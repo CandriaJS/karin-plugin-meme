@@ -6,6 +6,8 @@ import path from 'node:path'
 import { exists, logger, mkdir, readFile } from 'node-karin'
 import TOML from 'smol-toml'
 
+import { Config } from '@/common'
+import { utils } from '@/models'
 import { get_meme_server_name, get_meme_server_path } from '@/models/server/utils'
 import type { MemeServerConfigType } from '@/types'
 
@@ -60,7 +62,11 @@ export async function start (port: number = 2233) {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const configContent = configContentBuffer?.toString().trim() || TOML.stringify(config)
     const configData = TOML.parse(configContent) as unknown as MemeServerConfigType
+    const download_url = 'https://cdn.jsdelivr.net/gh/MemeCrafters/meme-generator-rs@'
+    const base_url = await utils.isAbroad() ? download_url : 'https://cdn.mengze.vip/gh/MemeCrafters/meme-generator-rs@'
+    const url = Config.server.download_url?.trim() ? Config.server.download_url.replace(/\/+$/, '') : base_url
     configData.server.port = port
+    configData.resource.resource_url = url
     const newConfigData = TOML.stringify(configData)
     await fs.writeFile(configPath, newConfigData)
     const memeServerPath = path.join(`${get_meme_server_path()}/${get_meme_server_name()}`)

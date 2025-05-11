@@ -15,4 +15,6 @@ export interface serverType {
   timeout: number
   /** 下载地址 */
   proxy_url: string
+  /** 服务端资源下载地址 */
+  download_url: string
 }

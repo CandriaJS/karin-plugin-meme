@@ -33,6 +33,11 @@ export const AdminTypeConfig: Record<string, AdminConfigType> = {
         title: '代理地址',
         desc: '代理地址, 如: https://github.moeyy.xyz',
         type: 'string'
+      },
+      download_url: {
+        title: '下载地址',
+        desc: '下载地址, 如: https://cdn.mengze.vip/gh/MemeCrafters/meme-generator-rs@',
+        type: 'string'
       }
     }
   },

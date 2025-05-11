@@ -18,6 +18,10 @@ retry: 5
 # 请求超时时间
 timeout: 5
 
-# 服务端下载代理镜像地址
+# 服务端文件下载代理镜像地址
 # 如: https://github.moeyy.xyz
 proxy_url: ''
+
+# 服务端资源下载代理镜像地址
+# 如: https://cdn.mengze.vip/gh/MemeCrafters/meme-generator-rs@
+download_url: ''

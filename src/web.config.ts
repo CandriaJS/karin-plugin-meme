@@ -96,9 +96,16 @@ export default {
             }),
             components.input.string('proxy_url', {
               label: '代理地址',
-              description: '代理地址，用于下载表情服务端',
+              description: '代理地址，用于下载表情服务端文件',
               defaultValue: Config.server.proxy_url,
               placeholder: '请输入代理地址',
+              isRequired: false
+            }),
+            components.input.string('proxy_url', {
+              label: '下载地址',
+              description: '下载地址，用于下载表情服务端资源',
+              defaultValue: Config.server.proxy_url,
+              placeholder: '请输入下载地址',
               isRequired: false
             })
           ]
