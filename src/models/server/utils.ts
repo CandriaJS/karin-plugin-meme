@@ -195,9 +195,12 @@ export async function get_meme_server_pid (): Promise<string> {
 
     switch (type) {
       case 'Windows_NT':
+      {
         command = 'wmic'
-        args = ['process', 'where', `name='${get_meme_server_name()}'`, 'get', 'ProcessId', '/value']
+        const serverPath = path.join(get_meme_server_path() ?? '', get_meme_server_name() ?? '')
+        args = ['process', 'where', `"ExecutablePath='${serverPath.replace(/\\/g, '\\\\')}'"`, 'get', 'ProcessId', '/value']
         break
+      }
       case 'Linux':
       case 'Darwin':
         command = 'pgrep'
