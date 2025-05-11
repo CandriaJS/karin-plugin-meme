@@ -363,6 +363,10 @@ export async function init_server (port: number = 2233): Promise<void> {
   try {
     const server_path = path.join(`${get_meme_server_path()}/${get_meme_server_name()}`)
     if (!await exists(server_path)) await download_server()
+    const type = os.type()
+    if (type === 'Linux') {
+      await exec('chmod +x ' + server_path)
+    }
     const resource_path = path.join(os.homedir(), '.meme_generator', 'resources')
     if (!await exists(resource_path)) {
       logger.info('表情服务端资源不存在，请稍后使用[#柠糖表情下载表情服务端资源]命令下载')
