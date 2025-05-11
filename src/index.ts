@@ -17,15 +17,20 @@ try {
 }
 
 logger.info(logger.chalk.bold.rgb(0, 255, 0)('========= 🌟🌟🌟 ========='))
-if (Number(Config.server.mode) === 1) {
-  logger.info(logger.chalk.bold.blue('🚀 启动表情服务端...'))
-  await server.init_server(Config.server.port)
-  logger.info(logger.chalk.bold.green('🎉 表情服务端启动成功！'))
+try {
+  if (Number(Config.server.mode) === 1) {
+    logger.info(logger.chalk.bold.blue('🚀 启动表情服务端...'))
+    await server.init_server(Config.server.port)
+    logger.info(logger.chalk.bold.green('🎉 表情服务端启动成功！'))
+  }
+} catch (error) {
+  logger.error(logger.chalk.bold.red(`💥 表情服务端启动失败！错误详情：${(error as Error).message}`))
 }
+
 try {
   await utils.init()
   logger.info(logger.chalk.bold.cyan('🎉 表情包数据加载成功！'))
-} catch (error: unknown) {
+} catch (error) {
   logger.error(logger.chalk.bold.red(`💥 表情包数据加载失败！错误详情：${(error as Error).message}`))
 }
 logger.info(

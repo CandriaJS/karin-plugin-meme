@@ -26,7 +26,7 @@ import type { AvatarInfoResponseType, ImageInfoResponseType } from '@/types'
 export async function get_base_url (): Promise<string> {
   try {
     let base_url:string
-    switch (Config.server.mode) {
+    switch (Number(Config.server.mode)) {
       case 0:
         base_url = Config.server.url.replace(/\/+$/, '') || 'https://meme.wuliya.cn'
         break
