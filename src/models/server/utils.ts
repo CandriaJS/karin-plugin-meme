@@ -307,7 +307,7 @@ export async function get_meme_server_memory (): Promise<string> {
         throw new Error('不支持的操作系统')
     }
 
-    const { status, stdout } = await exec(`${command} ${args.join(' ')}`, { log: true })
+    const { status, stdout } = await exec(`${command} ${args.join(' ')}`)
     if (!status) throw new Error('获取表情服务端内存使用失败')
     let memoryInMB: number
 
@@ -338,7 +338,6 @@ export async function get_meme_server_meme_total (): Promise<string> {
   try {
     const url = await utils.get_base_url()
     const res = await utils.Request.get(`${url}/meme/keys`)
-    console.log(res.data)
     return res.data.length
   } catch (error) {
     logger.error(error)
@@ -354,7 +353,7 @@ export async function get_meme_server_meme_total (): Promise<string> {
 export async function init_server (port: number = 2233): Promise<void> {
   try {
     const server_path = path.join(`${get_meme_server_path()}/${get_meme_server_name()}`)
-    if (!server_path) await download_server()
+    if (!await exists(server_path)) await download_server()
     const resource_path = path.join(os.homedir(), '.meme_generator', 'resources')
     if (!await exists(resource_path)) {
       logger.info('表情服务端资源不存在，请稍后使用[#柠糖下载表情服务端资源]命令下载')
