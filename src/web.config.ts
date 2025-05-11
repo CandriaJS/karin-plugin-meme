@@ -11,7 +11,7 @@ async function createMemeList (value: string) {
       const memeKey = await utils.get_meme_key_by_keyword(keyword)
       return components.checkbox.create(value, {
         label: keyword,
-        value: memeKey!
+        value: memeKey ?? ''
       })
     })
   )
