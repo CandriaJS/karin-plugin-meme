@@ -30,7 +30,7 @@
 
 body {
   color: #1e1f20;
-  font-family: Number, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", "NotoColorEmoji", sans-serif;
+  font-family: Number, YS, PingFangSC-Medium, NotoColorEmoji,  sans-serif;
   transform-origin: 0 0;
   width: 100%;
 }

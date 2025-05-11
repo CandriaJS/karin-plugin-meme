@@ -52,7 +52,7 @@ export async function start (port: number = 2233) {
     const configDir = path.join(os.homedir(), '.meme_generator')
     const configPath = path.join(configDir, 'config.toml')
     if (!await exists(configDir)) {
-      await mkdir(configPath)
+      await mkdir(configDir)
     }
     if (!await exists(configPath)) {
       const defaultConfig = TOML.stringify(config)
