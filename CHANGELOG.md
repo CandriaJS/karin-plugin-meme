@@ -1,5 +1,19 @@
 # 变更日志
 
+## [2.1.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.0.8...v2.1.0) (2025-05-11)
+
+
+### ✨ 新功能
+
+* **admin:** 添加服务模式、自定义端口和代理地址设置 ([f445fc3](https://github.com/CandriaJS/karin-plugin-meme/commit/f445fc3400075fccc55fb49a852d137367a357e8))
+* **server:** 添加本地表情服务端功能 ([#71](https://github.com/CandriaJS/karin-plugin-meme/issues/71)) ([4e538fd](https://github.com/CandriaJS/karin-plugin-meme/commit/4e538fd85d0f3f97e3e86872030c05d062f3f890))
+
+
+### 🐛 错误修复
+
+* **server:** 修复 Windows 系统下获取 meme 服务器进程 ID 的方法 ([be1fc94](https://github.com/CandriaJS/karin-plugin-meme/commit/be1fc94413866361bc92a9c4996094a9ded1ca93))
+* **src:** 优化表情服务端启动流程和错误处理 ([5ad8c0c](https://github.com/CandriaJS/karin-plugin-meme/commit/5ad8c0c5b1bc8c98f3b5ecf306d0fb16e58ef0ca))
+
 ## [2.0.8](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.0.7...v2.0.8) (2025-05-09)
 
 
