@@ -20,6 +20,7 @@ logger.info(logger.chalk.bold.rgb(0, 255, 0)('========= 🌟🌟🌟 =========')
 if (Number(Config.server.mode) === 1) {
   logger.info(logger.chalk.bold.blue('🚀 启动表情服务端...'))
   await server.init_server(Config.server.port)
+  logger.info(logger.chalk.bold.green('🎉 表情服务端启动成功！'))
 }
 try {
   await utils.init()

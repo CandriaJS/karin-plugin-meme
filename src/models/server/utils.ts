@@ -86,10 +86,16 @@ export async function download_server ():Promise<void> {
     const url = Config.server.proxy_url?.trim() ? `${Config.server.proxy_url.replace(/\/+$/, '')}/${github_url}` : base_url
     const release_url = `${url}/MemeCrafters/meme-generator-rs/releases/latest/download/${file_name}`
     const res = await utils.Request.get(release_url, null, null, 'arraybuffer')
+    if (!res.success) {
+      throw new Error('下载表情服务端文件失败')
+    } else if (res.success) {
+      logger.debug('下载表情服务端文件成功')
+    }
     logger.debug('下载表情服务端文件成功')
     logger.debug('开始解压表情服务端文件')
     const zip = new AdmZip(res.data)
     zip.extractAllTo(save_path, true)
+    logger.debug('解压表情服务端文件成功')
   } catch (error) {
     logger.error(error)
     throw new Error('下载表情服务端文件失败:' + (error as Error).message)
