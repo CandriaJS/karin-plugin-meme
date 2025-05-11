@@ -4,10 +4,20 @@ export const AdminTypeConfig: Record<string, AdminConfigType> = {
   server: {
     title: '服务设置',
     cfg: {
+      mode: {
+        title: '服务模式',
+        desc: '运行模式, 0为远程服务, 1为本地服务',
+        type: 'number'
+      },
       url: {
         title: '自定义地址',
         desc: '设置自定义表情服务地址',
         type: 'string'
+      },
+      port: {
+        title: '自定义端口',
+        desc: '设置自定义端口, 仅在本地服务模式下生效, 默认为2255',
+        type: 'number'
       },
       retry: {
         title: '重试次数',
@@ -18,6 +28,11 @@ export const AdminTypeConfig: Record<string, AdminConfigType> = {
         title: '超时时间',
         desc: '超时时间，单位为秒',
         type: 'number'
+      },
+      proxy_url: {
+        title: '代理地址',
+        desc: '代理地址, 如: https://github.moeyy.xyz',
+        type: 'string'
       }
     }
   },
