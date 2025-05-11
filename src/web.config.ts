@@ -98,7 +98,8 @@ export default {
               label: '代理地址',
               description: '代理地址，用于下载表情服务端',
               defaultValue: Config.server.proxy_url,
-              placeholder: '请输入代理地址'
+              placeholder: '请输入代理地址',
+              isRequired: false
             })
           ]
         })
