@@ -1,7 +1,8 @@
 import { logger } from 'node-karin'
 import axios from 'node-karin/axios'
 
-import { utils } from '@/models'
+import { Config } from '@/common'
+import { server, utils } from '@/models'
 import { Version } from '@/root'
 
 let responseData = '加载失败'
@@ -16,6 +17,11 @@ try {
 }
 
 logger.info(logger.chalk.bold.rgb(0, 255, 0)('========= 🌟🌟🌟 ========='))
+if (Number(Config.server.mode) === 1) {
+  logger.info(logger.chalk.bold.blue('🚀 启动表情服务端...'))
+  await server.init_server(Config.server.port)
+  logger.info(logger.chalk.bold.green('🎉 表情服务端启动成功！'))
+}
 try {
   await utils.init()
   logger.info(logger.chalk.bold.cyan('🎉 表情包数据加载成功！'))
