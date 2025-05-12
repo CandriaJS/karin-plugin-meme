@@ -1,5 +1,36 @@
 # 变更日志
 
+## [2.2.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.1.0...v2.2.0) (2025-05-12)
+
+
+### ✨ 新功能
+
+* **server:** 添加服务端资源下载地址配置项 ([68d462a](https://github.com/CandriaJS/karin-plugin-meme/commit/68d462ae1f3f9aed22c7bdd93afc93ffc46da93d))
+
+
+### 🐛 错误修复
+
+* **resources:** 修复 emoji 字体格式和样式 ([b2db493](https://github.com/CandriaJS/karin-plugin-meme/commit/b2db493dbbed89a68f52cc63896e22f066964c07))
+* **server:** 修复 Linux 系统下表情服务端无法运行的问题 ([9b6b52b](https://github.com/CandriaJS/karin-plugin-meme/commit/9b6b52b542925995881324045a78e70924549848))
+* **server:** 修复配置文件目录创建逻辑 ([1a0adfc](https://github.com/CandriaJS/karin-plugin-meme/commit/1a0adfc39ad279d97165c02702de57f6a87eb19d))
+* **src:** 修正服务模式 ([6f98a85](https://github.com/CandriaJS/karin-plugin-meme/commit/6f98a85bd8bd49051b3d496011520ff8ed13c5cb))
+* **webui:** 修复webui的代理地址配置 ([49313cc](https://github.com/CandriaJS/karin-plugin-meme/commit/49313cc64fdeda36de3d6c19951444d6c1eff1b2))
+* 优化背景图大小 ([036f5b7](https://github.com/CandriaJS/karin-plugin-meme/commit/036f5b74c41356e009f947dfb2e706d6b9ec4860))
+* 修复字体加载 ([db5e3ec](https://github.com/CandriaJS/karin-plugin-meme/commit/db5e3ece70b0c44744496a8f3839473b8deef64f))
+
+
+### ♻️ 代码重构
+
+* **meme:** 移除废弃配置项 ([75963ff](https://github.com/CandriaJS/karin-plugin-meme/commit/75963ff7fb04d6b22ccb365f41ec2c4b263bdc79))
+* **models:** 修改表情服务端资源下载提示信息 ([c8b73b7](https://github.com/CandriaJS/karin-plugin-meme/commit/c8b73b77ec67ead594c68a069a9c090da7f12b7f))
+
+
+### 🎡 持续集成
+
+* 修复 pkg.pr.new URL 中的仓库路径 ([f61ea19](https://github.com/CandriaJS/karin-plugin-meme/commit/f61ea19c78661ae1c13acc03f0088d886938eb3a))
+* 更新 beta 版本安装命令 ([0d8e387](https://github.com/CandriaJS/karin-plugin-meme/commit/0d8e3879ca3c20b86a00ff51968a5557b0b7e294))
+* 更新 release-beta 工作流 ([54bba0c](https://github.com/CandriaJS/karin-plugin-meme/commit/54bba0cc8995805ec3751cec352ef8cad1145b70))
+
 ## [2.1.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.0.8...v2.1.0) (2025-05-11)
 
 
