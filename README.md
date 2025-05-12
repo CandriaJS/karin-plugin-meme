@@ -67,9 +67,9 @@ pnpm install --filter=@candriajs/karin-plugin-meme
 - [x] 重构 `使用Sqlite存储数据` 📦
 - [x] 重构 `迁移至Rust版API` 📦
 - [ ] 添加 `表情调用统计` 📊
-- [ ] 内置 `表情服务端` 🌍
+- [x] 内置 `表情服务端` 🌍
 - [ ] `emoji` 表情合成实现 😀🌈
-- [ ] 添加 `G图片操作` 🔄
+- [ ] 添加 `图片操作` 🔄
 
 ## 贡献者 👨‍💻👩‍💻
 
