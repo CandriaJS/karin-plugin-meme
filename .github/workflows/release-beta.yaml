@@ -21,7 +21,6 @@ jobs:
     outputs:
       beta_version: ${{ steps.set-version.outputs.BETA_VERSION }}
       short_commit_hash: ${{ steps.get-sha.outputs.SHORT_COMMIT_HASH }}
-      pr_number: ${{ steps.get-pr-number.outputs.PR_NUMBER }}
       build_timestamp: ${{ steps.get-build-timestamp.outputs.BUILD_TIMESTAMP }}
       package_name: ${{ steps.set-version.outputs.PACKAGE_NAME }}
       package_short_name: ${{ steps.set-version.outputs.PACKAGE_SHORT_NAME }}
@@ -192,7 +191,7 @@ jobs:
 
             你可以通过以下命令安装该版本：
             ```
-            pnpm add https://pkg.pr.new/${{ needs.beta-version.outputs.package_name }}@${{ needs.beta-version.outputs.short_commit_hash }} -w
+            pnpm add https://pkg.pr.new/${{ github.repository }}/${{ needs.beta-version.outputs.package_name }}@${{ needs.beta-version.outputs.short_commit_hash }} -w
             ```
             
       - name: 上传NPM包信息
