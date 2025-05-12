@@ -125,15 +125,15 @@ export default {
               defaultSelected: Config.meme.enable
             }),
             components.switch.create('forceSharp', {
-              label: '强制使用#触发',
-              description: '是否强制使用#触发，开启后需要强制在指令前加#',
-              defaultSelected: Config.meme.forceSharp
+              label: '前缀',
+              description: '是否开启前缀, 开启使用强制使用#触发'
             }),
-            components.switch.create('quotedImages', {
-              label: '引用消息图片',
-              description: '是否开启获取引用消息图片，关闭后无法获取引用消息的图片',
-              defaultSelected: Config.meme.quotedImages
+            components.switch.create('cache', {
+              label: '表情缓存',
+              description: '是否开启表情缓存，开启后表情图片将缓存到本地，减少网络请求次数',
+              defaultSelected: Config.meme.cache
             }),
+
             components.switch.create('errorReply', {
               label: '错误回复',
               description: '是否开启错误回复，开启后会在错误时回复错误信息，关闭后只会在控制台输出错误信息',

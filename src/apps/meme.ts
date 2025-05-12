@@ -126,7 +126,7 @@ export const meme = karin.command(memeRegExp, async (e: Message) => {
       options,
       userText
     )
-    await e.reply([segment.image(res)])
+    await e.reply([segment.image(res)], { reply: Config.meme.reply })
   } catch (error) {
     logger.error(error)
     if (Config.meme.errorReply) {
@@ -173,7 +173,7 @@ export const preset = karin.command(presetRegExp, async (e: Message) => {
       userText,
       true
     )
-    await e.reply([segment.image(res)])
+    await e.reply([segment.image(res)], { reply: Config.meme.reply })
   } catch (error) {
     logger.error(error)
     if (Config.meme.errorReply) {

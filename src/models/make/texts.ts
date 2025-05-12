@@ -1,6 +1,5 @@
 import { Message } from 'node-karin'
 
-import { Config } from '@/common'
 import { utils } from '@/models'
 
 export async function handleTexts (
@@ -9,7 +8,6 @@ export async function handleTexts (
   min_texts: number,
   max_texts: number,
   userText:string,
-  allUsers: string[],
   formdata: Record<string, unknown>
 ): Promise<
   | { success: true, texts: string }
@@ -27,16 +25,6 @@ export async function handleTexts (
     }
   }
 
-  if (texts.length === 0 && Config.meme.userName) {
-    if (allUsers.length >= 1) {
-      const User = allUsers[0]
-      const Nickname = await utils.get_user_name(e, User)
-      texts.push(Nickname)
-    } else {
-      const Nickname = await utils.get_user_name(e, e.userId)
-      texts.push(Nickname)
-    }
-  }
   const memeInfo = await utils.get_meme_info(memekey)
   const default_texts = memeInfo?.default_texts ?? null
   if (
