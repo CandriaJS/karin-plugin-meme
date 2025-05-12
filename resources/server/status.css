@@ -90,21 +90,6 @@ body {
   font-weight: bold;
 }
 
-@media (max-width: 768px) {
-  .status-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 15px;
-  }
-  
-  .header-card {
-    padding: 20px;
-  }
-  
-  .header-card .title {
-    font-size: 24px;
-  }
-}
-
 .status-item {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 10px;

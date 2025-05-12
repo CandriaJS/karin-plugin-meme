@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
-      - '!release-please*'
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: 
+    - opened
+    - reopened
+    - synchronize
   workflow_dispatch:
 
 permissions:
@@ -15,6 +17,7 @@ permissions:
 jobs:
   beta-version:
     runs-on: ubuntu-latest
+    if: "!startsWith(github.head_ref, 'release-please')"
     outputs:
       beta_version: ${{ steps.set-version.outputs.BETA_VERSION }}
       short_commit_hash: ${{ steps.get-sha.outputs.SHORT_COMMIT_HASH }}
