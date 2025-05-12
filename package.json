@@ -66,6 +66,8 @@
   "packageManager": "pnpm@9.13.2",
   "karin": {
     "main": "src/index.ts",
+    "web": "./lib/web.config.js",
+    "ts-web": "./src/web.config.ts",
     "apps": [
       "lib/apps"
     ],
@@ -80,7 +82,8 @@
       "data",
       "resources"
     ],
-    "web": "./lib/web.config.js",
-    "ts-web": "./src/web.config.ts"
+    "engines": {
+        "karin": ">=1.9.1"
+    }
   }
 }

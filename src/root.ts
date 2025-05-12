@@ -34,10 +34,6 @@ const Version:VersionType = {
   get Plugin_Name () {
     return (isPackaged || process.env.NODE_ENV === 'development') ? pkg.name : basename
   },
-  /** 插件包配置名称 */
-  get Plugin_Config_Name () {
-    return this.Plugin_Name.replace('/', '-')
-  },
   /** 插件包别名 */
   get Plugin_AliasName () {
     return '柠糖表情'
