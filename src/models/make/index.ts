@@ -61,7 +61,7 @@ export async function make_meme (
     }
 
     if (max_texts > 0) {
-      const text = await handleTexts(e, memekey, min_texts, max_texts, userText, allUsers, formdata)
+      const text = await handleTexts(e, memekey, min_texts, max_texts, userText, formdata)
       if (!text.success) {
         throw new Error(text.message)
       }
