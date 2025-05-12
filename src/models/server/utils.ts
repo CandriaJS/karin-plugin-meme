@@ -37,7 +37,7 @@ function formatRuntime (diffMs: number): string {
  * @returns 重启结果
  */
 
-const save_path = path.join(karinPathBase, Version.Plugin_Config_Name, 'data', 'server')
+const save_path = path.join(karinPathBase, Version.Plugin_Name, 'data', 'server')
 /**
  * 下载表情服务端
  * 自动根据当前系统类型下载对应的表情服务端并保存到本地

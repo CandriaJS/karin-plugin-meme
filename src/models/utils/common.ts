@@ -97,7 +97,7 @@ export async function get_user_avatar (
 
     const avatarDir = path.join(
       karinPathBase,
-      Version.Plugin_Config_Name,
+      Version.Plugin_Name,
       'data',
       'avatar'
     )
