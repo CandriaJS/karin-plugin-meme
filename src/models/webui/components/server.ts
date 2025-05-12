@@ -71,10 +71,10 @@ export const serverComponents = () => [
             placeholder: '请输入代理地址',
             isRequired: false
           }),
-          components.input.string('proxy_url', {
+          components.input.string('download_url', {
             label: '下载地址',
             description: '下载地址，用于下载表情服务端资源',
-            defaultValue: Config.server.proxy_url,
+            defaultValue: Config.server.download_url,
             placeholder: '请输入下载地址',
             isRequired: false
           })
