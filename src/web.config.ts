@@ -43,7 +43,7 @@ export default {
             components.radio.group('mode', {
               label: '服务模式',
               description: '服务模式',
-              defaultValue: Config.access.mode.toString(),
+              defaultValue: Config.server.mode.toString(),
               radio: [
                 components.radio.create('0', {
                   label: '使用远程服务',
@@ -247,7 +247,7 @@ export default {
         })
       ]
     }),
-    components.accordion.create('stst', {
+    components.accordion.create('stat', {
       label: '统计设置',
       children: [
         components.accordion.createItem('stat', {
@@ -322,7 +322,6 @@ export default {
               } catch {
               }
             }
-
             Config.Modify(configKey as keyof ConfigType, key, value)
           }
         }
