@@ -39,7 +39,7 @@ const Render = {
       },
       screensEval: '#containter',
       pageGotoParams: {
-        waitUntil: 'load',
+        waitUntil: 'networkidle0',
         timeout: 60000
       }
     })
