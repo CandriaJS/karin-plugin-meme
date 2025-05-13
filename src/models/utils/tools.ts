@@ -217,6 +217,18 @@ export async function get_meme_key_by_keyword (keyword: string): Promise<string 
   if (!res) return null
   return res.key
 }
+
+/**
+ * 通过键值获取表情的标签信息
+ * @param tag 表情的tag
+ * @returns 表情的标签信息
+ */
+export async function get_meme_key_by_tag (tag: string): Promise<string[] | null> {
+  const res = await db.meme.getByTag(tag)
+  if (!res) return null
+  return JSON.parse(String(res.key))
+}
+
 /**
  * 获取所有所有相关表情的键值
  * @param key 表情的唯一标识符
@@ -226,6 +238,16 @@ export async function get_meme_keys_by_about (key: string): Promise<string[] | n
   const res = await db.meme.getKeysByAbout(key)
   return res.map(meme => meme.key).flat() ?? null
 }
+
+/**
+ * 获取所有所有相关表情的键值
+ * @param tag 表情的标签
+ * @returns 所有相关表情的键值列表
+ */
+export async function get_meme_keys_by_about_tag (tag: string): Promise<string[] | null> {
+  const res = await db.meme.getTagsByAbout(tag)
+  return res.map(meme => meme.key).flat() ?? null
+}
 /**
  * 获取所有表情的关键词信息
  * @returns 关键词信息列表
@@ -233,6 +255,15 @@ export async function get_meme_keys_by_about (key: string): Promise<string[] | n
 export async function get_meme_all_keywords (): Promise<string[] | null> {
   const res = await db.meme.getAll()
   return res.map((item) => JSON.parse(String(item.keyWords))).flat() ?? null
+}
+
+/**
+ * 获取所有表情的标签信息
+ * @returns 标签信息列表
+ */
+export async function get_meme_all_tags (): Promise<string[] | null> {
+  const res = await db.meme.getAll()
+  return res.map((item) => JSON.parse(String(item.tags))).flat() ?? null
 }
 
 /**
@@ -247,12 +278,32 @@ export async function get_meme_keyword (key: string): Promise<string[] | null> {
 }
 
 /**
+ * 通过关键词获取表情的标签信息
+ * @param tsg 表情的标签
+ * @returns 表情的标签信息
+ */
+export async function get_meme_keyword_by_tag (tag: string): Promise<string[] | null> {
+  const res = await db.meme.getByTag(tag)
+  if (!res) return null
+  return JSON.parse(String(res.keyWords))
+}
+
+/**
  * 获取所有相关表情的关键词信息
  * @param keyword 表情关键词
  * @returns 所有相关表情的关键词列表
  */
 export async function get_meme_keywords_by_about (keyword: string): Promise<string[] | null> {
   const res = await db.meme.getKeyWordsByAbout(keyword)
+  return res.map((item) => JSON.parse(String(item.keyWords))).flat() ?? null
+}
+/**
+ * 获取所有相关表情的关键词信息
+ * @param tag 表情的标签
+ * @returns 所有相关表情的关键词列表
+ */
+export async function get_meme_keywords_by_about_tag (tag: string): Promise<string[] | null> {
+  const res = await db.meme.getTagsByAbout(tag)
   return res.map((item) => JSON.parse(String(item.keyWords))).flat() ?? null
 }
 
