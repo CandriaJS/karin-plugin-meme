@@ -3,7 +3,7 @@ import karin, { common, logger, Message, segment } from 'node-karin'
 import { imageTool, utils } from '@/models'
 import { Version } from '@/root'
 
-export const flip_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:水平翻转)$/i, async (e: Message) => {
+export const flip_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:水平翻转)(?:图片)?$/i, async (e: Message) => {
   try {
     const image = await utils.get_image(e, 'url')
     if (!image) {
@@ -22,7 +22,7 @@ export const flip_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(
   event: 'message'
 })
 
-export const flip_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:垂直翻转)$/i, async (e: Message) => {
+export const flip_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:垂直翻转)(?:图片)?$/i, async (e: Message) => {
   try {
     const image = await utils.get_image(e, 'url')
     if (!image) {
@@ -319,7 +319,7 @@ export const gif_reverse = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gi
   event: 'message'
 })
 
-export const gif_change_duration = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)?(?:变速|改变帧率)(?:\s*([\d.]+)(?:fps|ms|s|x|X|倍速?|%)?)?$/i, async (e: Message) => {
+export const gif_change_duration = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)?(?:变速|改变帧率)(?:\s*(\d{0,3}\.?\d{1,3}(?:fps|ms|s|x|倍速?|%)?))?$/i, async (e: Message) => {
   try {
     const [, param] = e.msg.match(gif_change_duration.reg)!
     const image = await utils.get_image(e, 'url')
@@ -327,26 +327,31 @@ export const gif_change_duration = karin.command(/^#?(?:(?:柠糖)(?:表情|meme
       return await e.reply('请发送图片', { reply: true })
     }
     if (!param) {
-      return await e.reply('请使用正确的倍率格式,如:0.5x,50%,20FPS,0.05s')
+      return await e.reply('请使用正确的倍率格式,如:[0.5x],[50%],[20FPS],[0.05s]')
     }
-
+    const image_id = await utils.upload_image(image[0].image)
+    const image_info = await imageTool.get_image_info(image_id)
+    if (!image_info.is_multi_frame) {
+      return await e.reply('该图片不是动图,无法进行变速操作')
+    }
     let duration: number
-    const value = parseFloat(param)
-    const unit = param.slice(value.toString().length).toLowerCase()
 
-    if (unit === 'fps') {
-      duration = 1 / value
-    } else if (unit.endsWith('s')) {
-      duration = unit === 'ms' ? value / 1000 : value
+    const fps_match = param.match(/(\d{0,3}\.?\d{1,3})fps$/i)
+    const time_match = param.match(/(\d{0,3}\.?\d{1,3})(m?)s$/i)
+    const speed_match = param.match(/(\d{0,3}\.?\d{1,3})(?:x|倍速?)$/i)
+    const percent_match = param.match(/(\d{0,3}\.?\d{1,3})%$/)
+
+    if (fps_match) {
+      duration = 1 / parseFloat(fps_match[1])
+    } else if (time_match) {
+      duration = time_match[2] ? parseFloat(time_match[1]) / 1000 : parseFloat(time_match[1])
     } else {
-      const image_id = await utils.upload_image(image[0].image)
-      const image_info = await imageTool.get_image_info(image_id)
       duration = image_info.average_duration
 
-      if (unit.startsWith('x') || unit.includes('倍')) {
-        duration /= value
-      } else if (unit === '%') {
-        duration /= value / 100
+      if (speed_match) {
+        duration /= parseFloat(speed_match[1])
+      } else if (percent_match) {
+        duration = duration * (100 / parseFloat(percent_match[1]))
       } else {
         return await e.reply('请使用正确的倍率格式,如:0.5x,50%,20FPS,0.05s')
       }
@@ -360,7 +365,6 @@ export const gif_change_duration = karin.command(/^#?(?:(?:柠糖)(?:表情|meme
       ])
     }
 
-    const image_id = await utils.upload_image(image[0].image)
     const reslut = await imageTool.gif_change_duration(image_id, duration)
     await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
   } catch (error) {

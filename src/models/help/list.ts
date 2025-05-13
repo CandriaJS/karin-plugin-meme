@@ -3,7 +3,7 @@ type HelpListType = HelpType['helpList']
 
 export const helpList:HelpListType = [
   {
-    group: '[]内为必填项,{}内为可选项'
+    group: '[]内为必填项,{}内为可选项, #均为可选'
   },
   {
     group: '表情命令',
@@ -32,6 +32,76 @@ export const helpList:HelpListType = [
         icon: 71,
         title: 'xx',
         desc: '如喜报xx (参数使用#,多个参数同样使用#, 多段文本使用/, 指定用户头像使用@+qq号)'
+      }
+    ]
+  },
+  {
+    group: '图片操作命令',
+    list: [
+      {
+        icon: 71,
+        title: '#图片信息',
+        desc: '获取图片信息'
+      },
+      {
+        icon: 157,
+        title: '#水平翻转',
+        desc: '水平翻转图片'
+      },
+      {
+        icon: 158,
+        title: '#垂直翻转',
+        desc: '垂直翻转图片'
+      },
+      {
+        icon: 158,
+        title: '#灰度化',
+        desc: '灰度化图片'
+      },
+      {
+        icon: 158,
+        title: '#反色',
+        desc: '反色图片'
+      },
+      {
+        icon: 159,
+        title: '#旋转 xx',
+        desc: '旋转图片xx度'
+      },
+      {
+        icon: 160,
+        title: '#缩放 xx',
+        desc: '缩放图片xx度'
+      },
+      {
+        icon: 161,
+        title: '#裁剪 xx,xx,xx,xx',
+        desc: '裁剪图片xx度'
+      },
+      {
+        icon: 132,
+        title: '#水平拼接',
+        desc: '水平拼接图片，需多张图片'
+      },
+      {
+        icon: 132,
+        title: '#垂直拼接',
+        desc: '垂直拼接图片，需多张图片'
+      },
+      {
+        icon: 123,
+        title: '#gif分解',
+        desc: '分解gif图片'
+      },
+      {
+        icon: 123,
+        title: '#gif合成',
+        desc: '合成gif图片，需多张图片'
+      },
+      {
+        icon: 123,
+        title: '#gif变速xxxS',
+        desc: '变速gif图片'
       }
     ]
   },
