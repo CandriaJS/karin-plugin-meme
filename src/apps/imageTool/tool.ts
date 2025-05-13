@@ -266,7 +266,7 @@ export const gif_split = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
     await e.bot.sendForwardMsg(e.contact, forWordMsg, {
       news: [{ text: 'GIF分解' }],
       prompt: 'GIF分解',
-      summary: 'GIF分解',
+      summary: Version.Plugin_Name,
       source: 'GIF分解'
     })
   } catch (error) {
@@ -319,7 +319,7 @@ export const gif_reverse = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gi
   event: 'message'
 })
 
-export const gif_change_duration = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)?(?:变速|改变帧率)(?:\s*([\d.]+)(?:x|倍|%|fps|s)?)?$/i, async (e: Message) => {
+export const gif_change_duration = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)?(?:变速|改变帧率)(?:\s*([\d.]+)(?:fps|ms|s|x|X|倍速?|%)?)?$/i, async (e: Message) => {
   try {
     const [, param] = e.msg.match(gif_change_duration.reg)!
     const image = await utils.get_image(e, 'url')
@@ -327,29 +327,37 @@ export const gif_change_duration = karin.command(/^#?(?:(?:柠糖)(?:表情|meme
       return await e.reply('请发送图片', { reply: true })
     }
     if (!param) {
-      return await e.reply('请输入正确的倍率格式,如:0.5x,50%,20FPS,0.05s')
+      return await e.reply('请使用正确的倍率格式,如:0.5x,50%,20FPS,0.05s')
     }
 
     let duration: number
-    if (param.toLowerCase().endsWith('fps')) {
-      /** FPS格式 */
-      const fps = parseFloat(param)
-      duration = 1 / fps
-    } else if (param.toLowerCase().endsWith('s')) {
-      /** 秒格式 */
-      duration = parseFloat(param)
-    } else if (param.endsWith('%')) {
-      /** 百分比格式 */
-      const percent = parseFloat(param)
-      duration = 1 / (percent / 100)
+    const value = parseFloat(param)
+    const unit = param.slice(value.toString().length).toLowerCase()
+
+    if (unit === 'fps') {
+      duration = 1 / value
+    } else if (unit.endsWith('s')) {
+      duration = unit === 'ms' ? value / 1000 : value
     } else {
-      /** 倍率格式(x或无单位) */
-      const speed = parseFloat(param)
-      duration = 1 / speed
+      const image_id = await utils.upload_image(image[0].image)
+      const image_info = await imageTool.get_image_info(image_id)
+      duration = image_info.average_duration
+
+      if (unit.startsWith('x') || unit.includes('倍')) {
+        duration /= value
+      } else if (unit === '%') {
+        duration /= value / 100
+      } else {
+        return await e.reply('请使用正确的倍率格式,如:0.5x,50%,20FPS,0.05s')
+      }
     }
 
-    if (duration <= 0.02) {
-      return await e.reply(`帧间隔必须大于 0.02 s(小于等于 50 FPS),\n当前帧间隔为 ${duration.toFixed(3)} s (${(1 / duration).toFixed(1)} FPS)`)
+    if (duration < 0.02) {
+      return await e.reply([
+        segment.text('帧间隔必须大于 0.02 s(小于等于 50 FPS),\n'),
+        segment.text('超过该限制可能会导致 GIF 显示速度不正常.\n'),
+        segment.text(`当前帧间隔为 ${duration.toFixed(3)} s (${(1 / duration).toFixed(1)} FPS)`)
+      ])
     }
 
     const image_id = await utils.upload_image(image[0].image)

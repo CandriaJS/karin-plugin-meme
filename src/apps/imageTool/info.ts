@@ -2,7 +2,7 @@ import karin, { logger, Message, segment } from 'node-karin'
 
 import { imageTool, utils } from '@/models'
 
-export const info = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:查看图片信息|imageinfo)$/i, async (e: Message) => {
+export const info = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:查看)?(?:图片信息|imageinfo)$/i, async (e: Message) => {
   try {
     const image = await utils.get_image(e, 'url')
     if (!image) {
@@ -18,7 +18,7 @@ export const info = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:查看图
     ]
     if (image_info.is_multi_frame) {
       replyMessage.push(segment.text(`帧数: ${image_info.frame_count}\n`))
-      replyMessage.push(segment.text(`是否为动图: ${image_info.is_multi_frame}\n`))
+      replyMessage.push(segment.text(`动图平均帧率: ${image_info.average_duration}\n`))
     }
     await e.reply(replyMessage, { reply: true })
   } catch (error) {
