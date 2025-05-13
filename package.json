@@ -56,7 +56,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "globals": "^15.15.0",
     "neostandard": "^0.12.1",
-    "node-karin": "^1.8.13",
+    "node-karin": "^1.9.2",
     "tsc-alias": "1.8.13",
     "tsup": "^8.4.0",
     "tsx": "^4.19.4",
@@ -83,7 +83,7 @@
       "resources"
     ],
     "engines": {
-        "karin": ">=1.9.1"
+      "karin": ">=1.9.1"
     }
   }
 }

@@ -17,6 +17,5 @@ export const status = karin.command(/^#?(?:(?:柠糖)?(?:表情|meme))?(?:服务
 }, {
   name: '柠糖表情:表情服务端状态',
   priority: -Infinity,
-  event: 'message',
-  permission: 'master'
+  event: 'message'
 })
