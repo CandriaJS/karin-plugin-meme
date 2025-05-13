@@ -130,7 +130,7 @@ export async function download_server_resource (): Promise<boolean> {
     })
   } catch (error) {
     logger.error(error)
-    throw new Error('更新表情服务端资源失败: ' + (error as Error).message)
+    throw new Error(`更新表情服务端资源失败: ${(error as Error).message}`)
   }
 }
 

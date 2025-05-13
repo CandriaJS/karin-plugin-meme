@@ -1,6 +1,6 @@
 import { logger } from 'node-karin'
 
-import { db, utils } from '@/models'
+import { db, imageTool, utils } from '@/models'
 import Request from '@/models/utils/request'
 import type { dbType, MemeInfoType, ResponseType } from '@/types'
 type Model = dbType['meme']
@@ -279,7 +279,7 @@ export async function get_meme_keyword (key: string): Promise<string[] | null> {
 
 /**
  * 通过关键词获取表情的标签信息
- * @param tsg 表情的标签
+ * @param tag 表情的标签
  * @returns 表情的标签信息
  */
 export async function get_meme_keyword_by_tag (tag: string): Promise<string[] | null> {
@@ -323,23 +323,6 @@ export async function get_meme_info (key: string): Promise<Model | null> {
  */
 export async function get_meme_info_by_keyword (keyword: string): Promise<Model | null> {
   return await db.meme.getByKeyWord(keyword) ?? null
-}
-
-/**
- * 获取图片
- * @param image_id 图片唯一标识符
- * @returns 图片数据
- */
-export async function get_meme_image (image_id: string): Promise<Buffer> {
-  try {
-    const url = await utils.get_base_url()
-    const res = await Request.get(`${url}/image/${image_id}`, {}, {}, 'arraybuffer')
-    if (!res.success) throw new Error('获取图片失败')
-    return res.data
-  } catch (error) {
-    logger.error(error)
-    throw new Error((error as Error).message)
-  }
 }
 
 /**
@@ -399,8 +382,8 @@ export async function get_meme_preview (key: string): Promise<Buffer> {
     const url = await utils.get_base_url()
     const res = await Request.get(`${url}/memes/${key}/preview`)
     if (!res.success) throw new Error(res.msg)
-    const image = await get_meme_image(res.data.image_id)
-    return image
+    const image = await imageTool.get_image(res.data.image_id, 'buffer')
+    return image as Buffer
   } catch (error) {
     logger.error(error)
     throw new Error((error as Error).message)
@@ -420,9 +403,9 @@ export async function make_meme (memekey: string, data: Record<string, unknown>)
     if (!res.success) {
       throw new Error(res.msg)
     }
-    const image = await get_meme_image(res.data.image_id)
+    const image = await imageTool.get_image(res.data.image_id, 'buffer')
     if (!image) throw new Error('获取图片失败')
-    return image
+    return image as Buffer
   } catch (error) {
     logger.error(error)
     throw new Error((error as Error).message)

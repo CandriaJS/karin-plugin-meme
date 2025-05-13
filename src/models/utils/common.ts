@@ -17,7 +17,7 @@ import {
 import { Config } from '@/common'
 import Request from '@/models/utils/request'
 import { Version } from '@/root'
-import type { AvatarInfoResponseType, ImageInfoResponseType } from '@/types'
+import type { AvatarInfoType, ImageInfoType } from '@/types'
 
 /**
  * 获取基础 URL
@@ -90,7 +90,7 @@ export async function get_user_avatar (
   e: Message,
   userId: string,
   type: 'url' | 'base64' = 'url'
-): Promise<AvatarInfoResponseType | null> {
+): Promise<AvatarInfoType | null> {
   try {
     if (!e) throw new Error('消息事件不能为空')
     if (!userId) throw new Error('用户ID不能为空')
@@ -201,7 +201,7 @@ export async function get_user_name (
 export async function get_image (
   e: Message,
   type: 'url' | 'base64' = 'url'
-): Promise<ImageInfoResponseType[]> {
+): Promise<ImageInfoType[]> {
   const imagesInMessage = e.elements
     .filter((m) => m.type === 'image')
     .map((img) => ({
@@ -209,7 +209,7 @@ export async function get_image (
       file: img.file
     }))
 
-  const tasks: Promise<ImageInfoResponseType>[] = []
+  const tasks: Promise<ImageInfoType>[] = []
 
   let quotedImages: Array<{ userId: string; file: string }> = []
   let source = null
@@ -292,7 +292,7 @@ export async function get_image (
   const results = await Promise.allSettled(tasks)
   const images = results
     .filter(
-      (res): res is PromiseFulfilledResult<ImageInfoResponseType> =>
+      (res): res is PromiseFulfilledResult<ImageInfoType> =>
         res.status === 'fulfilled' && Boolean(res.value)
     )
     .map((res) => res.value)
