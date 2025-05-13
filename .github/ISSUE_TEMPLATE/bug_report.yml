@@ -1,5 +1,5 @@
 name: 错误报告
-description: 在使用 clarity-meme 的过程中遇到了错误
+description: 在使用 karin-plugin-meme 的过程中遇到了错误
 title: '[🐛 Bug]: '
 labels: [ "bug" ]
 
@@ -13,9 +13,9 @@ body:
       label: 请确保以下事项
       description: 您必须勾选以下所有内容, 否则您的issue可能会被直接关闭。
       options:
-        - label: 我已经阅读了[文档](https://docs.wuliya.cn/clarity/meme)。
+        - label: 我已经阅读了[文档](https://docs.wuliya.cn/candria/meme)。
         - label: 我确定没有重复的issue或讨论。
-        - label: 我确定是`clarity-meme`的问题，而不是其他原因（例如网络，`依赖`或`操作`）。
+        - label: 我确定是`karin-plugin-meme`的问题，而不是其他原因（例如网络，`依赖`或`操作`）。
         - label: 我确定这个问题在最新版本中没有被修复。
 
   - type: input
