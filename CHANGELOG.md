@@ -1,5 +1,24 @@
 # 变更日志
 
+## [2.3.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.2.0...v2.3.0) (2025-05-13)
+
+
+### ✨ 新功能
+
+* **imageTool:** 添加图片操作功能 ([#81](https://github.com/CandriaJS/karin-plugin-meme/issues/81)) ([89a6892](https://github.com/CandriaJS/karin-plugin-meme/commit/89a689209114092ca396311ad0f0c4567956e1ce))
+* **search:** 增加表情包标签搜索功能 ([#79](https://github.com/CandriaJS/karin-plugin-meme/issues/79)) ([95216b4](https://github.com/CandriaJS/karin-plugin-meme/commit/95216b4172e84f423a2ecaa28b5fb3e67bfdf26d))
+
+
+### ♻️ 代码重构
+
+* **models:** 更新数据库和文件保存路径 ([c73f128](https://github.com/CandriaJS/karin-plugin-meme/commit/c73f128d48ae4300ef9c30fcfb6c973d92ee6711))
+* 模块化webui配置功能 ([#76](https://github.com/CandriaJS/karin-plugin-meme/issues/76)) ([2e1aaab](https://github.com/CandriaJS/karin-plugin-meme/commit/2e1aaab9fb884551c1ca3962b3f81143c0f19aad))
+
+
+### 🎡 持续集成
+
+* 优化 GitHub Actions 工作流并更新 issue 模板 ([1b72aa5](https://github.com/CandriaJS/karin-plugin-meme/commit/1b72aa54a25d0c2f3a5fa6db3f8c75cbb64c5403))
+
 ## [2.2.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.1.0...v2.2.0) (2025-05-12)
 
 
