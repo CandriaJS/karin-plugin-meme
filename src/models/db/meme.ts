@@ -202,6 +202,29 @@ export async function getKeyWordsByAbout (keyword: string): Promise<Model[]> {
     where: literal(`json_extract(keyWords, '$') LIKE '%${keyword}%'`)
   }) as Model[]
 }
+
+/**
+ * 通过表情标签获取表情信息
+ * @param tag 表情的标签
+ * @returns 表情信息
+ */
+export async function getByTag (tag: string): Promise<Model | null> {
+  return await table.findOne({
+    where: literal(`json_extract(tags, '$') LIKE '%"${tag}"%'`)
+  }) as Model | null
+}
+
+/**
+ * 通过表情标签模糊获取所有相关的表情信息
+ * @param tag 标签关键词
+ * @returns 表情信息列表
+ */
+export async function getTagsByAbout (tag: string): Promise<Model[]> {
+  return await table.findAll({
+    where: literal(`json_extract(tags, '$') LIKE '%${tag}%'`)
+  }) as Model[]
+}
+
 /**
  * 获取表情信息列表
  * @returns 表情信息列表

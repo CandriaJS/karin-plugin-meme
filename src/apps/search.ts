@@ -13,12 +13,23 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
     /** 键值搜索 */
     const keys = await utils.get_meme_keys_by_about(searchKey)
 
-    if (!keywords?.length && !keys?.length) {
+    /** tag搜索 */
+    const [keyTags, keywordTags] = await Promise.all([
+      utils.get_meme_keys_by_about_tag(searchKey),
+      utils.get_meme_keywords_by_about_tag(searchKey)
+    ])
+    const keyTagsKeywords = await Promise.all(
+      (keyTags ?? []).map(key => utils.get_meme_keyword(key))
+    )
+
+    const tags = [...(keyTagsKeywords.filter(Boolean) ?? []), ...(keywordTags ?? [])]
+
+    if (!keywords?.length && !keys?.length && !tags?.length) {
       await e.reply(`没有找到${searchKey}相关的表情`)
       return true
     }
 
-    const allResults = [...(keywords ?? []), ...(keys ?? [])]
+    const allResults = [...(keywords ?? []), ...(keys ?? []), ...(tags ?? [])]
 
     const replyMessage = allResults
       .map((kw, index) => `${index + 1}. ${kw}`)
