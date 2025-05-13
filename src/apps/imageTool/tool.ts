@@ -11,7 +11,7 @@ export const flip_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(
     }
     const image_id = await utils.upload_image(image[0].image)
     const reslut = await imageTool.flip_horizontal(image_id)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`水平翻转图片失败:: ${(error as Error).message}`)
@@ -30,7 +30,7 @@ export const flip_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:
     }
     const image_id = await utils.upload_image(image[0].image)
     const reslut = await imageTool.flip_vertical(image_id)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]垂直翻转图片图片失败:: ${(error as Error).message}`)
@@ -53,7 +53,7 @@ export const rotate = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:旋转)
     }
     const image_id = await utils.upload_image(image[0].image)
     const reslut = await imageTool.rotate(image_id, parseInt(angle))
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]旋转图片失败:: ${(error as Error).message}`)
@@ -92,7 +92,7 @@ export const resize = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:缩放)
     }
 
     const reslut = await imageTool.resize(image_id, finalWidth, finalHeight)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]缩放图片失败:${(error as Error).message}`)
@@ -143,11 +143,11 @@ export const crop = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:裁剪)(?
         bottom = top + newHeight
       }
     } else {
-      throw new Error('裁剪格式错误')
+      return await e.reply('请输入正确的裁剪格式 ,如:[0,0,100,100],[100x100],[2:1]')
     }
 
     const reslut = await imageTool.crop(image_id, left, top, right, bottom)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]裁剪图片失败: ${(error as Error).message}`)
@@ -158,7 +158,7 @@ export const crop = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:裁剪)(?
   event: 'message'
 })
 
-export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰度化)$/i, async (e: Message) => {
+export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰度化)(?:图片)?$/i, async (e: Message) => {
   try {
     const image = await utils.get_image(e, 'url')
     if (!image) {
@@ -166,7 +166,7 @@ export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰�
     }
     const image_id = await utils.upload_image(image[0].image)
     const reslut = await imageTool.grayscale(image_id)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]灰度化图片失败:: ${(error as Error).message}`)
@@ -177,7 +177,7 @@ export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰�
   event: 'message'
 })
 
-export const invert = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:反色)$/i, async (e: Message) => {
+export const invert = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:反色)(?:图片)?$/i, async (e: Message) => {
   try {
     const image = await utils.get_image(e, 'url')
     if (!image) {
@@ -185,7 +185,7 @@ export const invert = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:反色)
     }
     const image_id = await utils.upload_image(image[0].image)
     const reslut = await imageTool.invert(image_id)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]反色图片失败: ${(error as Error).message}`)
@@ -196,7 +196,7 @@ export const invert = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:反色)
   event: 'message'
 })
 
-export const merge_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:水平拼接)$/i, async (e: Message) => {
+export const merge_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:水平拼接)(?:图片)?$/i, async (e: Message) => {
   try {
     const images = await utils.get_image(e, 'url')
     if (!images || images.length < 2) {
@@ -206,7 +206,7 @@ export const merge_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?
       images.map(img => utils.upload_image(img.image))
     )
     const reslut = await imageTool.merge_horizontal(image_ids)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]水平拼接图片失败: ${(error as Error).message}`)
@@ -217,7 +217,7 @@ export const merge_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?
   event: 'message'
 })
 
-export const merge_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:垂直拼接)$/i, async (e: Message) => {
+export const merge_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:垂直拼接)(?:图片)?$/i, async (e: Message) => {
   try {
     const images = await utils.get_image(e, 'url')
     if (!images || images.length < 2) {
@@ -227,7 +227,7 @@ export const merge_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?
       images.map(img => utils.upload_image(img.image))
     )
     const reslut = await imageTool.merge_vertical(image_ids)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]垂直拼接图片失败: ${(error as Error).message}`)
@@ -246,7 +246,6 @@ export const gif_split = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
     }
     const image_id = await utils.upload_image(image[0].image)
     const reslut = await imageTool.gif_split(image_id)
-    console.log(reslut)
 
     const images = await Promise.all(
       reslut.map(id => imageTool.get_image(id, 'base64'))
@@ -279,7 +278,7 @@ export const gif_split = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
   event: 'message'
 })
 
-export const gif_merge = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)?(?:合并)$/i, async (e: Message) => {
+export const gif_merge = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)?(?:合并|拼接)$/i, async (e: Message) => {
   try {
     const images = await utils.get_image(e, 'url')
     if (!images || images.length < 2) {
@@ -289,10 +288,10 @@ export const gif_merge = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
       images.map(img => utils.upload_image(img.image))
     )
     const reslut = await imageTool.gif_merge(image_ids)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
-    await e.reply(`[${Version.Plugin_Name}]gif合并图片失败: ${(error as Error).message}`)
+    await e.reply(`[${Version.Plugin_Name}]gif拼接图片失败: ${(error as Error).message}`)
   }
 }, {
   name: '柠糖表情:图片操作:gif合并',
@@ -308,7 +307,7 @@ export const gif_reverse = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gi
     }
     const image_id = await utils.upload_image(image[0].image)
     const reslut = await imageTool.gif_reverse(image_id)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]gif反转图片失败: ${(error as Error).message}`)
@@ -327,12 +326,12 @@ export const gif_change_duration = karin.command(/^#?(?:(?:柠糖)(?:表情|meme
       return await e.reply('请发送图片', { reply: true })
     }
     if (!param) {
-      return await e.reply('请使用正确的倍率格式,如:[0.5x],[50%],[20FPS],[0.05s]')
+      return await e.reply('请使用正确的倍率格式,如:[0.5x],[50%],[20FPS],[0.05s]', { reply: true })
     }
     const image_id = await utils.upload_image(image[0].image)
     const image_info = await imageTool.get_image_info(image_id)
     if (!image_info.is_multi_frame) {
-      return await e.reply('该图片不是动图,无法进行变速操作')
+      return await e.reply('该图片不是动图,无法进行变速操作', { reply: true })
     }
     let duration: number
 
@@ -366,7 +365,7 @@ export const gif_change_duration = karin.command(/^#?(?:(?:柠糖)(?:表情|meme
     }
 
     const reslut = await imageTool.gif_change_duration(image_id, duration)
-    await e.reply(segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`))
+    await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_Name}]GIF变速失败: ${(error as Error).message}`)
