@@ -256,7 +256,7 @@ export async function get_meme_server_runtime (): Promise<string> {
       case 'Linux':
       case 'Darwin':
         command = 'ps'
-        args = ['-p', pid, '-o', 'time=']
+        args = ['-p', pid, '-o', 'etime=']
         break
       default:
         throw new Error('不支持的操作系统')
@@ -284,16 +284,21 @@ export async function get_meme_server_runtime (): Promise<string> {
         throw new Error('无法解析WMIC输出的创建日期')
       }
     } else {
-      const time = stdout.trim()
-      const timeMatch = time.match(/(\d+):(\d+):(\d+)/)
-      if (timeMatch) {
-        const [, hours, minutes, seconds] = timeMatch
-        const diffMs = (parseInt(hours) * 60 * 60 +
+      const etime = stdout.trim()
+      const etimeMatch = etime.match(/(?:(\d+)-)?(?:(\d+):)?(\d+):(\d+)/)
+      if (etimeMatch) {
+        const [, days, possibleHours, minutes, seconds] = etimeMatch
+        let hours = 0
+        if (possibleHours) {
+          hours = parseInt(possibleHours)
+        }
+        const diffMs = ((parseInt(days || '0') * 24 * 60 * 60) +
+          (hours * 60 * 60) +
           parseInt(minutes) * 60 +
           parseInt(seconds)) * 1000
         runtime = formatRuntime(diffMs)
       }
-      if (!timeMatch) {
+      if (!etimeMatch) {
         throw new Error('无法获取进程运行时间')
       }
     }
