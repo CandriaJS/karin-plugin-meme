@@ -11,6 +11,7 @@ export const flip_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -37,6 +38,7 @@ export const flip_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -64,6 +66,7 @@ export const rotate = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:旋转)
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -94,6 +97,7 @@ export const resize = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:缩放)
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -140,6 +144,7 @@ export const crop = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:裁剪)(?
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -201,6 +206,7 @@ export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰�
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -227,6 +233,7 @@ export const invert = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:反色)
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
