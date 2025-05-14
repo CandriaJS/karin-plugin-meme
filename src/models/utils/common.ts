@@ -26,9 +26,10 @@ import type { AvatarInfoType, ImageInfoType } from '@/types'
 export async function get_base_url (): Promise<string> {
   try {
     let base_url:string
+    if (!Config.server.url) throw new Error('请先使用未配置表情包API或使用本地服务')
     switch (Number(Config.server.mode)) {
       case 0:
-        base_url = Config.server.url.replace(/\/+$/, '') || 'https://meme.wuliya.cn'
+        base_url = Config.server.url.replace(/\/+$/, '')
         break
       case 1:{
         const resources_path = path.join(os.homedir(), '.meme_generator', 'resources')
