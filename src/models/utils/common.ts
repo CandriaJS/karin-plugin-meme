@@ -26,7 +26,7 @@ import type { AvatarInfoType, ImageInfoType } from '@/types'
 export async function get_base_url (): Promise<string> {
   try {
     let base_url:string
-    if (!Config.server.url) throw new Error('请先使用未配置表情包API或使用本地服务')
+    if (!Config.server.url && !(Config.server.mode === 1)) throw new Error('请先使用未配置表情包API或使用本地服务')
     switch (Number(Config.server.mode)) {
       case 0:
         base_url = Config.server.url.replace(/\/+$/, '')
