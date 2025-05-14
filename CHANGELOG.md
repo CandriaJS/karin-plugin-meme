@@ -1,5 +1,27 @@
 # 变更日志
 
+## [2.3.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.3.0...v2.3.1) (2025-05-14)
+
+
+### 🐛 错误修复
+
+* **imageTool:** 优化图片获取逻辑 ([84812a7](https://github.com/CandriaJS/karin-plugin-meme/commit/84812a7e47f9fd8690ea1b4dfda4a3ee7a4871f4))
+* **models:** 修复 API 地址未配置时的错误提示 ([fbac855](https://github.com/CandriaJS/karin-plugin-meme/commit/fbac85570fe3198603aadf89a5e0f8bfb7ad2ba6))
+* **server:** 优化 Linux 系统下进程运行时间解析 ([80d4a94](https://github.com/CandriaJS/karin-plugin-meme/commit/80d4a94400dbd8ec821a25964cba6f25f965d296))
+* **server:** 修复 Linux 进程运行时间获取 ([68deed9](https://github.com/CandriaJS/karin-plugin-meme/commit/68deed9079dd6ca01bfaaf30a16094b4eed8fba1))
+* **server:** 修复 linux下的时间计算与内存计算 ([68e344f](https://github.com/CandriaJS/karin-plugin-meme/commit/68e344f5004fc80bdec4570346602834444409a1))
+
+
+### ⚡️ 性能优化
+
+* **ImageTools:** 优化图片操作，部分图片操作支持艾特获取头像 ([61d8543](https://github.com/CandriaJS/karin-plugin-meme/commit/61d8543ea356d1e9b96d18fbc3ee2653bd6836fb))
+
+
+### 📝 文档更新
+
+* **README:** 更新项目计划状态 ([8e2104a](https://github.com/CandriaJS/karin-plugin-meme/commit/8e2104a18deada0c1253ba447c53f95650018e69))
+* 修正描述 ([4a50cb4](https://github.com/CandriaJS/karin-plugin-meme/commit/4a50cb49aa9c7be271396dbac2e2f890e8d4f2ac))
+
 ## [2.3.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.2.0...v2.3.0) (2025-05-13)
 
 
