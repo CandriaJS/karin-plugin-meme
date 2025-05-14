@@ -203,9 +203,12 @@ export async function get_meme_server_pid (): Promise<string> {
       }
       case 'Linux':
       case 'Darwin':
+      {
         command = 'pgrep'
-        args = ['-f', get_meme_server_name() ?? '']
+        const serverPath = path.join(get_meme_server_path() ?? '', get_meme_server_name() ?? '')
+        args = ['-f', serverPath ?? '']
         break
+      }
       default:
         throw new Error('不支持的操作系统')
     }
@@ -253,7 +256,7 @@ export async function get_meme_server_runtime (): Promise<string> {
       case 'Linux':
       case 'Darwin':
         command = 'ps'
-        args = ['-p', pid, '-o', 'etime=']
+        args = ['-p', pid, '-o', 'time=']
         break
       default:
         throw new Error('不支持的操作系统')
@@ -281,17 +284,16 @@ export async function get_meme_server_runtime (): Promise<string> {
         throw new Error('无法解析WMIC输出的创建日期')
       }
     } else {
-      const etime = stdout.trim()
-      const etimeMatch = etime.trim().match(/(?:(\d+)-)?(?:(\d+):)?(\d+):(\d+)/)
-      if (etimeMatch) {
-        const [, days, hours, minutes, seconds] = etimeMatch
-        const diffMs = ((parseInt(days || '0') * 24 * 60 * 60) +
-        (parseInt(hours || '0') * 60 * 60) +
-        parseInt(minutes) * 60 +
-        parseInt(seconds)) * 1000
+      const time = stdout.trim()
+      const timeMatch = time.match(/(\d+):(\d+):(\d+)/)
+      if (timeMatch) {
+        const [, hours, minutes, seconds] = timeMatch
+        const diffMs = (parseInt(hours) * 60 * 60 +
+          parseInt(minutes) * 60 +
+          parseInt(seconds)) * 1000
         runtime = formatRuntime(diffMs)
       }
-      if (!etimeMatch) {
+      if (!timeMatch) {
         throw new Error('无法获取进程运行时间')
       }
     }
@@ -318,7 +320,7 @@ export async function get_meme_server_memory (): Promise<string> {
       case 'Linux':
       case 'Darwin':
         command = 'ps'
-        args = ['-p', process.pid.toString(), '-o', 'rss=']
+        args = ['-p', pid, '-o', 'rss=']
         break
       default:
         throw new Error('不支持的操作系统')
