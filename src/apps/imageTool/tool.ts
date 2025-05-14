@@ -11,6 +11,7 @@ export const flip_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -37,6 +38,7 @@ export const flip_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -47,7 +49,7 @@ export const flip_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:
     await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
-    await e.reply(`[${Version.Plugin_Name}]垂直翻转图片图片失败:: ${(error as Error).message}`)
+    await e.reply(`[${Version.Plugin_Name}]垂直翻转图片图片失败: ${(error as Error).message}`)
   }
 }, {
   name: '柠糖表情:图片操作:垂直翻转',
@@ -64,6 +66,7 @@ export const rotate = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:旋转)
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -77,7 +80,7 @@ export const rotate = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:旋转)
     await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
-    await e.reply(`[${Version.Plugin_Name}]旋转图片失败:: ${(error as Error).message}`)
+    await e.reply(`[${Version.Plugin_Name}]旋转图片失败: ${(error as Error).message}`)
   }
 }, {
   name: '柠糖表情:图片操作:旋转',
@@ -94,6 +97,7 @@ export const resize = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:缩放)
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -140,6 +144,7 @@ export const crop = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:裁剪)(?
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -201,6 +206,7 @@ export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰�
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
@@ -211,7 +217,7 @@ export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰�
     await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
     logger.error(error)
-    await e.reply(`[${Version.Plugin_Name}]灰度化图片失败:: ${(error as Error).message}`)
+    await e.reply(`[${Version.Plugin_Name}]灰度化图片失败: ${(error as Error).message}`)
   }
 }, {
   name: '柠糖表情:图片操作:灰度化',
@@ -227,6 +233,7 @@ export const invert = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:反色)
       image = avatarInfo.avatar
     } else {
       const msgImage = await utils.get_image(e, 'url')
+      if (!msgImage) return await e.reply('请发送图片', { reply: true })
       image = msgImage[0].image
     }
     if (!image) {
