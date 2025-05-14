@@ -261,7 +261,7 @@ export async function get_meme_server_runtime (): Promise<string> {
 
     const { status, stdout } = await exec(`${command} ${args.join(' ')}`)
     if (!status) throw new Error('获取表情服务端运行时间失败')
-    let runtime: string
+    let runtime: string = ''
 
     if (type === 'Windows_NT') {
       const match = stdout.match(/CreationDate=(\d+)/)
@@ -282,10 +282,18 @@ export async function get_meme_server_runtime (): Promise<string> {
       }
     } else {
       const etime = stdout.trim()
-      if (!etime) {
+      const etimeMatch = etime.trim().match(/(?:(\d+)-)?(?:(\d+):)?(\d+):(\d+)/)
+      if (etimeMatch) {
+        const [, days, hours, minutes, seconds] = etimeMatch
+        const diffMs = ((parseInt(days || '0') * 24 * 60 * 60) +
+        (parseInt(hours || '0') * 60 * 60) +
+        parseInt(minutes) * 60 +
+        parseInt(seconds)) * 1000
+        runtime = formatRuntime(diffMs)
+      }
+      if (!etimeMatch) {
         throw new Error('无法获取进程运行时间')
       }
-      runtime = etime
     }
 
     return runtime
