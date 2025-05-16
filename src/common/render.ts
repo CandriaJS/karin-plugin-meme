@@ -1,4 +1,6 @@
-import karin, { segment } from 'node-karin'
+import path from 'node:path'
+
+import karin, { ImageElement, segment } from 'node-karin'
 
 import { Config } from '@/common/config'
 import { Version } from '@/root'
@@ -26,7 +28,7 @@ const Render = {
     const img = await karin.render({
       type: 'jpeg',
       encoding: 'base64',
-      name: `${name}`.replace(/\\/g, '/'),
+      name: path.basename(name),
       file: `${root}/${name}.html`,
       data: {
         _res_path: `${Version.Plugin_Path}/resources`.replace(/\\/g, '/'),
@@ -38,12 +40,19 @@ const Render = {
         ...params
       },
       screensEval: '#containter',
+      multiPage: 12000,
       pageGotoParams: {
         waitUntil: 'networkidle0',
         timeout: 60000
       }
     })
-    return segment.image(`${img.startsWith('base64://') ? img : `base64://${img}`}`)
+    const ret: ImageElement[] = []
+    for (const image of img) {
+      const base64Image = image.startsWith('base64://') ? image : `base64://${image}`
+      ret.push(segment.image(base64Image))
+    }
+
+    return ret
   }
 }
 export { Render }

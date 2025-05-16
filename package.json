@@ -38,6 +38,7 @@
     "watch": "cross-env EBV_FILE=\"development.env\" tsx watch --include \"src/**/*.ts\" src/app.ts"
   },
   "dependencies": {
+    "@karinjs/plugin-puppeteer": "^1.0.16",
     "@types/adm-zip": "^0.5.7",
     "adm-zip": "^0.5.16",
     "axios-retry": "^4.5.0",
