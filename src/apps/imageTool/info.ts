@@ -1,6 +1,7 @@
 import karin, { logger, Message, segment } from 'node-karin'
 
 import { imageTool, utils } from '@/models'
+import { Version } from '@/root'
 
 export const info = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:查看)?(?:图片信息|imageinfo)$/i, async (e: Message) => {
   try {
@@ -23,7 +24,7 @@ export const info = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:查看)?(
     await e.reply(replyMessage, { reply: true })
   } catch (error) {
     logger.error(error)
-    await e.reply(`获取图片信息失败: ${(error as Error).message}`, { reply: true })
+    await e.reply(`[${Version.Plugin_AliasName}]获取图片信息失败: ${(error as Error).message}`, { reply: true })
   }
 }, {
   name: '柠糖表情:图片操作:查看图片信息',
