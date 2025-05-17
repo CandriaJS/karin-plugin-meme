@@ -72,6 +72,8 @@ export async function update_preset (force: boolean = false) {
     const preset = utils.preset
     await Promise.all(
       preset.map(async (preset) => {
+        const memeExists = await db.meme.get(preset.key)
+        if (!memeExists && !force) return
         await db.preset.add({
           name: preset.name,
           key: preset.key,
@@ -79,8 +81,7 @@ export async function update_preset (force: boolean = false) {
           option_value: preset.option_value
         }, {
           force
-        }
-        )
+        })
       })
     )
   } catch (error) {
