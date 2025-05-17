@@ -13,7 +13,7 @@ export const flip_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(
       image_id = await utils.upload_image(avatar.avatar, type)
     } else {
       image = await utils.get_image(e)
-      image_id = await utils.upload_image(image[0].image)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
 
     if (!image_id) {
@@ -40,7 +40,7 @@ export const flip_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:
       image_id = await utils.upload_image(avatar.avatar, type)
     } else {
       image = await utils.get_image(e)
-      image_id = await utils.upload_image(image[0].image)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
 
     if (!image_id) {
@@ -68,7 +68,7 @@ export const rotate = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:旋转)
       image_id = await utils.upload_image(avatar.avatar, type)
     } else {
       image = await utils.get_image(e)
-      image_id = await utils.upload_image(image[0].image)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
 
     if (!image_id) {
@@ -99,7 +99,7 @@ export const resize = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:缩放)
       image_id = await utils.upload_image(avatar.avatar, type)
     } else {
       image = await utils.get_image(e)
-      image_id = await utils.upload_image(image[0].image)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
 
     if (!image_id) {
@@ -146,7 +146,7 @@ export const crop = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:裁剪)(?
       image_id = await utils.upload_image(avatar.avatar, type)
     } else {
       image = await utils.get_image(e)
-      image_id = await utils.upload_image(image[0].image)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
 
     if (!image_id) {
@@ -208,7 +208,7 @@ export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰�
       image_id = await utils.upload_image(avatar.avatar, type)
     } else {
       image = await utils.get_image(e)
-      image_id = await utils.upload_image(image[0].image)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
 
     if (!image_id) {
@@ -235,7 +235,7 @@ export const invert = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:反色)
       image_id = await utils.upload_image(avatar.avatar, type)
     } else {
       image = await utils.get_image(e)
-      image_id = await utils.upload_image(image[0].image)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
 
     if (!image_id) {
