@@ -1,5 +1,20 @@
 # 变更日志
 
+## [2.3.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.3.1...v2.3.2) (2025-05-17)
+
+
+### 🐛 错误修复
+
+* **meme:** 优化初始化正则失败导致误触发 ([f3c0c4b](https://github.com/CandriaJS/karin-plugin-meme/commit/f3c0c4ba21fb0f37beea8d98f7884f83ac72462b))
+* **models:** 优化预设表情更新逻辑 ([ca02a1a](https://github.com/CandriaJS/karin-plugin-meme/commit/ca02a1a3ffab602a254b7fc29f4bf6784357f4c7))
+
+
+### ♻️ 代码重构
+
+* **imageTool:** 重构图片处理逻辑 ([#85](https://github.com/CandriaJS/karin-plugin-meme/issues/85)) ([0aab61b](https://github.com/CandriaJS/karin-plugin-meme/commit/0aab61bf22ac799dfcf4b15ebcd569379267bfe0))
+* **models:** 添加狠撅和狠骑两个新预设 ([4609f32](https://github.com/CandriaJS/karin-plugin-meme/commit/4609f32a35c34746bf705b64036528474e68e660))
+* 统一日志输出格式 ([92ca38e](https://github.com/CandriaJS/karin-plugin-meme/commit/92ca38ece110e666c22fe3f1cc182d02402383ef))
+
 ## [2.3.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.3.0...v2.3.1) (2025-05-14)
 
 
