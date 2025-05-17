@@ -5,13 +5,13 @@ const preset:PresetInfoResponseType[] = [
     name: '狠撅',
     key: 'do',
     option_name: 'fps',
-    option_value: 0.02
+    option_value: 50
   },
   {
     name: '狠骑',
     key: 'qi',
     option_name: 'fps',
-    option_value: 0.02
+    option_value: 50
   },
   /** ba说 */
   {

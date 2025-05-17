@@ -11,6 +11,7 @@ let memeRegExp: RegExp, presetRegExp: RegExp
  */
 const createRegex = async (getKeywords: () => Promise<string[]>): Promise<RegExp> => {
   const keywords = (await getKeywords()) ?? []
+  if (keywords.length === 0) return new RegExp('$^')
   const prefix = Config.meme.forceSharp ? '^#' : '^#?'
   const escapedKeywords = keywords.map((keyword) =>
     keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
