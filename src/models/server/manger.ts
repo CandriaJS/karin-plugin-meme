@@ -47,7 +47,7 @@ const config: MemeServerConfigType = {
  * @returns 启动结果
  */
 
-export async function start (port: number = 2233) {
+export async function start (port: number = 2255) {
   try {
     const configDir = path.join(os.homedir(), '.meme_generator')
     const configPath = path.join(configDir, 'config.toml')

@@ -374,7 +374,7 @@ export async function get_meme_server_meme_total (): Promise<string> {
  * @param port - 端口
  * @returns 初始化结果
  */
-export async function init_server (port: number = 2233): Promise<void> {
+export async function init_server (port: number = 2255): Promise<void> {
   try {
     const server_path = path.join(`${get_meme_server_path()}/${get_meme_server_name()}`)
     if (!await exists(server_path)) await download_server()

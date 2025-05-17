@@ -217,12 +217,12 @@ export async function get_image (
   /**
    * 获取引用消息的内容
    */
-  let MsgId: string | null | undefined = null
+  let MsgId: string | null = null
 
   if (e.replyId) {
-    MsgId = (await e.bot.getMsg(e.contact, e.replyId)).messageId
+    MsgId = (await e.bot.getMsg(e.contact, e.replyId)).messageId ?? null
   } else {
-    MsgId = e.elements.find((m) => m.type === 'reply')?.messageId
+    MsgId = e.elements.find((m) => m.type === 'reply')?.messageId ?? null
   }
 
   if (MsgId) {

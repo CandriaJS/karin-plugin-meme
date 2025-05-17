@@ -33,16 +33,20 @@ export async function handleImages (
   images = await Promise.all(imagePromises)
 
   if (allUsers.length > 0) {
-    const avatarBuffers = await utils.get_user_avatar(e, allUsers[0], 'url')
-    if (avatarBuffers) {
-      let image
-      if (Config.meme.enable) {
-        image = await utils.upload_image(avatarBuffers.avatar, 'path')
-      } else {
-        image = await utils.upload_image(avatarBuffers.avatar, 'url')
+    let avatar = await utils.get_user_avatar(e, allUsers[0], 'url')
+    if (!avatar) {
+      return {
+        success: false,
+        message: '获取用户头像失败'
       }
+    }
+
+    const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+    const image = await utils.upload_image(avatar.avatar, type)
+
+    if (image) {
       userAvatars.push({
-        name: await utils.get_user_name(e, avatarBuffers.userId),
+        name: await utils.get_user_name(e, avatar.userId),
         id: image
       })
     }
@@ -50,16 +54,20 @@ export async function handleImages (
 
   /** 获取引用消息的头像 */
   if (messageImages.length === 0 && quotedUser) {
-    const triggerAvatar = await utils.get_user_avatar(e, quotedUser, 'url')
-    if (triggerAvatar) {
-      let image
-      if (Config.meme.cache) {
-        image = await utils.upload_image(triggerAvatar.avatar, 'path')
-      } else {
-        image = await utils.upload_image(triggerAvatar.avatar, 'url')
+    let avatar = await utils.get_user_avatar(e, quotedUser, 'url')
+    if (!avatar) {
+      return {
+        success: false,
+        message: '获取用户头像失败'
       }
+    }
+
+    const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+    const image = await utils.upload_image(avatar.avatar, type)
+
+    if (image) {
       userAvatars.push({
-        name: await utils.get_user_name(e, triggerAvatar.userId),
+        name: await utils.get_user_name(e, avatar.userId),
         id: image
       })
     }
@@ -69,32 +77,40 @@ export async function handleImages (
    * 特殊处理：当 min_images === 1 时，因没有多余的图片，表情保护功能会失效
    */
   if (min_images === 1 && messageImages.length === 0) {
-    const triggerAvatar = await utils.get_user_avatar(e, e.userId, 'url')
-    if (triggerAvatar) {
-      let image
-      if (Config.meme.cache) {
-        image = await utils.upload_image(triggerAvatar.avatar, 'path')
-      } else {
-        image = await utils.upload_image(triggerAvatar.avatar, 'url')
+    let avatar = await utils.get_user_avatar(e, e.userId, 'url')
+    if (!avatar) {
+      return {
+        success: false,
+        message: '获取用户头像失败'
       }
+    }
+
+    const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+    const image = await utils.upload_image(avatar.avatar, type)
+
+    if (image) {
       userAvatars.push({
-        name: await utils.get_user_name(e, triggerAvatar.userId),
+        name: await utils.get_user_name(e, avatar.userId),
         id: image
       })
     }
   }
 
   if (images.length + userAvatars.length < min_images) {
-    const triggerAvatar = await utils.get_user_avatar(e, e.userId, 'url')
-    if (triggerAvatar) {
-      let image
-      if (Config.meme.enable) {
-        image = await utils.upload_image(triggerAvatar.avatar, 'path')
-      } else {
-        image = await utils.upload_image(triggerAvatar.avatar, 'url')
+    let avatar = await utils.get_user_avatar(e, e.userId, 'url')
+    if (!avatar) {
+      return {
+        success: false,
+        message: '获取用户头像失败'
       }
+    }
+
+    const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+    const image = await utils.upload_image(avatar.avatar, type)
+
+    if (image) {
       userAvatars.unshift({
-        name: await utils.get_user_name(e, triggerAvatar.userId),
+        name: await utils.get_user_name(e, avatar.userId),
         id: image
       })
     }
@@ -142,8 +158,8 @@ export async function handleImages (
     ? {
         success: false,
         message: min_images === max_images
-          ? `该表情需要${min_images}张图片`
-          : `该表情需要 ${min_images} ~ ${max_images}张图片`
+          ? `该表情至少需要需要${min_images}张图片`
+          : `该表情至少需要 ${min_images} ~ ${max_images} 张图片`
       }
     : {
         success: true,
