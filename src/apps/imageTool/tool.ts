@@ -1,23 +1,24 @@
 import karin, { common, logger, Message, segment } from 'node-karin'
 
+import { Config } from '@/common'
 import { imageTool, utils } from '@/models'
 import { Version } from '@/root'
 
 export const flip_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:水平翻转)(?:图片)?$/i, async (e: Message) => {
   try {
-    let image
-    const avatarInfo = await utils.get_user_avatar(e, e.at[0], 'url')
-    if (avatarInfo?.avatar) {
-      image = avatarInfo.avatar
+    let avatar, image, image_id
+    avatar = await utils.get_user_avatar(e, e.at[0], 'url')
+    if (avatar) {
+      const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+      image_id = await utils.upload_image(avatar.avatar, type)
     } else {
-      const msgImage = await utils.get_image(e, 'url')
-      if (!msgImage) return await e.reply('请发送图片', { reply: true })
-      image = msgImage[0].image
+      image = await utils.get_image(e)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
-    if (!image) {
+
+    if (!image_id) {
       return await e.reply('请发送图片', { reply: true })
     }
-    const image_id = await utils.upload_image(image)
     const reslut = await imageTool.flip_horizontal(image_id)
     await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
@@ -32,19 +33,19 @@ export const flip_horizontal = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(
 
 export const flip_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:垂直翻转)(?:图片)?$/i, async (e: Message) => {
   try {
-    let image
-    const avatarInfo = await utils.get_user_avatar(e, e.at[0], 'url')
-    if (avatarInfo?.avatar) {
-      image = avatarInfo.avatar
+    let avatar, image, image_id
+    avatar = await utils.get_user_avatar(e, e.at[0], 'url')
+    if (avatar) {
+      const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+      image_id = await utils.upload_image(avatar.avatar, type)
     } else {
-      const msgImage = await utils.get_image(e, 'url')
-      if (!msgImage) return await e.reply('请发送图片', { reply: true })
-      image = msgImage[0].image
+      image = await utils.get_image(e)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
-    if (!image) {
+
+    if (!image_id) {
       return await e.reply('请发送图片', { reply: true })
     }
-    const image_id = await utils.upload_image(image)
     const reslut = await imageTool.flip_vertical(image_id)
     await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
@@ -60,22 +61,22 @@ export const flip_vertical = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:
 export const rotate = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:旋转)(?:图片)?(?:\s*(\d+))?$/i, async (e: Message) => {
   try {
     const [, angle] = e.msg.match(rotate.reg)!
-    let image
-    const avatarInfo = await utils.get_user_avatar(e, e.at[0], 'url')
-    if (avatarInfo?.avatar) {
-      image = avatarInfo.avatar
+    let avatar, image, image_id
+    avatar = await utils.get_user_avatar(e, e.at[0], 'url')
+    if (avatar) {
+      const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+      image_id = await utils.upload_image(avatar.avatar, type)
     } else {
-      const msgImage = await utils.get_image(e, 'url')
-      if (!msgImage) return await e.reply('请发送图片', { reply: true })
-      image = msgImage[0].image
+      image = await utils.get_image(e)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
-    if (!image) {
+
+    if (!image_id) {
       return await e.reply('请发送图片', { reply: true })
     }
     if (!angle) {
       return await e.reply('请输入旋转角度')
     }
-    const image_id = await utils.upload_image(image)
     const reslut = await imageTool.rotate(image_id, parseInt(angle))
     await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
@@ -91,23 +92,23 @@ export const rotate = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:旋转)
 export const resize = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:缩放)(?:图片)?(?:\s*(\d+)(?:x(\d+)?|%)?)?$/i, async (e: Message) => {
   try {
     const [, width, height] = e.msg.match(resize.reg)!
-    let image
-    const avatarInfo = await utils.get_user_avatar(e, e.at[0], 'url')
-    if (avatarInfo?.avatar) {
-      image = avatarInfo.avatar
+    let avatar, image, image_id
+    avatar = await utils.get_user_avatar(e, e.at[0], 'url')
+    if (avatar) {
+      const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+      image_id = await utils.upload_image(avatar.avatar, type)
     } else {
-      const msgImage = await utils.get_image(e, 'url')
-      if (!msgImage) return await e.reply('请发送图片', { reply: true })
-      image = msgImage[0].image
+      image = await utils.get_image(e)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
-    if (!image) {
+
+    if (!image_id) {
       return await e.reply('请发送图片', { reply: true })
     }
     if (!width) {
       return await e.reply('请输入正确的尺寸格式, 如:100x100,100x,50%')
     }
 
-    const image_id = await utils.upload_image(image)
     const image_info = await imageTool.get_image_info(image_id)
     let finalWidth: number
     let finalHeight: number
@@ -138,23 +139,23 @@ export const resize = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:缩放)
 export const crop = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:裁剪)(?:图片)?(?:\s*([\d:x,]+))?$/i, async (e: Message) => {
   try {
     const [, cropParam] = e.msg.match(crop.reg)!
-    let image
-    const avatarInfo = await utils.get_user_avatar(e, e.at[0], 'url')
-    if (avatarInfo?.avatar) {
-      image = avatarInfo.avatar
+    let avatar, image, image_id
+    avatar = await utils.get_user_avatar(e, e.at[0], 'url')
+    if (avatar) {
+      const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+      image_id = await utils.upload_image(avatar.avatar, type)
     } else {
-      const msgImage = await utils.get_image(e, 'url')
-      if (!msgImage) return await e.reply('请发送图片', { reply: true })
-      image = msgImage[0].image
+      image = await utils.get_image(e)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
-    if (!image) {
+
+    if (!image_id) {
       return await e.reply('请发送图片', { reply: true })
     }
     if (!cropParam) {
       return await e.reply('请输入正确的裁剪格式 ,如:[0,0,100,100],[100x100],[2:1]')
     }
 
-    const image_id = await utils.upload_image(image)
     const image_info = await imageTool.get_image_info(image_id)
     let left: number, top: number, right: number, bottom: number
 
@@ -200,19 +201,19 @@ export const crop = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:裁剪)(?
 
 export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰度化)(?:图片)?$/i, async (e: Message) => {
   try {
-    let image
-    const avatarInfo = await utils.get_user_avatar(e, e.at[0], 'url')
-    if (avatarInfo?.avatar) {
-      image = avatarInfo.avatar
+    let avatar, image, image_id
+    avatar = await utils.get_user_avatar(e, e.at[0], 'url')
+    if (avatar) {
+      const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+      image_id = await utils.upload_image(avatar.avatar, type)
     } else {
-      const msgImage = await utils.get_image(e, 'url')
-      if (!msgImage) return await e.reply('请发送图片', { reply: true })
-      image = msgImage[0].image
+      image = await utils.get_image(e)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
-    if (!image) {
+
+    if (!image_id) {
       return await e.reply('请发送图片', { reply: true })
     }
-    const image_id = await utils.upload_image(image)
     const reslut = await imageTool.grayscale(image_id)
     await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
@@ -227,19 +228,19 @@ export const grayscale = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:灰�
 
 export const invert = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:反色)(?:图片)?$/i, async (e: Message) => {
   try {
-    let image
-    const avatarInfo = await utils.get_user_avatar(e, e.at[0], 'url')
-    if (avatarInfo?.avatar) {
-      image = avatarInfo.avatar
+    let avatar, image, image_id
+    avatar = await utils.get_user_avatar(e, e.at[0], 'url')
+    if (avatar) {
+      const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
+      image_id = await utils.upload_image(avatar.avatar, type)
     } else {
-      const msgImage = await utils.get_image(e, 'url')
-      if (!msgImage) return await e.reply('请发送图片', { reply: true })
-      image = msgImage[0].image
+      image = await utils.get_image(e)
+      image_id = image && image.length > 0 ? await utils.upload_image(image[0].image) : null
     }
-    if (!image) {
+
+    if (!image_id) {
       return await e.reply('请发送图片', { reply: true })
     }
-    const image_id = await utils.upload_image(image)
     const reslut = await imageTool.invert(image_id)
     await e.reply([segment.image(`base64://${await imageTool.get_image(reslut, 'base64')}`)])
   } catch (error) {
