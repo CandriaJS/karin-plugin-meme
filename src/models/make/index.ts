@@ -1,6 +1,7 @@
 import { base64, logger, Message } from 'node-karin'
 
-import { utils } from '@/models'
+import { Config } from '@/common'
+import { db, utils } from '@/models'
 import { handleImages } from '@/models/make/images'
 import { handleOption } from '@/models/make/options'
 import { handleTexts } from '@/models/make/texts'
@@ -75,6 +76,17 @@ export async function make_meme (
     }
     const response = await utils.make_meme(memekey, formdata)
     const basedata = await base64(response)
+    if (Config.stat.enable && e.isGroup) {
+      const groupStart = (await db.stat.get({
+        groupId: e.groupId,
+        memeKey: memekey
+      }))?.count ?? 0
+      await db.stat.add({
+        groupId: e.groupId,
+        memeKey: memekey,
+        count: Number(groupStart) + 1
+      })
+    }
     return `base64://${basedata}`
   } catch (error) {
     logger.error(error)

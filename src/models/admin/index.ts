@@ -136,16 +136,16 @@ export const AdminTypeConfig: Record<string, AdminConfigType> = {
       }
     }
   },
-  // stat: {
-  //   title: '统计设置',
-  //   cfg: {
-  //     enable: {
-  //       title: '表情统计',
-  //       desc: '是否开启表情统计',
-  //       type: 'boolean'
-  //     }
-  //   }
-  // },
+  stat: {
+    title: '统计设置',
+    cfg: {
+      enable: {
+        title: '表情统计',
+        desc: '是否开启表情统计',
+        type: 'boolean'
+      }
+    }
+  },
   other: {
     title: '其他设置',
     cfg: {
