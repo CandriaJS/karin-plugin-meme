@@ -14,6 +14,11 @@ export const helpList:HelpListType = [
         desc: '获取表情列表'
       },
       {
+        icon: 141,
+        title: '#柠糖表情统计',
+        desc: '获取表情统计'
+      },
+      {
         icon: 90,
         title: '#柠糖表情搜索xx',
         desc: '搜指定的表情'
