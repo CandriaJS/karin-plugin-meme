@@ -78,11 +78,7 @@ export async function add ({
   force?: boolean
 } = {}): Promise<[Model, boolean | null]> {
   if (force) {
-    await table.destroy({
-      where: {
-        key
-      }
-    })
+    await clear()
   }
   name = String(name)
   const data = {
@@ -161,4 +157,14 @@ export async function getAll (): Promise<Model[]> {
  */
 export async function remove (key: string): Promise<boolean> {
   return Boolean(await table.destroy({ where: { key } }))
+}
+
+/**
+ * 清空所有表情预设记录
+ */
+export async function clear (): Promise<void> {
+  await table.destroy({
+    truncate: true
+  })
+  await sequelize.query('DELETE FROM sqlite_sequence WHERE name = "preset"')
 }

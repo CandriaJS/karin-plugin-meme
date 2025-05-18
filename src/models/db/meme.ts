@@ -131,13 +131,9 @@ export async function add ({
   force = false
 }: {
   force?: boolean
-} = {}): Promise<[Model, boolean | null]> {
+}): Promise<[Model, boolean | null]> {
   if (force) {
-    await table.destroy({
-      where: {
-        key
-      }
-    })
+    await clear()
   }
   const data = {
     key,
@@ -231,4 +227,14 @@ export async function getTagsByAbout (tag: string): Promise<Model[]> {
  */
 export async function getAll (): Promise<Model[]> {
   return await table.findAll() as Model[]
+}
+
+/**
+ * 清空所有表情信息
+ */
+export async function clear (): Promise<void> {
+  await table.destroy({
+    truncate: true
+  })
+  await sequelize.query('DELETE FROM sqlite_sequence WHERE name = "meme"')
 }
