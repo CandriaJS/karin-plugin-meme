@@ -68,7 +68,7 @@ export const update = karin.command(/^#?(?:(?:柠糖)?表情)(?:插件)?(?:(强�
   permission: 'master'
 })
 
-export const updateRes = karin.command(/^#?(?:(?:柠糖)?表情)更新(表情包)?(资源|数据)?$/i, async (e: Message) => {
+export const updateRes = karin.command(/^#?(?:(?:柠糖)?表情)更新(?:表情(?:包)?)?(?:资源|数据)?$/i, async (e: Message) => {
   try {
     await e.reply('正在更新表情包数据...')
     await utils.update_meme(true)

@@ -166,11 +166,25 @@ export async function get_preset_all_keywords (): Promise<string[] | null> {
  * @param keyword 关键词
  * @returns 键值
  */
-export async function get_preset_key_by_keyword (keyword: string): Promise<string | null> {
+export async function get_preset_key (keyword: string): Promise<string | null> {
   const res = await get_preset_info_by_keyword(keyword)
   if (!res) return null
   return res.key
 }
+
+/**
+ * 通过表情的键值获取预设表情的关键词
+ * @param key 表情的唯一标识符
+ * @returns 预设表情信息
+ */
+export async function get_preset_keyword (key: string): Promise<string[] | null> {
+  const res = await db.preset.getAll()
+  const filteredOptions = res
+    .filter(preset => preset.key === key)
+    .map(preset => preset.name)
+  return filteredOptions.length > 0 ? filteredOptions : null
+}
+
 /**
  * 获取指定的预设表情信息
  * @param key 表情的唯一标识符
@@ -191,11 +205,21 @@ export async function get_preset_info_by_keyword (keyword: string): Promise<Pres
 
 /**
  * 获取所有相关预设表情的键值
+ * @param keyword 表情的关键词
+ * @returns 所有相关预设表情的键值列表
+ */
+export async function get_preset_all_about_keywords (keyword: string): Promise<string[] | null> {
+  const res = await db.preset.getByKeyWordAbout(keyword)
+  return res.map(preset => preset.name).flat() ?? null
+}
+
+/**
+ * 获取所有相关预设表情的关键词
  * @param key 表情的唯一标识符
  * @returns 所有相关预设表情的键值列表
  */
-export async function get_preset_all_about_keywords_by_key (keywords: string): Promise<string[] | null> {
-  const res = await db.preset.getAbout(keywords)
+export async function get_preset_all_about_keywords_by_key (key: string): Promise<string[] | null> {
+  const res = await db.preset.getAbout(key)
   return res.map(preset => preset.name).flat() ?? null
 }
 

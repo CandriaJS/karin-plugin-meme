@@ -1,4 +1,4 @@
-import { col, DataTypes, fn, literal, Op, sequelize } from '@/models/db/base'
+import { DataTypes, Op, sequelize } from '@/models/db/base'
 import type { dbType } from '@/types'
 type Model = dbType['preset']
 /**
@@ -78,11 +78,7 @@ export async function add ({
   force?: boolean
 } = {}): Promise<[Model, boolean | null]> {
   if (force) {
-    await table.destroy({
-      where: {
-        key
-      }
-    })
+    await clear()
   }
   name = String(name)
   const data = {
@@ -141,7 +137,9 @@ export async function getByKeyWord (keyword: string): Promise<Model | null> {
 export async function getByKeyWordAbout (keyword: string): Promise<Model[]> {
   return await table.findAll({
     where: {
-      name: keyword
+      name: {
+        [Op.like]: `%${keyword}%`
+      }
     }
   }) as Model[]
 }
@@ -161,4 +159,14 @@ export async function getAll (): Promise<Model[]> {
  */
 export async function remove (key: string): Promise<boolean> {
   return Boolean(await table.destroy({ where: { key } }))
+}
+
+/**
+ * 清空所有表情预设记录
+ */
+export async function clear (): Promise<void> {
+  await table.destroy({
+    truncate: true
+  })
+  await sequelize.query('DELETE FROM sqlite_sequence WHERE name = "preset"')
 }

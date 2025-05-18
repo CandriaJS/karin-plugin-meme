@@ -11,7 +11,9 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
     /** 关键词搜索 */
     const keywords = await utils.get_meme_keywords_by_about(searchKey)
     /** 键值搜索 */
-    const keys = await utils.get_meme_keys_by_about(searchKey)
+    const keys = await Promise.all(
+      (await utils.get_meme_keys_by_about(searchKey) ?? []).map(key => utils.get_meme_keyword(key))
+    )
 
     /** tag搜索 */
     const [keyTags, keywordTags] = await Promise.all([
@@ -24,12 +26,16 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
 
     const tags = [...(keyTagsKeywords.filter(Boolean) ?? []), ...(keywordTags ?? [])]
 
-    if (!keywords?.length && !keys?.length && !tags?.length) {
+    /** 预设表情搜索 */
+    const preset = await utils.get_preset_all_about_keywords(searchKey) ?? await utils.get_preset_all_about_keywords_by_key(searchKey) ?? []
+
+    /** 关键词搜索 */
+    if (!keywords?.length && !keys?.length && !tags?.length && !preset?.length) {
       await e.reply(`没有找到${searchKey}相关的表情`)
       return true
     }
 
-    const allResults = [...(keywords ?? []), ...(keys ?? []), ...(tags ?? [])]
+    const allResults = [...(keywords ?? []), ...(keys ?? []), ...(preset ?? []), ...(tags ?? [])]
 
     const replyMessage = allResults
       .map((kw, index) => `${index + 1}. ${kw}`)
@@ -38,7 +44,7 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
     await e.reply([segment.text('你可能在找以下表情：\n' + replyMessage)], { reply: true })
     return true
   } catch (error) {
-    await e.reply('搜索出错了：' + (error as Error).message)
+    await e.reply(`搜索出错了：${(error as Error).message}`)
     return false
   }
 }, {
