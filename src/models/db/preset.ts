@@ -1,4 +1,4 @@
-import { col, DataTypes, fn, literal, Op, sequelize } from '@/models/db/base'
+import { DataTypes, Op, sequelize } from '@/models/db/base'
 import type { dbType } from '@/types'
 type Model = dbType['preset']
 /**
@@ -137,7 +137,9 @@ export async function getByKeyWord (keyword: string): Promise<Model | null> {
 export async function getByKeyWordAbout (keyword: string): Promise<Model[]> {
   return await table.findAll({
     where: {
-      name: keyword
+      name: {
+        [Op.like]: `%${keyword}%`
+      }
     }
   }) as Model[]
 }
