@@ -1,4 +1,8 @@
-import karin, { common, logger, Message, segment } from 'node-karin'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
+import AdmZip from 'adm-zip'
+import karin, { common, exists, karinPathBase, logger, Message, segment } from 'node-karin'
 
 import { Config } from '@/common'
 import { imageTool, utils } from '@/models'
@@ -307,6 +311,20 @@ export const gif_split = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
     const images = await Promise.all(
       reslut.map(id => imageTool.get_image(id, 'base64'))
     )
+    const zip = new AdmZip()
+    images.forEach((img, index) => {
+      zip.addFile(`image_${index}.png`, Buffer.from((img as string), 'base64'))
+    })
+    const timestamp = Date.now()
+    const zipPath = path.join(karinPathBase, Version.Plugin_Name, 'data', 'temp', `gif分解-${timestamp}.zip`)
+    const zipName = path.basename(zipPath)
+    zip.writeZip(zipPath)
+    const type = e.isGroup ? 'group' : 'private'
+    const id = e.isGroup ? e.groupId : e.userId
+    await utils.send_file(type, Number(e.bot.selfId), Number(id), zipPath, zipName)
+    if (await exists(zipPath)) {
+      await fs.rm(zipPath)
+    }
 
     const replyMessage = [
       segment.text('============\n'),
@@ -339,7 +357,7 @@ export const gif_merge = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
   try {
     const images = await utils.get_image(e, 'url')
     if (!images || images.length < 2) {
-      return await e.reply('请发送至少两张图片进行分解', { reply: true })
+      return await e.reply('请发送至少两张图片进行拼接', { reply: true })
     }
     const image_ids = await Promise.all(
       images.map(img => utils.upload_image(img.image))
