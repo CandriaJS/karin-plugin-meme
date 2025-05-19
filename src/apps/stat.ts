@@ -16,13 +16,23 @@ export const staat = karin.command(/^#?(?:(?:柠糖)?表情)(?:调用)?统计$/i
   }
   let total = 0
   const formattedStats: { keywords: string; count: number }[] = []
+  const memeKeyMap = new Map<string, number>()
 
-  await Promise.all(statsData.map(async (data) => {
+  statsData.forEach(data => {
     const { memeKey, count } = data
+    memeKeyMap.set(memeKey, (memeKeyMap.get(memeKey) ?? 0) + count)
+  })
+
+  await Promise.all([...memeKeyMap.entries()].map(async ([memeKey, count]) => {
     total += count
-    const keywords = await utils.get_meme_keyword(memeKey)
-    if (keywords?.length) {
-      formattedStats.push({ keywords: keywords.join(', '), count })
+    const allKeywords = [
+      ...new Set([
+        ...(await utils.get_meme_keyword(memeKey) ?? []),
+        ...(await utils.get_preset_keyword(memeKey) ?? [])
+      ])
+    ]
+    if (allKeywords?.length) {
+      formattedStats.push({ keywords: allKeywords.join(', '), count })
     }
   }))
 
