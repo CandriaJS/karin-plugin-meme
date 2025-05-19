@@ -214,34 +214,13 @@ jobs:
             - 此版本是基于快照 [`${{ needs.beta-version.outputs.short_commit_hash }}`](https://github.com/${{ github.repository }}/tree/${{ needs.beta-version.outputs.short_commit_hash }}) 所构建的，[**点击此处查看更改**](https://github.com/${{ github.repository }}/commit/${{ needs.beta-version.outputs.short_commit_hash }}) By @${{ github.actor }}
 
             ### 安装该版本
-            **以下安装方式任选其一**
             ---
-            <details>
-            <summary>使用 Git</summary>
-            
-            **插件根目录** 下执行
-            ```sh
-            git fetch origin
-            ```
-            ```sh
-            git checkout ${{ needs.beta-version.outputs.short_commit_hash }}
-            ```
-
-            若报错缺失依赖，可先运行 `pnpm install` 安装或更新依赖。
-
-            </details>
-           
-
-            <details>
-            <summary>使用包管理器</summary>
           
             **Karin 根目录** 下执行
 
             ```sh
             pnpm add https://pkg.pr.new/${{ github.repository }}/${{ needs.beta-version.outputs.package_name }}@${{ needs.beta-version.outputs.short_commit_hash }} -w
             ```
-
-            </details>
             
             ---
             **此版本非正式版本，可能存在一些问题，请谨慎使用！**

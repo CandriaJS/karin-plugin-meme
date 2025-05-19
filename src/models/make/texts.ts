@@ -26,7 +26,7 @@ export async function handleTexts (
   }
 
   const memeInfo = await utils.get_meme_info(memekey)
-  const default_texts = memeInfo?.default_texts ?? null
+  const default_texts = memeInfo?.default_texts ? JSON.parse(String(memeInfo.default_texts)) : []
   if (
     texts.length < min_texts &&
     default_texts

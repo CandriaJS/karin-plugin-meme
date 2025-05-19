@@ -1,4 +1,4 @@
-import { logger } from 'node-karin'
+import karin, { logger, segment } from 'node-karin'
 
 import { db, imageTool, utils } from '@/models'
 import Request from '@/models/utils/request'
@@ -434,5 +434,33 @@ export async function make_meme (memekey: string, data: Record<string, unknown>)
   } catch (error) {
     logger.error(error)
     throw new Error((error as Error).message)
+  }
+}
+
+/**
+ * 向指定的群或好友发送文件
+ * @param type 发送的类型
+ * - group 为群
+ * - private 为好友
+ * @param botId 机器人的id
+ * @param id 群或好友的id
+ * @param file 文件路径
+ * @param name 文件名称
+ * @returns 发送结果
+ */
+export async function send_file (type: 'group' | 'private', botId: number, id: number, file: string, name: string) {
+  try {
+    const bot = karin.getBot(String(botId))
+    let Contact
+    if (type === 'group') {
+      Contact = karin.contactGroup(String(id))
+    } else if (type === 'private') {
+      Contact = karin.contactFriend(String(id))
+    } else {
+      throw new Error('type 必须为 group 或 private')
+    }
+    return await bot?.uploadFile(Contact, file, name)
+  } catch (error) {
+    throw new Error(`向${type === 'group' ? '群' : '好友'} ${id} 发送文件失败: ${(error as Error).message}`)
   }
 }
