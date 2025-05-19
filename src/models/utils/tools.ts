@@ -1,4 +1,4 @@
-import karin, { logger } from 'node-karin'
+import karin, { logger, segment } from 'node-karin'
 
 import { db, imageTool, utils } from '@/models'
 import Request from '@/models/utils/request'
@@ -450,7 +450,7 @@ export async function make_meme (memekey: string, data: Record<string, unknown>)
  */
 export async function send_file (type: 'group' | 'private', botId: number, id: number, file: string, name: string) {
   try {
-    const bot = karin.getBot(Number(botId))
+    const bot = karin.getBot(String(botId))
     let Contact
     if (type === 'group') {
       Contact = karin.contactGroup(String(id))

@@ -316,12 +316,12 @@ export const gif_split = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
       zip.addFile(`image_${index}.png`, Buffer.from((img as string), 'base64'))
     })
     const timestamp = Date.now()
-    const zipPath = path.join(karinPathBase, Version.Plugin_Name, 'data', 'temp', `gif分解-${timestamp}.zip`)
+    const zipPath = path.join(karinPathBase, Version.Plugin_Name, 'data', 'temp', `gif分解-${timestamp}.zip`).replace(/\\/g, '/')
     const zipName = path.basename(zipPath)
     zip.writeZip(zipPath)
     const type = e.isGroup ? 'group' : 'private'
     const id = e.isGroup ? e.groupId : e.userId
-    await utils.send_file(type, Number(e.bot.selfId), Number(id), zipPath, zipName)
+    await utils.send_file(type, Number(e.bot.selfId), Number(id), `file://${zipPath}`, zipName)
     if (await exists(zipPath)) {
       await fs.rm(zipPath)
     }

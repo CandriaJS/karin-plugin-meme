@@ -17,50 +17,23 @@
 
 如有问题请提交 `issue` 或加入 Q 群: `272040396` 📬
 
+>[!TIP]
+>自`V2`版本起，已内置服务端的下载，在`server.yaml`中配置`mode`为`1`即可使用
+>但需手动下载表情资源, 在data/server目录下执行以下命令. windows用户需要加.exe后缀
+>```bash
+>meme download
+>```
+
 ## 安装与更新 🔧
 
-<details>
-  <summary><code>Karin</code> 🤖</summary>
-    <details>
-    <summary>使用 <code>Github</code> 🐙</summary>
-
-```bash
-git clone --depth=1 -b build https://github.com/CandriaJS/karin-plugin-meme ./plugins/karin-plugin-meme/
-```
-  </details>
-
-  <details>
-    <summary>使用 <code>Github</code> 镜像 🌐</summary>
-
-```bash
-git clone --depth=1 -b build https://gh.wuliya.xin/https://github.com/CandriaJS/karin-plugin-meme ./plugins/karin-plugin-meme/
-```
-
-  </details>
-    <details>
-    <summary>使用 <code>包管理器</code> 📦</summary>
+在`Karin`目录执行以下命令
 
 ```bash
 pnpm add @candriajs/karin-plugin-meme@latest -w
 ```
 
-  </details>
-</details>
-
-### 安装依赖 📦
-
->[!TIP]
-> 使用包管理器安装无需执行
-
-```bash
-pnpm install --filter=@candriajs/karin-plugin-meme
-```
-
 ## 使用帮助 ℹ️
 其他内容请查看 [官方文档](https://docs.wuliya.cn)
-
-### 表情后端搭建教程 🌟
-<mark>请查看文档</mark>
 
 ## 更新计划 🛠
 
