@@ -319,9 +319,16 @@ export const gif_split = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
     const zipPath = path.join(karinPathBase, Version.Plugin_Name, 'data', 'temp', `gif分解-${timestamp}.zip`).replace(/\\/g, '/')
     const zipName = path.basename(zipPath)
     zip.writeZip(zipPath)
-    const type = e.isGroup ? 'group' : 'private'
-    const id = e.isGroup ? e.groupId : e.userId
-    await utils.send_file(type, Number(e.bot.selfId), Number(id), `file://${zipPath}`, zipName)
+    try {
+      let file
+      const fileBuffer = await fs.readFile(zipPath)
+      file = `base64://${fileBuffer.toString('base64')}`
+      const type = e.isGroup ? 'group' : 'private'
+      const id = e.isGroup ? e.groupId : e.userId
+      await utils.send_file(type, Number(e.bot.selfId), Number(id), file, zipName)
+    } catch (error) {
+      logger.warn('上传文件失败, 跳过文件发送')
+    }
     if (await exists(zipPath)) {
       await fs.rm(zipPath)
     }
