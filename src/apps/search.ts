@@ -28,14 +28,26 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
 
     /** 预设表情搜索 */
     const preset = await utils.get_preset_all_about_keywords(searchKey) ?? await utils.get_preset_all_about_keywords_by_key(searchKey) ?? []
+    const presetKeys = await Promise.all(
+      preset.map(async (preset) => {
+        const presetKey = await utils.get_preset_key(preset)
+        return presetKey
+      })
+    )
+    const presetKeywords = await Promise.all(
+      presetKeys.map(async (presetKeys) => {
+        const keywords = await utils.get_meme_keyword(String(presetKeys))
+        return keywords ?? []
+      })
+    )
 
     /** 关键词搜索 */
-    if (!keywords?.length && !keys?.length && !tags?.length && !preset?.length) {
+    if (!keywords?.length && !keys?.length && !tags?.length && !presetKeywords?.length) {
       await e.reply(`没有找到${searchKey}相关的表情`)
       return true
     }
 
-    const allResults = [...(keywords ?? []), ...(keys ?? []), ...(preset ?? []), ...(tags ?? [])]
+    const allResults = [...(keywords ?? []), ...(keys ?? []), ...(presetKeywords ?? []), ...(tags ?? [])]
 
     const replyMessage = allResults
       .map((kw, index) => `${index + 1}. ${kw}`)
