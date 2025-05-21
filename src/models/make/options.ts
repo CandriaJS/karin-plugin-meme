@@ -7,34 +7,34 @@ export async function handleOption (
   memekey: string,
   userText: string,
   formdata: Record<string, unknown>,
-  isPreset? : boolean
+  isPreset? : boolean,
+  PresetKeyWord?: string
 ): Promise<
 | { success: true, text: string }
 | { success: false, message: string }
 > {
   let options: Record<string, unknown> = {}
   const optionsMatches = userText.match(/#(\S+)\s+([^#]+)/g)
-  const optionArray: { name: string; value: string }[] = []
+  const optionArray: { name: string; value: string | number }[] = []
 
   if (isPreset) {
-    const presetInfo = await utils.get_preset_info(memekey)
+    const presetInfo = await utils.get_preset_info_by_keyword(PresetKeyWord!)
     if (!presetInfo) {
       return {
         success: false,
         message: '获取预设信息失败'
       }
     }
-    optionArray.push({ name: presetInfo.option_name, value: presetInfo.option_value as string })
-  } else {
-    if (optionsMatches) {
-      for (const match of optionsMatches) {
-        const [, name, value] = match.match(/#(\S+)\s+([^#]+)/)! ?? null
-        if (name && value) {
-          optionArray.push({
-            name: name.trim(),
-            value: value.trim()
-          })
-        }
+    optionArray.push({ name: presetInfo.option_name, value: presetInfo.option_value })
+  }
+  if (optionsMatches) {
+    for (const match of optionsMatches) {
+      const [, name, value] = match.match(/#(\S+)\s+([^#]+)/)! ?? null
+      if (name && value) {
+        optionArray.push({
+          name: name.trim(),
+          value: value.trim()
+        })
       }
     }
   }
@@ -65,7 +65,6 @@ export async function handleOption (
         message: result.message!
       }
     }
-
     options[option.name] = result.value
   }
 
@@ -86,7 +85,7 @@ export async function handleOption (
  * @returns 转换结果对象
  */
 function convertOptionValue (
-  option: { name: string; value: string },
+  option: { name: string; value: string | number },
   supportedOption: MemeOptionType
 ): { success: boolean; value?: unknown; message?: string } {
   let convertedValue: boolean | number | string
@@ -94,7 +93,7 @@ function convertOptionValue (
   switch (supportedOption.type) {
     case 'boolean':
     {
-      const boolValue = option.value.toLowerCase()
+      const boolValue = String(option.value).toLowerCase()
       if (['true', '真', '是', 'yes', '1'].includes(boolValue)) {
         convertedValue = true
       } else if (['false', '假', '否', 'no', '0'].includes(boolValue)) {
@@ -110,7 +109,7 @@ function convertOptionValue (
 
     case 'integer':
     {
-      const intValue = parseInt(option.value)
+      const intValue = parseInt(String(option.value))
       if (isNaN(intValue)) {
         return {
           success: false,
@@ -137,7 +136,7 @@ function convertOptionValue (
 
     case 'float':
     {
-      const floatValue = parseFloat(option.value)
+      const floatValue = parseFloat(String(option.value))
       if (isNaN(floatValue)) {
         return {
           success: false,
@@ -164,7 +163,7 @@ function convertOptionValue (
 
     case 'string':
       convertedValue = option.value
-      if (supportedOption.choices && !supportedOption.choices.includes(convertedValue)) {
+      if (supportedOption.choices && !supportedOption.choices.includes(String(convertedValue))) {
         return {
           success: false,
           message: `参数 ${option.name} 的值必须是: ${supportedOption.choices.join(', ')} 之一`

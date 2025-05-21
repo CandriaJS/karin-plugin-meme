@@ -16,8 +16,9 @@ export async function make_meme (
   max_images: number,
   options: MemeOptionType[] | null,
   userText: string,
-  isPreset?: boolean
-) {
+  isPreset?: boolean,
+  PresetKeyWord?: string
+): Promise<string> {
   try {
     const getquotedUser = async (e: Message): Promise<string | null> => {
       let source = null
@@ -54,7 +55,7 @@ export async function make_meme (
     }
 
     if (options) {
-      const option = await handleOption(e, memekey, userText, formdata, isPreset)
+      const option = await handleOption(e, memekey, userText, formdata, isPreset, PresetKeyWord)
       if (!option.success) {
         throw new Error(option.message)
       }
