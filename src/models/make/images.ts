@@ -133,17 +133,17 @@ export async function handleImages (
           /** 优先检查引用消息的用户 */
           const protectUser = quotedUser ??
             (allProtectedUsers.length === 1 ? allProtectedUsers[0] : allProtectedUsers[1])
-
-          if (Config.protect.master) {
-            if (!e.isMaster && masterQQArray.includes(protectUser)) {
+          if (!e.isMaster) {
+            if (masterQQArray.includes(protectUser)) {
               userAvatars.reverse()
             }
-          } else if (Config.protect.userEnable) {
-            const protectUsers = Array.isArray(Config.protect.user)
-              ? Config.protect.user.map(String)
-              : [String(Config.protect.user)]
-            if (protectUsers.includes(protectUser)) {
-              userAvatars.reverse()
+            if (Config.protect.userEnable) {
+              const protectUsers = Array.isArray(Config.protect.user)
+                ? Config.protect.user.map(String)
+                : [String(Config.protect.user)]
+              if (protectUsers.includes(protectUser)) {
+                userAvatars.reverse()
+              }
             }
           }
         }
