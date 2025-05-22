@@ -1,4 +1,5 @@
 import axiosRetry from 'axios-retry'
+import { logger } from 'node-karin'
 import axios, {
   type AxiosError,
   type AxiosInstance,
@@ -87,6 +88,7 @@ class Request {
         msg: response.status >= 200 && response.status < 500 ? '请求成功' : '请求失败'
       }
     } catch (error) {
+      logger.error(error)
       const axiosError = error as AxiosError
       const errorMessage = this.handleError(axiosError)
       return {

@@ -44,7 +44,7 @@ export async function handleTexts (
         success: false,
         message: min_texts === max_texts
           ? `该表情需要${min_texts}个文本`
-          : `该表情需要 ${min_texts} ~ ${max_texts}个文本`
+          : `该表情至少需要 ${min_texts} ~ ${max_texts} 个文本`
       }
     : {
         success: true,

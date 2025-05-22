@@ -134,8 +134,10 @@ export async function handleImages (
           const protectUser = quotedUser ??
             (allProtectedUsers.length === 1 ? allProtectedUsers[0] : allProtectedUsers[1])
           if (!e.isMaster) {
-            if (masterQQArray.includes(protectUser)) {
-              userAvatars.reverse()
+            if (Config.protect.master) {
+              if (masterQQArray.includes(protectUser)) {
+                userAvatars.reverse()
+              }
             }
             if (Config.protect.userEnable) {
               const protectUsers = Array.isArray(Config.protect.user)
@@ -158,7 +160,7 @@ export async function handleImages (
     ? {
         success: false,
         message: min_images === max_images
-          ? `该表情至少需要需要${min_images}张图片`
+          ? `该表情需要${min_images}张图片`
           : `该表情至少需要 ${min_images} ~ ${max_images} 张图片`
       }
     : {
