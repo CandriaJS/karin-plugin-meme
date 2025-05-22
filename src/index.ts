@@ -5,6 +5,8 @@ import { Config } from '@/common'
 import { server, utils } from '@/models'
 import { Version } from '@/root'
 
+import { init, updateRegExp } from './apps/meme'
+
 let responseData = '加载失败'
 try {
   const response = await axios.get(
@@ -27,12 +29,6 @@ try {
   logger.error(logger.chalk.bold.red(`💥 表情服务端启动失败！错误详情：${(error as Error).message}`))
 }
 
-try {
-  await utils.init()
-  logger.info(logger.chalk.bold.cyan('🎉 表情包数据加载成功！'))
-} catch (error) {
-  logger.error(logger.chalk.bold.red(`💥 表情包数据加载失败！错误详情：${(error as Error).message}`))
-}
 logger.info(
   logger.chalk.bold.blue('🌍 当前运行环境: ') +
   logger.chalk.bold.white(`${Version.Bot_Name}`) +

@@ -4,14 +4,26 @@ import { Config } from '@/common'
 import { make, utils } from '@/models'
 import { Version } from '@/root'
 
-let memeRegExp: RegExp, presetRegExp: RegExp
+let memeRegExp: RegExp | null, presetRegExp: RegExp | null
 
+/**
+ * 初始化
+ */
+export const init = async () => {
+  try {
+    await init()
+    logger.info(logger.chalk.bold.cyan('🎉 表情包数据加载成功！'))
+  } catch (error) {
+    logger.error(logger.chalk.bold.red(`💥 表情包数据加载失败！错误详情：${(error as Error).message}`))
+  }
+}
+await init()
 /**
  * 生成正则
  */
-const createRegex = async (getKeywords: () => Promise<string[]>): Promise<RegExp> => {
+const createRegex = async (getKeywords: () => Promise<string[]>): Promise<RegExp | null> => {
   const keywords = (await getKeywords()) ?? []
-  if (keywords.length === 0) return new RegExp('$^')
+  if (keywords.length === 0) return null
   const prefix = Config.meme.forceSharp ? '^#' : '^#?'
   const escapedKeywords = keywords.map((keyword) =>
     keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -29,10 +41,9 @@ presetRegExp = await createRegex(async () => await utils.get_preset_all_keywords
 export const updateRegExp = async () => {
   memeRegExp = await createRegex(async () => await utils.get_meme_all_keywords() ?? [])
   presetRegExp = await createRegex(async () => await utils.get_preset_all_keywords() ?? [])
-  preset.reg = presetRegExp
-  meme.reg = memeRegExp
+  if (preset && presetRegExp) preset.reg = presetRegExp
+  if (meme && memeRegExp) meme.reg = memeRegExp
 }
-
 /**
  * 权限检查
  * @param e 消息
@@ -97,9 +108,9 @@ const checkUserText = (min_texts: number, max_texts: number, userText: string): 
   return true
 }
 
-export const meme = karin.command(memeRegExp, async (e: Message) => {
+export const meme = memeRegExp && karin.command(memeRegExp, async (e: Message) => {
   try {
-    const [, keyword, userText] = e.msg.match(meme.reg)!
+    const [, keyword, userText] = e.msg.match(meme!.reg)!
     const key = await utils.get_meme_key_by_keyword(keyword)
     if (!key) return false
     const memeInfo = await utils.get_meme_info(key)
@@ -143,10 +154,10 @@ export const meme = karin.command(memeRegExp, async (e: Message) => {
   permission: 'all'
 })
 
-export const preset = karin.command(presetRegExp, async (e: Message) => {
+export const preset = presetRegExp && karin.command(presetRegExp, async (e: Message) => {
   if (!Config.meme.enable) return false
   try {
-    const [, keyword, userText] = e.msg.match(preset.reg)!
+    const [, keyword, userText] = e.msg.match(preset!.reg)!
     const key = await utils.get_preset_key(keyword)
     if (!key) return false
     const memeInfo = await utils.get_meme_info(key)
@@ -190,5 +201,3 @@ export const preset = karin.command(presetRegExp, async (e: Message) => {
   event: 'message',
   permission: 'all'
 })
-
-await updateRegExp()

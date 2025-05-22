@@ -13,12 +13,7 @@ export const list = karin.command(/^#?(?:(?:柠糖)?(?:表情|(?:meme(?:s)?)))�
       return true
     }
     const tasks = keys.map(async (key) => {
-      const allKeywords = [
-        ...new Set([
-          ...(await utils.get_meme_keyword(key) ?? []),
-          ...(await utils.get_preset_keyword(key) ?? [])
-        ])
-      ]
+      const keywords = await utils.get_meme_keyword(key) ?? []
       const params = await utils.get_meme_info(key)
 
       const min_texts = params?.min_texts ?? 0
@@ -29,9 +24,9 @@ export const list = karin.command(/^#?(?:(?:柠糖)?(?:表情|(?:meme(?:s)?)))�
       if (min_images >= 1) types.push('image')
       if (options !== null) types.push('option')
 
-      if (allKeywords.length > 0) {
+      if (keywords.length > 0) {
         return {
-          name: allKeywords.join('/'),
+          name: keywords.join('/'),
           types
         }
       }
