@@ -7,7 +7,7 @@ export const protectComponents = async () => [
   components.accordion.create('protect', {
     label: '表情保护设置',
     children: [
-      components.accordion.createItem('protect', {
+      components.accordion.createItem('webui:protect', {
         title: '表情保护设置',
         subtitle: '用于设置表情保护等功能',
         children: [

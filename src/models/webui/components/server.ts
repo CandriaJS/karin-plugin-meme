@@ -6,7 +6,7 @@ export const serverComponents = () => [
   components.accordion.create('server', {
     label: '服务设置',
     children: [
-      components.accordion.createItem('server', {
+      components.accordion.createItem('webui:server', {
         title: '服务设置',
         subtitle: '用于和服务相关的内容，如设置服务地址等',
         children: [

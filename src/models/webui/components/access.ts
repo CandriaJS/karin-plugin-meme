@@ -7,7 +7,7 @@ export const accessComponents = async () => [
   components.accordion.create('access', {
     label: '名单设置',
     children: [
-      components.accordion.createItem('access', {
+      components.accordion.createItem('webui:access', {
         title: '名单设置',
         subtitle: '用于设置名单限制，如用户白名单、黑名单，禁用指定表情等',
         children: [

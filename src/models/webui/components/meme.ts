@@ -6,7 +6,7 @@ export const memeComponents = () => [
   components.accordion.create('meme', {
     label: '表情设置',
     children: [
-      components.accordion.createItem('meme', {
+      components.accordion.createItem('webui:meme', {
         title: '表情设置',
         subtitle: '用于和表情相关的内容，如设置默认表情等',
         children: [

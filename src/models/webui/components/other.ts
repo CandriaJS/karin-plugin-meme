@@ -6,7 +6,7 @@ export const otherComponents = () => [
   components.accordion.create('other', {
     label: '其他设置',
     children: [
-      components.accordion.createItem('other', {
+      components.accordion.createItem('webui:other', {
         title: '其他设置',
         subtitle: '用于和其他相关的内容，如设置渲染精度等',
         children: [
