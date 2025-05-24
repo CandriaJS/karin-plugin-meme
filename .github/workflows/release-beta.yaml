@@ -144,7 +144,7 @@ jobs:
           echo "## 成功推送的Package包 :" >> $GITHUB_STEP_SUMMARY
           echo "包名: \`${{ needs.beta-version.outputs.package_name }}\`" >> $GITHUB_STEP_SUMMARY
           echo "版本号: \`${{ needs.beta-version.outputs.beta_version }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "commit: \`${{ needs.beta-version.outputs.short_commit_hash }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "提交: \`${{ needs.beta-version.outputs.short_commit_hash }}\`" >> $GITHUB_STEP_SUMMARY
           echo "发布时间: \`${{ needs.beta-version.outputs.build_timestamp }}\`" >> $GITHUB_STEP_SUMMARY
           echo "发布者: \`${{ github.actor }}\`" >> $GITHUB_STEP_SUMMARY
           echo "使用 pnpm:" >> $GITHUB_STEP_SUMMARY
@@ -181,30 +181,3 @@ jobs:
           path: |
             pkg-output.txt
             output.json
-
-
-      - name: 创建 Release 并上传产物
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: "${{ needs.beta-version.outputs.beta_version }}"
-          name: "${{ needs.beta-version.outputs.beta_version }}"
-          target_commitish: "main"
-          body: |
-            ### 🎉 构建完成！
-            - 此版本是基于快照 [`${{ needs.beta-version.outputs.short_commit_hash }}`](https://github.com/${{ github.repository }}/tree/${{ needs.beta-version.outputs.short_commit_hash }}) 所构建的，[**点击此处查看更改**](https://github.com/${{ github.repository }}/commit/${{ needs.beta-version.outputs.short_commit_hash }}) By @${{ github.actor }}
-
-            ### 安装该版本
-            ---
-          
-            **Karin 根目录** 下执行
-
-            ```sh
-            pnpm add https://pkg.pr.new/${{ github.repository }}/${{ needs.beta-version.outputs.package_name }}@${{ needs.beta-version.outputs.short_commit_hash }} -w
-            ```
-            
-            ---
-            **此版本非正式版本，可能存在一些问题，请谨慎使用！**
-            构建时间：${{ needs.beta-version.outputs.build_timestamp }}
-          draft: false
-          prerelease: true
-          token: ${{ steps.app-token.outputs.token }}
