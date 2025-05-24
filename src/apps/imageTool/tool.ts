@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import AdmZip from 'adm-zip'
-import karin, { common, exists, karinPathBase, logger, Message, segment } from 'node-karin'
+import karin, { common, exists, karinPathTemp, logger, Message, segment } from 'node-karin'
 
 import { Config } from '@/common'
 import { imageTool, utils } from '@/models'
@@ -316,7 +316,7 @@ export const gif_split = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
       zip.addFile(`image_${index}.png`, Buffer.from((img as string), 'base64'))
     })
     const timestamp = Date.now()
-    const zipPath = path.join(karinPathBase, Version.Plugin_Name, 'data', 'temp', `gif分解-${timestamp}.zip`)
+    const zipPath = path.join(karinPathTemp, Version.Plugin_Name, 'gif', `gif分解-${timestamp}.zip`)
     const zipName = path.basename(zipPath)
     zip.writeZip(zipPath)
     try {
