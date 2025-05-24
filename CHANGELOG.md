@@ -1,5 +1,39 @@
 # 变更日志
 
+## [2.5.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.4.0...v2.5.0) (2025-05-24)
+
+
+### ✨ 新功能
+
+* 增加gif分解发送合并消息同时发送压缩文件 ([#91](https://github.com/CandriaJS/karin-plugin-meme/issues/91)) ([7559816](https://github.com/CandriaJS/karin-plugin-meme/commit/7559816404bc7e303aa4eadfc8ec9a9775a7b3dc))
+
+
+### 🐛 错误修复
+
+* **imageTool:** 修复 GIF 分解功能的文件发送问题 ([02ae288](https://github.com/CandriaJS/karin-plugin-meme/commit/02ae288d16bd85109590feedfe66697d192d96a1))
+* 修复用户保护失效 ([859f839](https://github.com/CandriaJS/karin-plugin-meme/commit/859f839518bca0569e1de9ab82db3bea03407eed))
+* 初始化表情正则萝莉 ([12ff5f3](https://github.com/CandriaJS/karin-plugin-meme/commit/12ff5f328f8e2941f8bf97b9e5d7acd282053fee))
+* 预设表情参数传递错误 ([5fd4456](https://github.com/CandriaJS/karin-plugin-meme/commit/5fd4456fcf414796b1828a6cdbac50597de154c9))
+
+
+### ⚡️ 性能优化
+
+* 优化webui配置 ([f3bdde3](https://github.com/CandriaJS/karin-plugin-meme/commit/f3bdde30068cf6f8247918f614cdf7e354f609ae))
+* 优化表情搜索，支持预设表情返回原始表情的关键词 ([1dfd1e2](https://github.com/CandriaJS/karin-plugin-meme/commit/1dfd1e20f431459feff8b8141185b637fd1652af))
+* 优化部分回复提示 ([1f8bd3a](https://github.com/CandriaJS/karin-plugin-meme/commit/1f8bd3a8021e590dd8124248659a1de88213cd03))
+
+
+### ♻️ 代码重构
+
+* **imageTool:** 修改 GIF 分解功能的文件保存路径 ([885fa68](https://github.com/CandriaJS/karin-plugin-meme/commit/885fa681af162871e1a082a7013fe82a753a4efe))
+* **models:** 优化 meme 制作逻辑 ([4d20779](https://github.com/CandriaJS/karin-plugin-meme/commit/4d207798a303650117935144c38caf91e54be145))
+
+
+### 🎡 持续集成
+
+* 优化版本发布流程 ([5ece947](https://github.com/CandriaJS/karin-plugin-meme/commit/5ece9478d1bf5287bac04f86d3219ba8cfb66963))
+* 移除预览版Release发布 ([fb03423](https://github.com/CandriaJS/karin-plugin-meme/commit/fb03423f027ad84cbd40c710ec39a71105ae952d))
+
 ## [2.4.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.3.1...v2.4.0) (2025-05-18)
 
 
