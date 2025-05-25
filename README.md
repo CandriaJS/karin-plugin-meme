@@ -19,6 +19,7 @@
 
 >[!TIP]
 >自`V2`版本起，已内置服务端的下载，在`server.yaml`中配置`mode`为`1`重启等待插件下载完成即可使用
+>修改完需重启生效
 >但需手动下载表情资源, 在data/server目录下执行以下命令. windows用户需要加.exe后缀
 >```bash
 >meme download

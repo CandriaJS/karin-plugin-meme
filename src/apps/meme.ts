@@ -11,16 +11,7 @@ let memeRegExp: RegExp | null, presetRegExp: RegExp | null
  */
 const createRegex = async (getKeywords: () => Promise<string[]>): Promise<RegExp | null> => {
   const keywords = (await getKeywords()) ?? []
-  if (keywords.length === 0) {
-    try {
-      logger.info('未找到表情包数据，正在尝试加载...')
-      await utils.init()
-      logger.info('加载完成, 请稍后重启Karin生效')
-    } catch (error) {
-      logger.error(error)
-      return null
-    }
-  }
+  if (keywords.length === 0) return null
   const prefix = Config.meme.forceSharp ? '^#' : '^#?'
   const escapedKeywords = keywords.map((keyword) =>
     keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
