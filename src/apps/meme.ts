@@ -7,23 +7,19 @@ import { Version } from '@/root'
 let memeRegExp: RegExp | null, presetRegExp: RegExp | null
 
 /**
- * 初始化
- */
-export const init = async () => {
-  try {
-    await init()
-    logger.info(logger.chalk.bold.cyan('🎉 表情包数据加载成功！'))
-  } catch (error) {
-    logger.error(logger.chalk.bold.red(`💥 表情包数据加载失败！错误详情：${(error as Error).message}`))
-  }
-}
-await init()
-/**
  * 生成正则
  */
 const createRegex = async (getKeywords: () => Promise<string[]>): Promise<RegExp | null> => {
   const keywords = (await getKeywords()) ?? []
-  if (keywords.length === 0) return null
+  if (keywords.length === 0) {
+    try {
+      logger.debug('未找到表情包数据，正在尝试加载...')
+      await utils.init()
+    } catch (error) {
+      logger.error(error)
+      return null
+    }
+  }
   const prefix = Config.meme.forceSharp ? '^#' : '^#?'
   const escapedKeywords = keywords.map((keyword) =>
     keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
