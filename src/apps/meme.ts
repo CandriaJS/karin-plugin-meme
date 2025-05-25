@@ -11,15 +11,7 @@ let memeRegExp: RegExp | null, presetRegExp: RegExp | null
  */
 const createRegex = async (getKeywords: () => Promise<string[]>): Promise<RegExp | null> => {
   const keywords = (await getKeywords()) ?? []
-  if (keywords.length === 0) {
-    try {
-      logger.debug('未找到表情包数据，正在尝试加载...')
-      await utils.init()
-    } catch (error) {
-      logger.error(error)
-      return null
-    }
-  }
+  if (keywords.length === 0) return null
   const prefix = Config.meme.forceSharp ? '^#' : '^#?'
   const escapedKeywords = keywords.map((keyword) =>
     keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -104,7 +96,7 @@ const checkUserText = (min_texts: number, max_texts: number, userText: string): 
   return true
 }
 
-export const meme = memeRegExp && karin.command(memeRegExp, async (e: Message) => {
+export let meme = memeRegExp && karin.command(memeRegExp, async (e: Message) => {
   try {
     const [, keyword, userText] = e.msg.match(meme!.reg)!
     const key = await utils.get_meme_key_by_keyword(keyword)
@@ -150,7 +142,7 @@ export const meme = memeRegExp && karin.command(memeRegExp, async (e: Message) =
   permission: 'all'
 })
 
-export const preset = presetRegExp && karin.command(presetRegExp, async (e: Message) => {
+export let preset = presetRegExp && karin.command(presetRegExp, async (e: Message) => {
   if (!Config.meme.enable) return false
   try {
     const [, keyword, userText] = e.msg.match(preset!.reg)!
