@@ -1,5 +1,12 @@
 # 变更日志
 
+## [2.5.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.5.0...v2.5.1) (2025-05-25)
+
+
+### ♻️ 代码重构
+
+* **apps:** 重构表情包数据加载逻辑 ([8b6f865](https://github.com/CandriaJS/karin-plugin-meme/commit/8b6f86534cea23fc176e77f87164f55a5cc87c43))
+
 ## [2.5.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.4.0...v2.5.0) (2025-05-24)
 
 
