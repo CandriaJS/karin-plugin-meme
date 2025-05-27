@@ -1,5 +1,17 @@
 # 变更日志
 
+## [2.5.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.5.1...v2.5.2) (2025-05-27)
+
+
+### 🐛 错误修复
+
+* **imageTool:** 优化 GIF 分拆功能的文件处理 ([00a2f8f](https://github.com/CandriaJS/karin-plugin-meme/commit/00a2f8f57db4b07c5577d288e92834899c0f330d))
+
+
+### 🎡 持续集成
+
+* 优化ci流程 ([0ac7501](https://github.com/CandriaJS/karin-plugin-meme/commit/0ac7501dddb1ac625d0a2958dbc97e48650ff0ed))
+
 ## [2.5.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.5.0...v2.5.1) (2025-05-25)
 
 
