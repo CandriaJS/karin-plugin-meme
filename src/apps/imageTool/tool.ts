@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import AdmZip from 'adm-zip'
+import type { Client, GfsDirStat, GfsFileStat } from 'icqq'
 import karin, { common, exists, karinPathTemp, logger, Message, segment } from 'node-karin'
 
 import { Config } from '@/common'
@@ -328,6 +329,48 @@ export const gif_split = karin.command(/^#?(?:(?:柠糖)(?:表情|meme))?(?:gif)
 
       if (await exists(zipPath)) {
         await fs.rm(zipPath)
+      }
+      if (e.isGroup) {
+        setTimeout(async () => {
+          try {
+            let filesList
+            const platform = e.bot.adapter.standard
+            if (platform === 'onebot11') {
+              filesList = await (e.bot as unknown as any).sendApi!('get_group_root_files', {
+                group_id: e.groupId
+              })
+            } else if (platform === 'icqq') {
+              filesList = await (e.bot.super as Client).pickGroup(Number(e.groupId)).fs.ls()
+            }
+            let matchedFile
+            if (platform === 'icqq') {
+              matchedFile = filesList.find((file: GfsFileStat | GfsDirStat) => file.name === zipName)
+            } else {
+              const filesArray = Array.isArray(filesList) ? filesList : (filesList.files ?? [])
+              matchedFile = filesArray.find((file: any) => file.file_name === zipName)
+            }
+            let fid
+            if (matchedFile) {
+              if (platform === 'icqq') {
+                fid = matchedFile.fid
+              } else {
+                fid = matchedFile.file_id
+              }
+            } else {
+              return logger.warn('未找到上传的文件fid, 跳过删除群文件')
+            }
+            if (platform === 'onebot11') {
+              await (e.bot as unknown as any).sendApi!('delete_group_file', {
+                group_id: e.groupId,
+                file_id: fid
+              })
+            } else if (platform === 'icqq') {
+              await (e.bot.super as Client).pickGroup(Number(e.groupId)).fs.rm(fid)
+            }
+          } catch (error) {
+            logger.warn('删除群文件失败, 跳过删除群文件')
+          }
+        }, 10 * 60 * 1000)
       }
     } catch (error) {
       logger.warn('上传文件失败, 跳过文件发送')

@@ -42,6 +42,7 @@
     "@types/adm-zip": "^0.5.7",
     "adm-zip": "^0.5.16",
     "axios-retry": "^4.5.0",
+    "icqq": "^0.6.10",
     "markdown-it": "^14.1.0",
     "sequelize": "^6.37.7",
     "smol-toml": "^1.3.4"
