@@ -47,7 +47,7 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
       return true
     }
 
-    const allResults = [...(keywords ?? []), ...(keys ?? []), ...(presetKeywords ?? []), ...(tags ?? [])]
+    const allResults = [...new Set([...(keywords ?? []), ...(keys ?? []), ...(presetKeywords ?? []), ...(tags ?? [])])]
 
     const replyMessage = allResults
       .map((kw, index) => `${index + 1}. ${kw}`)
