@@ -121,8 +121,8 @@ export const helpList:HelpListType = [
       },
       {
         icon: 35,
-        title: '#柠糖表情更新表情服务端资源',
-        desc: '下载表情服务端资源'
+        title: '#柠糖表情下载/更新表情服务端资源',
+        desc: '下载/更新表情服务端资源'
       },
       {
         icon: 934,
@@ -132,17 +132,17 @@ export const helpList:HelpListType = [
       {
         icon: 34,
         title: '#柠糖表情关闭表情服务端',
-        desc: '启动表情服务端'
+        desc: '关闭表情服务端'
       },
       {
         icon: 34,
         title: '#柠糖表情重启表情服务端',
-        desc: '启动表情服务端'
+        desc: '重启表情服务端'
       },
       {
         icon: 34,
         title: '#柠糖表情服务端状态',
-        desc: '启动表情服务端'
+        desc: '查看表情服务端状态'
       }
     ]
   },
