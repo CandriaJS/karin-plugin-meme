@@ -45,7 +45,7 @@ export const help = karin.command(/^#?(?:(柠糖)?表情)(?:命令|帮助|菜单
   permission: 'all'
 })
 
-export const version = karin.command(/^#?(?:(柠糖)?表情|(?:clarity-)?meme)(?:版本|版本信息|version|versioninfo)$/i, async (e: Message) => {
+export const version = karin.command(/^#?(?:(柠糖)?表情)(?:版本|版本信息|version|versioninfo)$/i, async (e: Message) => {
   const md = new MarkdownIt({ html: true })
   const makdown = md.render(await requireFile(`${Version.Plugin_Path}/CHANGELOG.md`))
   const img = await Render.render(

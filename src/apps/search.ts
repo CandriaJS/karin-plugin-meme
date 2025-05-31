@@ -16,7 +16,7 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
     )
 
     /** tag搜索 */
-    const [keyTags, keywordTags] = await Promise.all([
+    const [keyTags] = await Promise.all([
       utils.get_meme_keys_by_about_tag(searchKey),
       utils.get_meme_keywords_by_about_tag(searchKey)
     ])
@@ -24,7 +24,7 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
       (keyTags ?? []).map(key => utils.get_meme_keyword(key))
     )
 
-    const tags = [...(keyTagsKeywords.filter(Boolean) ?? []), ...(keywordTags ?? [])]
+    const tags = [...(keyTagsKeywords.flat() ?? [])]
 
     /** 预设表情搜索 */
     const preset = await utils.get_preset_all_about_keywords(searchKey) ?? await utils.get_preset_all_about_keywords_by_key(searchKey) ?? []
