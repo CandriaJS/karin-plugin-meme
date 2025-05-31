@@ -24,7 +24,7 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
       (keyTags ?? []).map(key => utils.get_meme_keyword(key))
     )
 
-    const tags = [...(keyTagsKeywords.filter(Boolean).flat() ?? [])]
+    const tags = [...(keyTagsKeywords.filter(Boolean) ?? [])]
 
     /** 预设表情搜索 */
     const preset = await utils.get_preset_all_about_keywords(searchKey) ?? await utils.get_preset_all_about_keywords_by_key(searchKey) ?? []
@@ -34,12 +34,12 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
         return presetKey
       })
     )
-    const presetKeywords = (await Promise.all(
+    const presetKeywords = await Promise.all(
       presetKeys.map(async (presetKeys) => {
         const keywords = await utils.get_meme_keyword(String(presetKeys))
         return keywords ?? []
       })
-    )).flat()
+    )
 
     /** 关键词搜索 */
     if (!keywords?.length && !keys?.length && !tags?.length && !presetKeywords?.length) {
@@ -47,7 +47,7 @@ export const search = karin.command(/^#?(?:(?:柠糖)?表情)搜索\s*(.+?)$/i, 
       return true
     }
 
-    const allResults = [...new Set([...(keywords ?? []), ...(keys ?? []), ...presetKeywords, ...(tags ?? [])])]
+    const allResults = [...new Set([...(keywords ?? []), ...(keys ?? []), ...presetKeywords, ...(tags ?? [])].flat())]
 
     const replyMessage = allResults
       .map((kw, index) => `${index + 1}. ${kw}`)
