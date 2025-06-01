@@ -58,7 +58,9 @@ export async function get_base_url (): Promise<string> {
 export async function isAbroad (): Promise<boolean> {
   const urls = [
     'https://blog.cloudflare.com/cdn-cgi/trace',
-    'https://developers.cloudflare.com/cdn-cgi/trace'
+    'https://developers.cloudflare.com/cdn-cgi/trace',
+    'https://hostinger.com/cdn-cgi/trace',
+    'https://ahrefs.com/cdn-cgi/trace'
   ]
 
   try {
