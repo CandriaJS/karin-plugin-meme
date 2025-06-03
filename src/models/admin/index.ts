@@ -84,30 +84,20 @@ export const AdminTypeConfig: Record<string, AdminConfigType> = {
         desc: '是否开启名单限制',
         type: 'boolean'
       },
-      blackListEnable: {
-        title: '禁用表情列表',
-        desc: '是否开启黑名单',
+      memeEnable: {
+        title: '表情限制',
+        desc: '是否开启禁用表情列表',
         type: 'boolean'
       },
-      mode: {
+      accessMode: {
         title: '名单模式',
         desc: '名单模式，仅在开启名单限制启用，0为白名单，1为黑名单',
         type: 'number'
       },
-      userWhiteList: {
-        title: '用户白名单',
-        desc: '白名单，白名单模式时生效',
-        type: 'array'
-      },
-      userBlackList: {
-        title: '用户黑名单',
-        desc: '用户黑名单，黑名单模式时生效',
-        type: 'array'
-      },
-      blackList: {
-        title: '黑名单表情列表',
-        desc: '黑名单表情列表',
-        type: 'array'
+      memeMode: {
+        title: '表情限制模式',
+        desc: '表情限制模式，仅在开启名单限制启用，0为白名单，1为黑名单',
+        type: 'number'
       }
     }
   },

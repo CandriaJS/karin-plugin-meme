@@ -38,46 +38,119 @@ export const updateRegExp = async () => {
  * @returns 是否有权限
  */
 const checkUserAccess = (e: Message): boolean => {
-  if (Config.access.enable) {
-    const userId = e.userId
-    if (Config.access.mode === 0 && !Config.access.userWhiteList.includes(userId)) {
-      logger.info(`[${Version.Plugin_AliasName}] 用户 ${userId} 不在白名单中，跳过生成`)
-      return false
-    } else if (Config.access.mode === 1 && Config.access.userBlackList.includes(userId)) {
-      logger.info(`[${Version.Plugin_AliasName}] 用户 ${userId} 在黑名单中，跳过生成`)
-      return false
+  if (!Config.access.enable) return true
+
+  const userId = e.userId
+
+  if (e.isGroup) {
+    const groupId = e.groupId
+    const groupConfig = Config.access.accessList.find(item => item.groupId.toString() === groupId)
+
+    if (groupConfig) {
+      if (Config.access.accessMode === 0) {
+        /** 白名单模式 */
+        if (!groupConfig.whiteUser.map(String).includes(userId)) {
+          logger.info(`[${Version.Plugin_AliasName}] 用户 ${userId} 不在群 ${groupId} 的白名单中，跳过生成`)
+          return false
+        }
+      } else {
+        /**  黑名单模式 */
+        console.log(groupConfig.blackUser)
+        if (groupConfig.blackUser.map(String).includes(userId)) {
+          logger.info(`[${Version.Plugin_AliasName}] 用户 ${userId} 在群 ${groupId} 的黑名单中，跳过生成`)
+          return false
+        }
+      }
+      return true
+    }
+  }
+
+  /** 全局模式 */
+  const globalConfig = Config.access.accessList.find(item => item.groupId.toString() === 'global')
+  if (globalConfig) {
+    if (Config.access.accessMode === 0) {
+      /** 白名单模式 */
+      if (!globalConfig.whiteUser.map(String).includes(userId)) {
+        logger.info(`[${Version.Plugin_AliasName}] 用户 ${userId} 不在全局白名单中，跳过生成`)
+        return false
+      }
+    } else {
+      /**  黑名单模式 */
+      if (globalConfig.blackUser.map(String).includes(userId)) {
+        logger.info(`[${Version.Plugin_AliasName}] 用户 ${userId} 在全局黑名单中，跳过生成`)
+        return false
+      }
     }
   }
   return true
 }
 
 /**
- * 禁用表情检查
- * @param keywordOrKey - 表情关键词或key
- * @returns 是否在禁用列表中
+ * 表情权限检查
+ * @param e 消息
+ * @param key 表情键值
+ * @returns 是否有权限使用该表情
  */
-const checkBlacklisted = async (keywordOrKey: string): Promise<boolean> => {
-  if (!Config.access.blackListEnable || Config.access.blackList.length < 0) {
-    return false
-  }
-  const key = await utils.get_meme_key_by_keyword(keywordOrKey)
-  if (!key) {
-    return false
-  }
+const checkMemeAccess = async (e: Message, key: string): Promise<boolean> => {
+  if (!Config.access.memeEnable) return true
 
-  const blacklistKeys = await Promise.all(
-    Config.access.blackList.map(async item => {
-      const convertedKey = await utils.get_meme_key_by_keyword(item)
-      return convertedKey ?? item
-    })
-  )
-
-  if (blacklistKeys.includes(key)) {
-    logger.info(`[${Version.Plugin_AliasName}] 该表情 "${key}" 在禁用列表中，跳过生成`)
-    return true
+  /**
+ * 获取名单中表情的键值
+ * @param memeList 表情名单
+ * @returns 键值数组
+ */
+  const getMemeKeys = async (memeList: string[]): Promise<string[]> => {
+    const keyPromises = memeList.map(async item =>
+      await utils.get_meme_key_by_keyword(item) ?? item
+    )
+    return await Promise.all(keyPromises)
   }
 
-  return false
+  if (e.isGroup) {
+    const groupId = e.groupId
+    const groupConfig = Config.access.memeAccessList.find(item => item.groupId.toString() === groupId)
+
+    if (groupConfig) {
+      if (Config.access.memeMode === 0) {
+        /** 白名单模式 */
+        const whiteKeys = await getMemeKeys(groupConfig.whiteMeme)
+        if (!whiteKeys.includes(key)) {
+          logger.info(`[${Version.Plugin_AliasName}] 表情 "${key}" 不在群 ${groupId} 的白名单中，跳过生成`)
+          return false
+        }
+      } else {
+        /**  黑名单模式 */
+        const blackKeys = await getMemeKeys(groupConfig.blackMeme)
+        if (blackKeys.includes(key)) {
+          logger.info(`[${Version.Plugin_AliasName}] 表情 "${key}" 在群 ${groupId} 的黑名单中，跳过生成`)
+          return false
+        }
+      }
+      return true
+    }
+  }
+
+  const globalConfig = Config.access.memeAccessList.find(item => item.groupId.toString() === 'global')
+
+  if (globalConfig) {
+    if (Config.access.memeMode === 0) {
+      /** 白名单模式 */
+      const whiteKeys = await getMemeKeys(globalConfig.whiteMeme)
+      if (!whiteKeys.includes(key)) {
+        logger.info(`[${Version.Plugin_AliasName}] 表情 "${key}" 不在全局白名单中，跳过生成`)
+        return false
+      }
+    } else {
+      /**  黑名单模式 */
+      const blackKeys = await getMemeKeys(globalConfig.blackMeme)
+      if (blackKeys.includes(key)) {
+        logger.info(`[${Version.Plugin_AliasName}] 表情 "${key}" 在全局黑名单中，跳过生成`)
+        return false
+      }
+    }
+  }
+
+  return true
 }
 
 /**
@@ -96,7 +169,8 @@ const checkUserText = (min_texts: number, max_texts: number, userText: string): 
   return true
 }
 
-export let meme = memeRegExp && karin.command(memeRegExp, async (e: Message) => {
+export const meme = memeRegExp && karin.command(memeRegExp, async (e: Message) => {
+  if (!Config.meme.enable) return false
   try {
     const [, keyword, userText] = e.msg.match(meme!.reg)!
     const key = await utils.get_meme_key_by_keyword(keyword)
@@ -110,8 +184,8 @@ export let meme = memeRegExp && karin.command(memeRegExp, async (e: Message) => 
     /* 检查用户权限 */
     if (!checkUserAccess(e)) return false
 
-    /* 检查禁用表情列表 */
-    if (await checkBlacklisted(keyword)) return false
+    /* 检查表情权限 */
+    if (!await checkMemeAccess(e, key)) return false
 
     /* 防误触发处理 */
     if (!checkUserText(min_texts, max_texts, userText)) return false
@@ -142,7 +216,7 @@ export let meme = memeRegExp && karin.command(memeRegExp, async (e: Message) => 
   permission: 'all'
 })
 
-export let preset = presetRegExp && karin.command(presetRegExp, async (e: Message) => {
+export const preset = presetRegExp && karin.command(presetRegExp, async (e: Message) => {
   if (!Config.meme.enable) return false
   try {
     const [, keyword, userText] = e.msg.match(preset!.reg)!
@@ -157,8 +231,8 @@ export let preset = presetRegExp && karin.command(presetRegExp, async (e: Messag
     /* 检查用户权限 */
     if (!checkUserAccess(e)) return false
 
-    /* 检查禁用表情列表 */
-    if (await checkBlacklisted(keyword)) return false
+    /* 检查表情权限 */
+    if (await checkMemeAccess(e, keyword)) return false
 
     /* 防误触发处理 */
     if (!checkUserText(min_texts, max_texts, userText)) return false

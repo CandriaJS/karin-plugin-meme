@@ -32,10 +32,5 @@ export const memeComponents = () => [
         ]
       })
     ]
-  }),
-  components.switch.create('test', {
-    label: 'test',
-    description: '是否开启错误回复，开启后会在错误时回复错误信息，关闭后只会在控制台输出错误信息',
-    defaultSelected: Config.meme.errorReply
   })
 ]
