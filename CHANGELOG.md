@@ -1,5 +1,32 @@
 # 变更日志
 
+## [2.5.3](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.5.2...v2.5.3) (2025-06-03)
+
+
+### 🐛 错误修复
+
+* **search:** 优化表情搜索功能，去重搜索结果 ([45713c3](https://github.com/CandriaJS/karin-plugin-meme/commit/45713c3bd898d9f1ee25792131ea699c1ebcc205))
+* **server:** 修正表情服务端停止成功提示信息 ([f0f61fe](https://github.com/CandriaJS/karin-plugin-meme/commit/f0f61fe855923824a222e8f683a14cf92acff9ff))
+* 预设表情搜索 ([d7c84d9](https://github.com/CandriaJS/karin-plugin-meme/commit/d7c84d956110325164965629a2a39bb7ad4a6c4c))
+
+
+### ⚡️ 性能优化
+
+* **imageTool:** 上传群文件后定时删除 ([3f1ee92](https://github.com/CandriaJS/karin-plugin-meme/commit/3f1ee9201f2d2ec6c25ff5c5666fe58bf3967a62))
+* 优化服务端文件下载 ([f7f5e92](https://github.com/CandriaJS/karin-plugin-meme/commit/f7f5e92a6fe7b1c1ee2d9a6fb3c4d1a3ec16252d))
+
+
+### 📝 文档更新
+
+* **help:** 更新帮助列表中表情服务端相关命令的描述 ([9dc8c62](https://github.com/CandriaJS/karin-plugin-meme/commit/9dc8c6239adc021bb1e5b1b0fc49eea4c36b3794))
+* **README:** 移除介绍部分的加速开发中信息 ([3751a0b](https://github.com/CandriaJS/karin-plugin-meme/commit/3751a0b5987c6b6376712e323d2233d374eaff56))
+
+
+### ♻️ 代码重构
+
+* **search:** 优化表情搜索功能 ([db26a28](https://github.com/CandriaJS/karin-plugin-meme/commit/db26a288fc3fbab6430d1cecea460f1d632e3826))
+* **search:** 优化表情搜索功能 ([e803362](https://github.com/CandriaJS/karin-plugin-meme/commit/e803362ec8f67a87c673bfa48e2dfe610b1d54ce))
+
 ## [2.5.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.5.1...v2.5.2) (2025-05-27)
 
 
