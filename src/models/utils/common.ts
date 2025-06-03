@@ -106,8 +106,10 @@ export async function get_user_avatar (
     )
     const cachePath = path.join(avatarDir, `${userId}.png`).replace(/\\/g, '/')
 
-    if (Config.meme.cache && (await exists(cachePath))) {
-      const headRes = await Request.head(await e.bot.getAvatarUrl(userId))
+    if (Config.meme.cache && Number(Config.server.mode) === 1 && (await exists(cachePath))) {
+      const avatarUrl = await e.bot.getAvatarUrl(userId)
+      if (!avatarUrl) throw new Error(`获取用户头像失败: ${userId}`)
+      const headRes = await Request.head(avatarUrl)
       const lastModified = headRes.data['last-modified']
       const cacheStat = await fs.stat(cachePath)
 
@@ -134,14 +136,14 @@ export async function get_user_avatar (
     const avatarUrl = await e.bot.getAvatarUrl(userId)
     if (!avatarUrl) throw new Error(`获取用户头像失败: ${userId}`)
 
-    if (Config.meme.cache && !(await exists(avatarDir))) {
+    if (Config.meme.cache && Number(Config.server.mode) === 1 && !(await exists(avatarDir))) {
       await mkdir(avatarDir)
     }
 
     const res = await Request.get(avatarUrl, {}, {}, 'arraybuffer')
     const avatarData = res.data
 
-    if (Config.meme.cache) {
+    if (Config.meme.cache && Number(Config.server.mode) === 1) {
       await fs.writeFile(cachePath, avatarData)
     }
 
@@ -155,7 +157,7 @@ export async function get_user_avatar (
       default:
         return {
           userId,
-          avatar: Config.meme.cache ? cachePath : avatarUrl
+          avatar: Config.meme.cache && Number(Config.server.mode) === 1 ? cachePath : avatarUrl
         }
     }
   } catch (error) {
