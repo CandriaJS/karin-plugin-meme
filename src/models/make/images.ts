@@ -17,12 +17,19 @@ export async function handleImages (
 | { success: false, message: string }
 > {
   let images = []
-  const messageImages = await utils.get_image(e, 'url')
+  const getType = Config.server.usebase64 ? 'base64' : 'url'
+  const uploadType = Config.server.usebase64
+    ? 'data'
+    : Number(Config.server.mode) === 1 && Config.meme.cache
+      ? 'path'
+      : 'url'
+
+  const messageImages = await utils.get_image(e, getType)
   let userAvatars: Array<{ name: string, id: string }> = []
 
   const imagePromises = messageImages.map(async (msgImage) => {
     const [image, name] = await Promise.all([
-      utils.upload_image(msgImage.image, 'url'),
+      utils.upload_image(msgImage.image, uploadType),
       utils.get_user_name(e, msgImage.userId)
     ])
     return {
@@ -33,16 +40,14 @@ export async function handleImages (
   images = await Promise.all(imagePromises)
 
   if (allUsers.length > 0) {
-    let avatar = await utils.get_user_avatar(e, allUsers[0], 'url')
+    let avatar = await utils.get_user_avatar(e, allUsers[0], getType)
     if (!avatar) {
       return {
         success: false,
         message: '获取用户头像失败'
       }
     }
-
-    const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
-    const image = await utils.upload_image(avatar.avatar, type)
+    const image = await utils.upload_image(avatar.avatar, uploadType)
 
     if (image) {
       userAvatars.push({
@@ -54,7 +59,7 @@ export async function handleImages (
 
   /** 获取引用消息的头像 */
   if (messageImages.length === 0 && quotedUser) {
-    let avatar = await utils.get_user_avatar(e, quotedUser, 'url')
+    let avatar = await utils.get_user_avatar(e, quotedUser, getType)
     if (!avatar) {
       return {
         success: false,
@@ -62,8 +67,7 @@ export async function handleImages (
       }
     }
 
-    const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
-    const image = await utils.upload_image(avatar.avatar, type)
+    const image = await utils.upload_image(avatar.avatar, uploadType)
 
     if (image) {
       userAvatars.push({
@@ -77,7 +81,7 @@ export async function handleImages (
    * 特殊处理：当 min_images === 1 时，因没有多余的图片，表情保护功能会失效
    */
   if (min_images === 1 && messageImages.length === 0) {
-    let avatar = await utils.get_user_avatar(e, e.userId, 'url')
+    let avatar = await utils.get_user_avatar(e, e.userId, getType)
     if (!avatar) {
       return {
         success: false,
@@ -85,8 +89,7 @@ export async function handleImages (
       }
     }
 
-    const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
-    const image = await utils.upload_image(avatar.avatar, type)
+    const image = await utils.upload_image(avatar.avatar, uploadType)
 
     if (image) {
       userAvatars.push({
@@ -105,8 +108,7 @@ export async function handleImages (
       }
     }
 
-    const type = Number(Config.server.mode) === 1 && Config.meme.cache ? 'path' : 'url'
-    const image = await utils.upload_image(avatar.avatar, type)
+    const image = await utils.upload_image(avatar.avatar, uploadType)
 
     if (image) {
       userAvatars.unshift({
