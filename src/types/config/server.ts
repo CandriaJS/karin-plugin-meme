@@ -11,6 +11,8 @@ export interface serverType {
   port: number
   /** 最大重试次数 */
   retry: number
+  /** 使用base64上传图片 */
+  usebase64: boolean
   /** 超时时间 */
   timeout: number
   /** 下载地址 */

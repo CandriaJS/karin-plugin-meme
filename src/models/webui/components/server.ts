@@ -54,6 +54,11 @@ export const serverComponents = () => [
               }
             ]
           }),
+          components.switch.create('usebase64', {
+            label: 'base64上传',
+            description: '是否开启使用base64上传图片',
+            defaultSelected: Config.server.usebase64
+          }),
           components.input.number('timeout', {
             label: '超时时间',
             description: '超时时间，单位为秒',
