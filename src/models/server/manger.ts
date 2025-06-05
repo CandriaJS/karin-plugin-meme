@@ -37,7 +37,7 @@ const config: MemeServerConfigType = {
   },
   server: {
     host: '0.0.0.0',
-    port: 2233
+    port: 2255
   }
 }
 

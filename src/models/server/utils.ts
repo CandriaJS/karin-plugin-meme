@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process'
+import net from 'node:net'
 import os from 'node:os'
 import path from 'node:path'
 
@@ -30,6 +31,60 @@ function formatRuntime (diffMs: number): string {
   runtime += `${remainingSeconds}秒`
 
   return runtime
+}
+
+/**
+ * 检查指定的端口是否被占用
+ * 后续将改成karin内置函数
+ * @param port 监听端口
+ * @returns 被占用则返回 true，否则返回 false
+ */
+async function checkPort (port: number): Promise<boolean> {
+  return new Promise((resolve) => {
+    const server = net.createServer()
+
+    server.once('error', (err: NodeJS.ErrnoException) => {
+      if (err.code === 'EADDRINUSE') {
+        resolve(true)
+      } else {
+        resolve(false)
+      }
+    })
+
+    server.once('listening', () => {
+      server.close()
+      resolve(false)
+    })
+
+    server.listen(port)
+  })
+}
+
+/**
+ * 获取本地IP地址
+ * @returns 本地IP地址
+ */
+export async function get_local_ip (): Promise<string> {
+  const interfaces = os.networkInterfaces()
+
+  for (const devName in interfaces) {
+    const iface = interfaces[devName]
+    if (!iface) continue
+
+    for (const alias of iface) {
+      if (!alias) continue
+
+      if (
+        alias.family === 'IPv4' &&
+        alias.address !== '127.0.0.1' &&
+        !alias.internal
+      ) {
+        return alias.address
+      }
+    }
+  }
+
+  return Promise.resolve('127.0.0.1')
 }
 
 /**

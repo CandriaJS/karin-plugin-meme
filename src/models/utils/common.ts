@@ -15,6 +15,7 @@ import {
 } from 'node-karin'
 
 import { Config } from '@/common'
+import { server } from '@/models'
 import Request from '@/models/utils/request'
 import { Version } from '@/root'
 import type { AvatarInfoType, ImageInfoType } from '@/types'
@@ -36,7 +37,7 @@ export async function get_base_url (): Promise<string> {
         if (!(await exists(resources_path))) {
           throw new Error('请先使用[#柠糖表情下载表情服务端资源]')
         }
-        base_url = `http://127.0.0.1:${Config.server.port}`
+        base_url = `http://${await server.get_local_ip()}:${Config.server.port}`
         break
       }
       default:
