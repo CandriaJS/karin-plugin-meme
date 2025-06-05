@@ -232,7 +232,7 @@ export const preset = presetRegExp && karin.command(presetRegExp, async (e: Mess
     if (!checkUserAccess(e)) return false
 
     /* 检查表情权限 */
-    if (await checkMemeAccess(e, keyword)) return false
+    if (!await checkMemeAccess(e, key)) return false
 
     /* 防误触发处理 */
     if (!checkUserText(min_texts, max_texts, userText)) return false
