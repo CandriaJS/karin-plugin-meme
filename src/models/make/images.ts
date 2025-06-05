@@ -18,11 +18,12 @@ export async function handleImages (
 > {
   let images = []
   const getType = Config.server.usebase64 ? 'base64' : 'url'
-  const uploadType = Config.server.usebase64
+  const AvatarUploadType = Config.server.usebase64
     ? 'data'
     : Number(Config.server.mode) === 1 && Config.meme.cache
       ? 'path'
       : 'url'
+  const uploadType = Config.server.usebase64 ? 'data' : 'url'
 
   const messageImages = await utils.get_image(e, getType)
   let userAvatars: Array<{ name: string, id: string }> = []
@@ -47,7 +48,7 @@ export async function handleImages (
         message: '获取用户头像失败'
       }
     }
-    const image = await utils.upload_image(avatar.avatar, uploadType)
+    const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
 
     if (image) {
       userAvatars.push({
@@ -67,7 +68,7 @@ export async function handleImages (
       }
     }
 
-    const image = await utils.upload_image(avatar.avatar, uploadType)
+    const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
 
     if (image) {
       userAvatars.push({
@@ -89,7 +90,7 @@ export async function handleImages (
       }
     }
 
-    const image = await utils.upload_image(avatar.avatar, uploadType)
+    const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
 
     if (image) {
       userAvatars.push({
@@ -100,7 +101,7 @@ export async function handleImages (
   }
 
   if (images.length + userAvatars.length < min_images) {
-    let avatar = await utils.get_user_avatar(e, e.userId, 'url')
+    let avatar = await utils.get_user_avatar(e, e.userId, getType)
     if (!avatar) {
       return {
         success: false,
@@ -108,7 +109,7 @@ export async function handleImages (
       }
     }
 
-    const image = await utils.upload_image(avatar.avatar, uploadType)
+    const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
 
     if (image) {
       userAvatars.unshift({
