@@ -8,7 +8,7 @@ import TOML from 'smol-toml'
 
 import { Config } from '@/common'
 import { utils } from '@/models'
-import { get_meme_server_name, get_meme_server_path } from '@/models/server/utils'
+import { checkPort, get_meme_server_name, get_meme_server_path, kil_meme_server } from '@/models/server/utils'
 import type { MemeServerConfigType } from '@/types'
 
 let serverProcess: ReturnType<typeof spawn> | null = null
@@ -72,6 +72,14 @@ export async function start (port: number = 2255) {
     const memeServerPath = path.join(`${get_meme_server_path()}/${get_meme_server_name()}`)
     if (!memeServerPath) {
       throw new Error('未找到表情服务端文件')
+    }
+    const available = await checkPort(port)
+    if (available) {
+      if (Config.server.kill) {
+        await kil_meme_server(port)
+      } else {
+        throw new Error(`[meme-server] 端口${port}已被占用, 请检查并稍后重启`)
+      }
     }
     serverProcess = spawn(memeServerPath, ['run'], { stdio: 'inherit' })
     serverProcess.on('error', (error) => {

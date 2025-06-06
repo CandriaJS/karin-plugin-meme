@@ -13,6 +13,11 @@ export interface serverType {
   retry: number
   /** 使用base64上传图片 */
   usebase64: boolean
+  /**
+   * 启动时检查服务是否运行
+   * 如果启用则杀死该端口的进程，否则抛出一个错误
+   * */
+  kill: boolean
   /** 超时时间 */
   timeout: number
   /** 下载地址 */

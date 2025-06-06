@@ -1,10 +1,9 @@
 import { spawn } from 'node:child_process'
-import net from 'node:net'
 import os from 'node:os'
 import path from 'node:path'
 
 import AdmZip from 'adm-zip'
-import { exec, exists, karinPathBase, logger, mkdir } from 'node-karin'
+import { exec, exists, karinPathBase, logger, mkdir, system } from 'node-karin'
 
 import { Config } from '@/common'
 import { utils } from '@/models/'
@@ -31,33 +30,6 @@ function formatRuntime (diffMs: number): string {
   runtime += `${remainingSeconds}秒`
 
   return runtime
-}
-
-/**
- * 检查指定的端口是否被占用
- * 后续将改成karin内置函数
- * @param port 监听端口
- * @returns 被占用则返回 true，否则返回 false
- */
-async function checkPort (port: number): Promise<boolean> {
-  return new Promise((resolve) => {
-    const server = net.createServer()
-
-    server.once('error', (err: NodeJS.ErrnoException) => {
-      if (err.code === 'EADDRINUSE') {
-        resolve(true)
-      } else {
-        resolve(false)
-      }
-    })
-
-    server.once('listening', () => {
-      server.close()
-      resolve(false)
-    })
-
-    server.listen(port)
-  })
 }
 
 /**
@@ -425,6 +397,25 @@ export async function get_meme_server_meme_total (): Promise<string> {
 }
 
 /**
+ * 检查指定的端口是否被占用
+ * 后续将改成karin内置函数
+ * @param port 监听端口
+ * @returns 被占用则返回 true，否则返回 false
+ */
+export async function checkPort (port: number): Promise<boolean> {
+  return await system.checkPort(port)
+}
+
+/**
+ * 杀死表情服务端进程
+ * @param port - 端口
+ * @returns 杀死结果
+ */
+export async function kil_meme_server (port: number): Promise<boolean> {
+  return await system.killApp(port, true)
+}
+
+/**
  * 初始化表情服务端
  * @param port - 端口
  * @returns 初始化结果
@@ -435,7 +426,7 @@ export async function init_server (port: number = 2255): Promise<void> {
     if (!await exists(server_path)) await download_server()
     const type = os.type()
     if (type === 'Linux') {
-      await exec('chmod +x ' + server_path)
+      await exec(`chmod +x ${server_path}`)
     }
     const resource_path = path.join(os.homedir(), '.meme_generator', 'resources')
     if (!await exists(resource_path)) {
