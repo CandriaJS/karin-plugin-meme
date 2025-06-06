@@ -1,5 +1,29 @@
 # 变更日志
 
+## [2.6.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.5.3...v2.6.0) (2025-06-06)
+
+
+### ✨ 新功能
+
+* **access:** 实现高级权限管理功能 ([#98](https://github.com/CandriaJS/karin-plugin-meme/issues/98)) ([a6ccd26](https://github.com/CandriaJS/karin-plugin-meme/commit/a6ccd26a3c766f55ebb298f51e602baaf4277719))
+* **server:** 添加 base64 图片上传支持 ([65295a7](https://github.com/CandriaJS/karin-plugin-meme/commit/65295a79938251dbba0009c6c87eba6cf21c05f5))
+* **server:** 添加 base64 图片上传支持 ([523660d](https://github.com/CandriaJS/karin-plugin-meme/commit/523660db831b029e2717347129c6411b10179ebc))
+* **server:** 添加端口占用检查和进程杀死功能 ([3d8b19b](https://github.com/CandriaJS/karin-plugin-meme/commit/3d8b19b5a1c35726b27d858d195a36ec4c9a9eff))
+* **server:** 添加端口检测和本地IP获取功能 ([e699b79](https://github.com/CandriaJS/karin-plugin-meme/commit/e699b79b90329583a35cf2df44d5f40cbf3c7251))
+
+
+### 🐛 错误修复
+
+* **models:** 优化网络错误处理逻辑 ([ff1237c](https://github.com/CandriaJS/karin-plugin-meme/commit/ff1237c2972e6480d2139ebfc60befaaa123d08d))
+* **models:** 修复用户头像缓存逻辑 ([4733938](https://github.com/CandriaJS/karin-plugin-meme/commit/4733938f0bd12665049bf8d0fa2eeac07b16cb9c))
+* 预设表情权限检查 ([9bd08c1](https://github.com/CandriaJS/karin-plugin-meme/commit/9bd08c18f5e4bd1dec1532571b9138aeb07b1fbe))
+
+
+### ♻️ 代码重构
+
+* **imageTool:** 重构图像处理逻辑 ([3850204](https://github.com/CandriaJS/karin-plugin-meme/commit/3850204051e5c1fa37bbfe656c829c90e3f72115))
+* **models:** 优化图片上传逻辑 ([9b53b32](https://github.com/CandriaJS/karin-plugin-meme/commit/9b53b32a4b458e90438043737fe1c53d8c31ebfa))
+
 ## [2.5.3](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.5.2...v2.5.3) (2025-06-03)
 
 
