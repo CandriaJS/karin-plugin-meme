@@ -1,5 +1,12 @@
 # 变更日志
 
+## [2.6.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.6.0...v2.6.1) (2025-06-07)
+
+
+### 🎨 代码样式
+
+* 优化状态页面样式和布局 ([e65ed05](https://github.com/CandriaJS/karin-plugin-meme/commit/e65ed05fc1483e60941c636f9c9660e9fd1c6e3f))
+
 ## [2.6.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.5.3...v2.6.0) (2025-06-06)
 
 
