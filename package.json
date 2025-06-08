@@ -58,7 +58,7 @@
     "globals": "^15.15.0",
     "icqq": "^0.6.10",
     "neostandard": "^0.12.1",
-    "node-karin": "https://pkg.pr.new/node-karin@cfe6471",
+    "node-karin": "^1.10.2",
     "tsc-alias": "1.8.13",
     "tsup": "^8.4.0",
     "tsx": "^4.19.4",
