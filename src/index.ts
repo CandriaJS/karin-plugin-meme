@@ -4,6 +4,23 @@ import axios from 'node-karin/axios'
 import { Config } from '@/common'
 import { server, utils } from '@/models'
 import { Version } from '@/root'
+export async function KARIN_PLUGIN_INIT () {
+  try {
+    if (Number(Config.server.mode) === 1) {
+      logger.info(logger.chalk.bold.blue(`[${Version.Plugin_AliasName}] 🚀 启动表情服务端...`))
+      await server.init_server(Config.server.port)
+      logger.info(logger.chalk.bold.blue(`[${Version.Plugin_AliasName}] 🎉 表情服务端启动成功！`))
+    }
+  } catch (error) {
+    logger.error(logger.chalk.bold.red(`[${Version.Plugin_AliasName}] 💥 表情服务端启动失败！错误详情：${(error as Error).message}`))
+  }
+  try {
+    await utils.init()
+    logger.info(logger.chalk.bold.blue(`[${Version.Plugin_AliasName}] 🎉 表情包数据加载成功！`))
+  } catch (error) {
+    logger.error(logger.chalk.bold.red(`[${Version.Plugin_AliasName}] 💥 表情包数据加载失败！错误详情：${(error as Error).message}`))
+  }
+}
 
 let responseData = '加载失败'
 try {
@@ -17,21 +34,6 @@ try {
 }
 
 logger.info(logger.chalk.bold.rgb(0, 255, 0)('========= 🌟🌟🌟 ========='))
-try {
-  if (Number(Config.server.mode) === 1) {
-    logger.info(logger.chalk.bold.blue('🚀 启动表情服务端...'))
-    await server.init_server(Config.server.port)
-    logger.info(logger.chalk.bold.green('🎉 表情服务端启动成功！'))
-  }
-} catch (error) {
-  logger.error(logger.chalk.bold.red(`💥 表情服务端启动失败！错误详情：${(error as Error).message}`))
-}
-try {
-  await utils.init()
-  logger.info(logger.chalk.bold.cyan('🎉 表情包数据加载成功！'))
-} catch (error) {
-  logger.error(logger.chalk.bold.red(`💥 表情包数据加载失败！错误详情：${(error as Error).message}`))
-}
 logger.info(
   logger.chalk.bold.blue('🌍 当前运行环境: ') +
   logger.chalk.bold.white(`${Version.Bot_Name}`) +
@@ -44,7 +46,7 @@ logger.info(
 )
 logger.info(
   logger.chalk.bold.rgb(255, 215, 0)(`✨ ${Version.Plugin_AliasName} `) +
-    logger.chalk.bold.rgb(255, 165, 0).italic(Version.Plugin_Version) +
+    logger.chalk.bold.rgb(255, 165, 0)(Version.Plugin_Version) +
     logger.chalk.rgb(255, 215, 0).bold(' 载入成功 ^_^')
 )
 logger.info(logger.chalk.cyan.bold('💬 雾里的小窝: 272040396'))
