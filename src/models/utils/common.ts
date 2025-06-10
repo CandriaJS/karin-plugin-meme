@@ -305,3 +305,11 @@ export async function get_image (
 
   return images
 }
+
+/**
+ * 判断是否是 rust 服务器
+ * @returns 是否是 rust 服务器
+ */
+export async function isRustServer () {
+  return (await server.get_meme_server_type()) === 'rust'
+}

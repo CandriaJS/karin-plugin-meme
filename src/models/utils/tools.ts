@@ -1,6 +1,6 @@
-import karin, { logger, segment } from 'node-karin'
+import karin, { logger } from 'node-karin'
 
-import { db, imageTool, utils } from '@/models'
+import { db, imageTool, server, utils } from '@/models'
 import Request from '@/models/utils/request'
 import type { dbType, MemeInfoType, ResponseType } from '@/types'
 type Model = dbType['meme']
@@ -424,12 +424,19 @@ export async function get_meme_preview (key: string): Promise<Buffer> {
 export async function make_meme (memekey: string, data: Record<string, unknown>): Promise<Buffer> {
   try {
     const url = await utils.get_base_url()
-    const res = await Request.post(`${url}/memes/${memekey}`, data, {}, 'json')
-    if (!res.success) {
-      throw new Error(res.msg)
+    let res, image
+    const meme_server_type = await server.get_meme_server_type()
+    if (meme_server_type === 'python') {
+      res = await Request.post(`${url}/memes/${memekey}`, data, {}, 'formdata')
+      image = res.data
+    } else if (meme_server_type === 'rust') {
+      res = await Request.post(`${url}/memes/${memekey}`, data, {}, 'json')
+      if (!res.success) throw new Error(res.msg)
+      image = await imageTool.get_image(res.data.image_id, 'buffer')
+      if (!image) throw new Error('获取图片失败')
+    } else {
+      throw new Error('未知的meme-generator服务器类型, 不支持生成')
     }
-    const image = await imageTool.get_image(res.data.image_id, 'buffer')
-    if (!image) throw new Error('获取图片失败')
     return image as Buffer
   } catch (error) {
     logger.error(error)
