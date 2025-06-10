@@ -38,6 +38,10 @@ jobs:
         with:
           version: 9.13.2
 
+      - name: 输出
+        run: |
+           echo '${{ toJSON(github.event.pull_request_target) }}'
+
       - name: 生成 Beta 版本号
         id: set-version
         run: |
