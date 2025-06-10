@@ -1,5 +1,13 @@
 # 变更日志
 
+## [2.7.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.7.0...v2.7.1) (2025-06-10)
+
+
+### 🐛 错误修复
+
+* **server:** 优化端口检查和进程杀死逻辑 ([4ca9ee5](https://github.com/CandriaJS/karin-plugin-meme/commit/4ca9ee57c4b97e725ddfd87352aceb4dd237163e))
+* 移除沉余代码 ([ec9c7a3](https://github.com/CandriaJS/karin-plugin-meme/commit/ec9c7a35bf7fb15f41954bec6514d0338c696859))
+
 ## [2.7.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.6.0...v2.7.0) (2025-06-08)
 
 
