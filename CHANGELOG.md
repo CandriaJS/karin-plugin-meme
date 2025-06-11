@@ -1,5 +1,12 @@
 # 变更日志
 
+## [2.7.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.7.1...v2.7.2) (2025-06-11)
+
+
+### 🐛 错误修复
+
+* 更新日志截图 ([25d328d](https://github.com/CandriaJS/karin-plugin-meme/commit/25d328dd8f503f8cd08b9a90f5eb5ba6d89bce12))
+
 ## [2.7.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.7.0...v2.7.1) (2025-06-10)
 
 
