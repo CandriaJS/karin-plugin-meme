@@ -63,7 +63,7 @@ export async function make_meme (
         ...[...(userText?.matchAll(/@\s*(\d+)/g) ?? [])].map(match => match[1] ?? '')
       ])
     ].filter(targetId => targetId && targetId !== quotedUser)
-    let formdata: Record<string, unknown> | FormData = await utils.isRustServer()
+    let formdata: Record<string, unknown> | FormData = isRust
       ? {
           images: [],
           texts: [],
