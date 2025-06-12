@@ -112,7 +112,10 @@ export async function download_server_resource (): Promise<boolean> {
     if (!server_path) throw new Error('表情服务端文件不存在')
 
     return new Promise<boolean>((resolve, reject) => {
-      const downloadProcess = spawn(server_path, ['download'], { stdio: 'inherit' })
+      const downloadProcess = spawn(server_path, ['download'], {
+        stdio: 'inherit',
+        env: { ...process.env, MEME_HOME: path.join(karinPathBase, Version.Plugin_Name, 'data', 'memes') }
+      })
 
       downloadProcess.on('error', (error) => {
         logger.error(error)
