@@ -1,5 +1,12 @@
 # 变更日志
 
+## [3.0.4](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.3...v3.0.4) (2025-06-12)
+
+
+### ♻️ 代码重构
+
+* **models:** 兼容两种 meme 服务器类型的预览功能 ([84e7cc2](https://github.com/CandriaJS/karin-plugin-meme/commit/84e7cc29b29fc49025071102c18eb52b1efcc9bb))
+
 ## [3.0.3](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.2...v3.0.3) (2025-06-12)
 
 
