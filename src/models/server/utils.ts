@@ -438,7 +438,7 @@ export async function init_server (port: number = 2255): Promise<void> {
     if (type === 'Linux') {
       await exec(`chmod +x ${server_path}`)
     }
-    const resource_path = path.join(os.homedir(), '.meme_generator', 'resources')
+    const resource_path = path.join(karinPathBase, Version.Plugin_Name, 'data', 'memes', 'resources')
     if (!await exists(resource_path)) {
       logger.info('表情服务端资源不存在，请稍后使用[#柠糖表情下载表情服务端资源]命令下载')
     }

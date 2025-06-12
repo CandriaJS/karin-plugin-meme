@@ -33,7 +33,7 @@ export async function get_base_url (): Promise<string> {
         base_url = Config.server.url.replace(/\/+$/, '')
         break
       case 1:{
-        const resources_path = path.join(os.homedir(), '.meme_generator', 'resources')
+        const resources_path = path.join(karinPathBase, Version.Plugin_Name, 'data', 'memes', 'resources')
         if (!(await exists(resources_path))) {
           throw new Error('请先使用[#柠糖表情下载表情服务端资源]')
         }
