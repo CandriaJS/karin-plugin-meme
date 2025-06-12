@@ -148,6 +148,12 @@ class Request {
     headers?: Record<string, string> | null,
     responseType: 'json' | 'arraybuffer' = 'json'
   ): Promise<ResponseType> {
+    if (data instanceof FormData) {
+      headers = {
+        ...headers,
+        'Content-Type': 'multipart/form-data'
+      }
+    }
     return this.request('post', url, data, null, headers, responseType)
   }
 

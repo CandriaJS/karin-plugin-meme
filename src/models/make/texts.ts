@@ -7,8 +7,11 @@ export async function handleTexts (
   memekey: string,
   min_texts: number,
   max_texts: number,
+  allUsers: string[],
+  quotedUser: string | null,
   userText:string,
-  formdata: Record<string, unknown>
+  formdata: Record<string, unknown> | FormData,
+  isRust: boolean
 ): Promise<
   | { success: true, texts: string }
   | { success: false, message: string }
@@ -26,7 +29,7 @@ export async function handleTexts (
   }
 
   const memeInfo = await utils.get_meme_info(memekey)
-  const default_texts = memeInfo?.default_texts ? JSON.parse(String(memeInfo.default_texts)) : []
+  const default_texts = memeInfo?.default_texts ? JSON.parse(String(memeInfo.default_texts)) : await utils.get_user_name(e, quotedUser ?? allUsers[0] ?? e.userId)
   if (
     texts.length < min_texts &&
     default_texts
@@ -36,8 +39,13 @@ export async function handleTexts (
       texts.push(default_texts[randomIndex])
     }
   }
-
-  formdata['texts'] = texts
+  if (isRust) {
+    (formdata as Record<string, unknown>)['texts'] = texts
+  } else {
+    texts.forEach((text) => {
+      (formdata as FormData).append('texts', text)
+    })
+  }
 
   return texts.length < min_texts
     ? {

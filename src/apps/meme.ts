@@ -6,6 +6,8 @@ import { Version } from '@/root'
 
 let memeRegExp: RegExp | null, presetRegExp: RegExp | null
 
+const isRustServer = await utils.isRustServer()
+
 /**
  * 生成正则
  */
@@ -199,6 +201,7 @@ export const meme = memeRegExp && karin.command(memeRegExp, async (e: Message) =
       max_images,
       options,
       userText,
+      isRustServer,
       false
     )
     await e.reply([segment.image(res)], { reply: Config.meme.reply })
@@ -246,6 +249,7 @@ export const preset = presetRegExp && karin.command(presetRegExp, async (e: Mess
       max_images,
       options,
       userText,
+      isRustServer,
       true,
       keyword
     )

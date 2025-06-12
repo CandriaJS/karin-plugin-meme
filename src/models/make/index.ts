@@ -16,6 +16,7 @@ export async function make_meme (
   max_images: number,
   options: MemeOptionType[] | null,
   userText: string,
+  isRust: boolean,
   isPreset?: boolean,
   PresetKeyWord?: string
 ): Promise<string> {
@@ -48,14 +49,16 @@ export async function make_meme (
         ...[...(userText?.matchAll(/@\s*(\d+)/g) ?? [])].map(match => match[1] ?? '')
       ])
     ].filter(targetId => targetId && targetId !== quotedUser)
-    let formdata: Record<string, unknown> = {
-      images: [],
-      texts: [],
-      options: {}
-    }
+    let formdata: Record<string, unknown> | FormData = await utils.isRustServer()
+      ? {
+          images: [],
+          texts: [],
+          options: {}
+        }
+      : new FormData()
 
     if (options) {
-      const option = await handleOption(e, memekey, userText, formdata, isPreset, PresetKeyWord)
+      const option = await handleOption(e, memekey, userText, allUsers, formdata, isRust, isPreset, PresetKeyWord)
       if (!option.success) {
         throw new Error(option.message)
       }
@@ -63,19 +66,19 @@ export async function make_meme (
     }
 
     if (min_texts > 0 && max_texts > 0) {
-      const text = await handleTexts(e, memekey, min_texts, max_texts, userText, formdata)
+      const text = await handleTexts(e, memekey, min_texts, max_texts, allUsers, quotedUser, userText, formdata, isRust)
       if (!text.success) {
         throw new Error(text.message)
       }
     }
 
     if (min_images > 0 && max_images > 0) {
-      const image = await handleImages(e, memekey, min_images, max_images, allUsers, quotedUser, userText, formdata)
+      const image = await handleImages(e, memekey, min_images, max_images, allUsers, quotedUser, userText, formdata, isRust)
       if (!image.success) {
         throw new Error(image.message)
       }
     }
-    const response = await utils.make_meme(memekey, formdata)
+    const response = await utils.make_meme(memekey, formdata, isRust ? 'rust' : 'python')
     const basedata = await base64(response)
     if (Config.stat.enable && e.isGroup) {
       const groupStart = (await db.stat.get({

@@ -397,6 +397,16 @@ export async function get_meme_server_meme_total (): Promise<string> {
 }
 
 /**
+ * 获取表情服务端的类型
+ * @returns 获取表情服务端的类型
+ */
+export async function get_meme_server_type (): Promise<'python' | 'rust'> {
+  const version = await get_meme_server_version()
+  if (!version) return 'python'
+  return system.satisfies('>=0.2.0', version) ? 'rust' : 'python'
+}
+
+/**
  * 检查指定的端口是否被占用
  * 后续将改成karin内置函数
  * @param port 监听端口

@@ -1,17 +1,15 @@
-import { db } from '@/models'
-
 export interface AvatarInfoType {
   /** 用户id */
   userId: string
   /** 头像 */
-  avatar: string
+  avatar: string | Buffer
 }
 
 export interface ImageInfoType {
   /** 用户id */
   userId: string
   /** 图片 */
-  image: string
+  image: string | Buffer
 }
 
 export interface PresetInfoResponseType {

@@ -93,7 +93,7 @@ export async function isAbroad (): Promise<boolean> {
 export async function get_user_avatar (
   e: Message,
   userId: string,
-  type: 'url' | 'base64' = 'url'
+  type: 'url' | 'base64' | 'buffer' = 'url'
 ): Promise<AvatarInfoType | null> {
   try {
     if (!e) throw new Error('消息事件不能为空')
@@ -122,6 +122,14 @@ export async function get_user_avatar (
             return {
               userId,
               avatar: data.toString('base64')
+            }
+          }
+          case 'buffer': {
+            const data = await readFile(cachePath)
+            if (!data) throw new Error(`通过缓存获取用户头像失败: ${userId}`)
+            return {
+              userId,
+              avatar: data
             }
           }
           case 'url':
@@ -153,6 +161,11 @@ export async function get_user_avatar (
         return {
           userId,
           avatar: avatarData.toString('base64')
+        }
+      case 'buffer':
+        return {
+          userId,
+          avatar: avatarData
         }
       case 'url':
       default:
@@ -199,6 +212,37 @@ export async function get_user_name (
 }
 
 /**
+ * 获取用户性别
+ * @param e 消息事件
+ * @param userId 用户 ID
+ * @returns 用户性别
+ */
+export async function get_user_gender (
+  e: Message,
+  userId: string
+): Promise<string> {
+  try {
+    let sex: 'male' | 'female' | 'unknown' = 'unknown'
+    let userInfo
+    if (e.isGroup) {
+      userInfo = await e.bot.getGroupMemberInfo(e.groupId, userId)
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      sex = userInfo.sex || userInfo.sex || 'unknown'
+    } else if (e.isPrivate) {
+      userInfo = await e.bot.getStrangerInfo(userId)
+      sex = userInfo.sex ?? 'unknown'
+    } else {
+      sex = e.sender.sex ?? 'unknown'
+    }
+    if (!sex) throw new Error('获取用户性别失败')
+    return sex
+  } catch (error) {
+    logger.error(`获取用户昵称失败: ${error}`)
+    return 'unknown'
+  }
+}
+
+/**
  * 获取图片
  * @param e 消息事件
  * @param type 返回类型 url 或 base64
@@ -206,7 +250,7 @@ export async function get_user_name (
  */
 export async function get_image (
   e: Message,
-  type: 'url' | 'base64' = 'url'
+  type: 'url' | 'base64' | 'buffer' = 'url'
 ): Promise<ImageInfoType[]> {
   const imagesInMessage = e.elements
     .filter((m) => m.type === 'image')
@@ -255,19 +299,26 @@ export async function get_image (
    */
   if (quotedImages.length > 0) {
     for (const item of quotedImages) {
-      if (type === 'url') {
-        tasks.push(
-          Promise.resolve({
-            userId: item.userId,
-            image: item.file.toString()
-          })
-        )
-      } else {
+      if (type === 'base64') {
         const buf = await buffer(item.file)
         tasks.push(
           Promise.resolve({
             userId: item.userId,
             image: buf.toString('base64')
+          })
+        )
+      } else if (type === 'buffer') {
+        tasks.push(
+          Promise.resolve({
+            userId: item.userId,
+            image: await buffer(item.file)
+          })
+        )
+      } else {
+        tasks.push(
+          Promise.resolve({
+            userId: item.userId,
+            image: item.file.toString()
           })
         )
       }
@@ -279,16 +330,21 @@ export async function get_image (
    */
   if (imagesInMessage.length > 0) {
     const imagePromises = imagesInMessage.map(async (item) => {
-      if (type === 'url') {
+      if (type === 'buffer') {
         return {
           userId: item.userId,
-          image: item.file.toString()
+          image: await buffer(item.file)
         }
-      } else {
+      } else if (type === 'base64') {
         const buf = await buffer(item.file)
         return {
           userId: item.userId,
           image: buf.toString('base64')
+        }
+      } else {
+        return {
+          userId: item.userId,
+          image: item.file.toString()
         }
       }
     })
@@ -304,4 +360,12 @@ export async function get_image (
     .map((res) => res.value)
 
   return images
+}
+
+/**
+ * 判断是否是 rust 服务器
+ * @returns 是否是 rust 服务器
+ */
+export async function isRustServer () {
+  return (await server.get_meme_server_type()) === 'rust'
 }

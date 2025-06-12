@@ -1,14 +1,3 @@
-export interface ParserFlagsType {
-  /** * 是否使用短标志，如选项名为 circle，表示是否使用 -c */
-  short: boolean;
-  /** * 是否使用长标志，如选项名为 circle，表示是否使用 --circle */
-  long: boolean;
-  /** * 其他短标志，不含 - */
-  short_aliases: string[];
-  /** * 其他长标志，不含 -- */
-  long_aliases: string[];
-}
-
 export interface MemeOptionType {
   /** * 选项类型，可能值有 boolean、integer、float、string */
   type: 'boolean' | 'integer' | 'float' | 'string';
@@ -18,8 +7,6 @@ export interface MemeOptionType {
   default: boolean | number | string;
   /** * 选项描述 */
   description: string | null;
-  /** * 选项命令行解析标志 */
-  parser_flags: ParserFlagsType;
   /** * 选项可选值，仅当选项类型为 string 时存在 */
   choices: string[] | null;
   /** * 选项最小值，仅当选项类型为 integer 和 float 时存在 */
