@@ -1,5 +1,21 @@
 # 变更日志
 
+## [3.0.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.7.2...v3.0.0) (2025-06-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* 同时兼容Python版和Rust meme api ([#105](https://github.com/CandriaJS/karin-plugin-meme/issues/105))
+
+### ✨ 新功能
+
+* 同时兼容Python版和Rust meme api ([#105](https://github.com/CandriaJS/karin-plugin-meme/issues/105)) ([5fc8af1](https://github.com/CandriaJS/karin-plugin-meme/commit/5fc8af118b80d2c9ea2f99fb465559849c88c10a))
+
+
+### ♻️ 代码重构
+
+* **server:** 修改表情服务端配置路径和资源路径 ([6ceac37](https://github.com/CandriaJS/karin-plugin-meme/commit/6ceac3763befd60b411024e9b664c3ac509f91e8))
+
 ## [2.7.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.7.1...v2.7.2) (2025-06-11)
 
 
