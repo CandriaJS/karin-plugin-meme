@@ -10,12 +10,12 @@ export async function handleTexts (
   allUsers: string[],
   quotedUser: string | null,
   userText:string,
-  formdata: Record<string, unknown> | FormData
+  formdata: Record<string, unknown> | FormData,
+  isRust: boolean
 ): Promise<
   | { success: true, texts: string }
   | { success: false, message: string }
 > {
-  const isRustServer = await utils.isRustServer()
   const texts: string[] = []
 
   /** 用户输入的文本 */
@@ -39,7 +39,7 @@ export async function handleTexts (
       texts.push(default_texts[randomIndex])
     }
   }
-  if (isRustServer) {
+  if (isRust) {
     (formdata as Record<string, unknown>)['texts'] = texts
   } else {
     texts.forEach((text) => {

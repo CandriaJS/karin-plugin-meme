@@ -521,11 +521,11 @@ export async function get_meme_preview (key: string): Promise<Buffer> {
  * @param data 表情数据
  * @returns 表情图片数据
  */
-export async function make_meme (memekey: string, data: Record<string, unknown> | FormData): Promise<Buffer> {
+export async function make_meme (memekey: string, data: Record<string, unknown> | FormData, type?: 'python' | 'rust'): Promise<Buffer> {
   try {
+    const meme_server_type = type ?? await server.get_meme_server_type()
     const url = await utils.get_base_url()
     let res, image
-    const meme_server_type = await server.get_meme_server_type()
     if (meme_server_type === 'python') {
       res = await Request.post(`${url}/memes/${memekey}`, data, {}, 'arraybuffer')
       image = res.data

@@ -11,13 +11,13 @@ export async function handleImages (
   allUsers: string[],
   quotedUser: string | null,
   userText: string,
-  formdata: Record<string, unknown> | FormData
+  formdata: Record<string, unknown> | FormData,
+  isRust: boolean
 ): Promise<
   { success: true; text: string } | { success: false; message: string }
 > {
-  const isRustServer = await utils.isRustServer()
   let images: Array<{ name: string; id: string }> | Buffer[] = []
-  const getType = isRustServer
+  const getType = isRust
     ? 'buffer'
     : Config.server.usebase64
       ? 'base64'
@@ -32,7 +32,7 @@ export async function handleImages (
   const messageImages = await utils.get_image(e, getType)
   let userAvatars: Array<{ name: string; id: string } | Buffer> = []
 
-  if (isRustServer) {
+  if (isRust) {
     const imagePromises = messageImages.map(async (msgImage) => {
       const [image, name] = await Promise.all([
         utils.upload_image(msgImage.image, uploadType),
@@ -56,7 +56,7 @@ export async function handleImages (
         message: '获取用户头像失败'
       }
     }
-    if (isRustServer) {
+    if (isRust) {
       const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
       if (image) {
         userAvatars.push({
@@ -79,7 +79,7 @@ export async function handleImages (
       }
     }
 
-    if (isRustServer) {
+    if (isRust) {
       const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
       if (image) {
         userAvatars.push({
@@ -103,7 +103,7 @@ export async function handleImages (
         message: '获取用户头像失败'
       }
     }
-    if (isRustServer) {
+    if (isRust) {
       const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
 
       if (image) {
@@ -126,7 +126,7 @@ export async function handleImages (
       }
     }
 
-    if (isRustServer) {
+    if (isRust) {
       const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
       if (image) {
         userAvatars.unshift({
@@ -183,12 +183,12 @@ export async function handleImages (
       }
     }
   }
-  if (isRustServer) {
+  if (isRust) {
     images = [...userAvatars, ...images].slice(0, max_images) as Array<{ name: string; id: string }>
   } else {
     images = [...userAvatars, ...images].slice(0, max_images) as Buffer[]
   }
-  if (isRustServer) {
+  if (isRust) {
     (formdata as Record<string, unknown>).images = images
   } else {
     (images as Buffer[]).forEach((buffer, index) => {

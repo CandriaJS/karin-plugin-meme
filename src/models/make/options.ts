@@ -8,13 +8,13 @@ export async function handleOption (
   userText: string,
   allUsers: string[],
   formdata: Record<string, unknown> | FormData,
+  isRust: boolean,
   isPreset? : boolean,
   PresetKeyWord?: string
 ): Promise<
 | { success: true, text: string }
 | { success: false, message: string }
 > {
-  const isRustServer = await utils.isRustServer()
   let options: Record<string, unknown> = {}
   const optionsMatches = userText.match(/#(\S+)\s+([^#]+)/g)
   const optionArray: { name: string; value: string | number }[] = []
@@ -69,7 +69,7 @@ export async function handleOption (
     }
     options[option.name] = result.value
   }
-  if (isRustServer) {
+  if (isRust) {
     (formdata as Record<string, unknown>)['options'] = options
   } else {
     const userInfos = [
