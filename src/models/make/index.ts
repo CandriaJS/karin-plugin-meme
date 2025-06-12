@@ -6,7 +6,21 @@ import { handleImages } from '@/models/make/images'
 import { handleOption } from '@/models/make/options'
 import { handleTexts } from '@/models/make/texts'
 import type { MemeOptionType } from '@/types'
-
+/**
+ * 生成表情包图片
+ * @param e - 消息对象，包含消息内容和上下文信息
+ * @param memekey - 表情包模板的唯一标识key
+ * @param min_texts - 最少需要处理的文本数量
+ * @param max_texts - 最多可以处理的文本数量
+ * @param min_images - 最少需要处理的图片数量
+ * @param max_images - 最多可以处理的图片数量
+ * @param options - 表情包的可选配置项数组，可为null
+ * @param userText - 用户输入的原始文本
+ * @param isRust - 是否使用Rust后端处理
+ * @param isPreset - [可选] 是否为预设模板
+ * @param PresetKeyWord - [可选] 预设模板的关键字
+ * @returns 返回处理完成的表情包图片base64数据，格式为"base64://xxxx"
+ */
 export async function make_meme (
   e: Message,
   memekey: string,

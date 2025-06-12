@@ -4,6 +4,8 @@ import { Config } from '@/common'
 import { make, utils } from '@/models'
 import { Version } from '@/root'
 
+const isRustServer = await utils.isRustServer()
+
 export const random = karin.command(/^#?(?:(?:柠糖)?表情)?随机(?:表情|meme)(包)?$/i, async (e:Message) => {
   if (!Config.meme.enable) return false
   try {
@@ -43,6 +45,7 @@ export const random = karin.command(/^#?(?:(?:柠糖)?表情)?随机(?:表情|me
             max_images,
             options,
             '',
+            isRustServer,
             false
           )
 
