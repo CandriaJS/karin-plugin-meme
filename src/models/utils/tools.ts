@@ -504,10 +504,20 @@ export async function upload_image (
  */
 export async function get_meme_preview (key: string): Promise<Buffer> {
   try {
+    const meme_server_type = await server.get_meme_server_type()
     const url = await utils.get_base_url()
-    const res = await Request.get(`${url}/memes/${key}/preview`)
-    if (!res.success) throw new Error(res.msg)
-    const image = await imageTool.get_image(res.data.image_id, 'buffer')
+    let image
+    if (meme_server_type === 'rust') {
+      const res = await Request.get(`${url}/memes/${key}/preview`)
+      if (!res.success) throw new Error(res.msg)
+      image = await imageTool.get_image(res.data.image_id, 'buffer')
+    } else if (meme_server_type === 'python') {
+      const res = await Request.get(`${url}/memes/${key}/preview`)
+      if (!res.success) throw new Error(res.msg)
+      image = res.data
+    } else {
+      throw new Error('未知的meme-generator服务器类型, 不支持生成预览图片')
+    }
     return image as Buffer
   } catch (error) {
     logger.error(error)
