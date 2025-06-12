@@ -1,5 +1,12 @@
 # 变更日志
 
+## [3.0.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.1...v3.0.2) (2025-06-12)
+
+
+### ♻️ 代码重构
+
+* **server:** 移除获取本地 IP 地址的功能 ([38a1a0a](https://github.com/CandriaJS/karin-plugin-meme/commit/38a1a0a1ef2c9875133e5f5ccde95c0df43c8d8c))
+
 ## [3.0.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.0...v3.0.1) (2025-06-12)
 
 
