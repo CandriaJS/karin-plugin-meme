@@ -1,5 +1,17 @@
 # 变更日志
 
+## [3.0.3](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.2...v3.0.3) (2025-06-12)
+
+
+### 🐛 错误修复
+
+* **server:** 表情服务端资源下载 ([f3c871f](https://github.com/CandriaJS/karin-plugin-meme/commit/f3c871fcfded49a896b7bd405509f0fe9c2d2272))
+
+
+### ♻️ 代码重构
+
+* **models:** 兼容 rust 和 non-rust meme 服务器类型 ([8f1fa96](https://github.com/CandriaJS/karin-plugin-meme/commit/8f1fa966c548ef87d14ee05d92f3b540f2777f82))
+
 ## [3.0.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.1...v3.0.2) (2025-06-12)
 
 
