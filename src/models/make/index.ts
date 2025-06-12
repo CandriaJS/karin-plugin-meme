@@ -48,14 +48,16 @@ export async function make_meme (
         ...[...(userText?.matchAll(/@\s*(\d+)/g) ?? [])].map(match => match[1] ?? '')
       ])
     ].filter(targetId => targetId && targetId !== quotedUser)
-    let formdata: Record<string, unknown> = {
-      images: [],
-      texts: [],
-      options: {}
-    }
+    let formdata: Record<string, unknown> | FormData = await utils.isRustServer()
+      ? {
+          images: [],
+          texts: [],
+          options: {}
+        }
+      : new FormData()
 
     if (options) {
-      const option = await handleOption(e, memekey, userText, formdata, isPreset, PresetKeyWord)
+      const option = await handleOption(e, memekey, userText, allUsers, formdata, isPreset, PresetKeyWord)
       if (!option.success) {
         throw new Error(option.message)
       }
@@ -63,7 +65,7 @@ export async function make_meme (
     }
 
     if (min_texts > 0 && max_texts > 0) {
-      const text = await handleTexts(e, memekey, min_texts, max_texts, userText, formdata)
+      const text = await handleTexts(e, memekey, min_texts, max_texts, allUsers, quotedUser, userText, formdata)
       if (!text.success) {
         throw new Error(text.message)
       }

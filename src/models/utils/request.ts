@@ -51,7 +51,7 @@ class Request {
     data?: any,
     params?: Record<string, string> | null,
     headers?: Record<string, string> | null,
-    responseType: 'json' | 'arraybuffer' | 'text' | 'formdata' = 'json'
+    responseType: 'json' | 'arraybuffer' | 'text' = 'json'
   ): Promise<ResponseType> {
     const config: AxiosRequestConfig = {
       params,
@@ -146,7 +146,7 @@ class Request {
     url: string,
     data: any,
     headers?: Record<string, string> | null,
-    responseType: 'json' | 'arraybuffer' | 'formdata' = 'json'
+    responseType: 'json' | 'arraybuffer' = 'json'
   ): Promise<ResponseType> {
     if (data instanceof FormData) {
       headers = {

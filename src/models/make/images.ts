@@ -11,13 +11,17 @@ export async function handleImages (
   allUsers: string[],
   quotedUser: string | null,
   userText: string,
-  formdata: Record<string, unknown>
+  formdata: Record<string, unknown> | FormData
 ): Promise<
-| { success: true, text: string }
-| { success: false, message: string }
+  { success: true; text: string } | { success: false; message: string }
 > {
-  let images = []
-  const getType = Config.server.usebase64 ? 'base64' : 'url'
+  const isRustServer = await utils.isRustServer()
+  let images: Array<{ name: string; id: string }> | Buffer[] = []
+  const getType = isRustServer
+    ? 'buffer'
+    : Config.server.usebase64
+      ? 'base64'
+      : 'url'
   const AvatarUploadType = Config.server.usebase64
     ? 'data'
     : Number(Config.server.mode) === 1 && Config.meme.cache
@@ -26,19 +30,23 @@ export async function handleImages (
   const uploadType = Config.server.usebase64 ? 'data' : 'url'
 
   const messageImages = await utils.get_image(e, getType)
-  let userAvatars: Array<{ name: string, id: string }> = []
+  let userAvatars: Array<{ name: string; id: string } | Buffer> = []
 
-  const imagePromises = messageImages.map(async (msgImage) => {
-    const [image, name] = await Promise.all([
-      utils.upload_image(msgImage.image, uploadType),
-      utils.get_user_name(e, msgImage.userId)
-    ])
-    return {
-      name,
-      id: image
-    }
-  })
-  images = await Promise.all(imagePromises)
+  if (isRustServer) {
+    const imagePromises = messageImages.map(async (msgImage) => {
+      const [image, name] = await Promise.all([
+        utils.upload_image(msgImage.image, uploadType),
+        utils.get_user_name(e, msgImage.userId)
+      ])
+      return {
+        name,
+        id: image
+      }
+    })
+    images = await Promise.all(imagePromises)
+  } else {
+    images = messageImages.map(msgImage => msgImage.image as Buffer)
+  }
 
   if (allUsers.length > 0) {
     let avatar = await utils.get_user_avatar(e, allUsers[0], getType)
@@ -48,13 +56,16 @@ export async function handleImages (
         message: '获取用户头像失败'
       }
     }
-    const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
-
-    if (image) {
-      userAvatars.push({
-        name: await utils.get_user_name(e, avatar.userId),
-        id: image
-      })
+    if (isRustServer) {
+      const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
+      if (image) {
+        userAvatars.push({
+          name: await utils.get_user_name(e, avatar.userId),
+          id: image
+        })
+      }
+    } else {
+      userAvatars.push(avatar.avatar as Buffer)
     }
   }
 
@@ -68,13 +79,16 @@ export async function handleImages (
       }
     }
 
-    const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
-
-    if (image) {
-      userAvatars.push({
-        name: await utils.get_user_name(e, avatar.userId),
-        id: image
-      })
+    if (isRustServer) {
+      const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
+      if (image) {
+        userAvatars.push({
+          name: await utils.get_user_name(e, avatar.userId),
+          id: image
+        })
+      }
+    } else {
+      userAvatars.push(avatar.avatar as Buffer)
     }
   }
 
@@ -89,14 +103,17 @@ export async function handleImages (
         message: '获取用户头像失败'
       }
     }
+    if (isRustServer) {
+      const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
 
-    const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
-
-    if (image) {
-      userAvatars.push({
-        name: await utils.get_user_name(e, avatar.userId),
-        id: image
-      })
+      if (image) {
+        userAvatars.push({
+          name: await utils.get_user_name(e, avatar.userId),
+          id: image
+        })
+      }
+    } else {
+      userAvatars.push(avatar.avatar as Buffer)
     }
   }
 
@@ -109,13 +126,16 @@ export async function handleImages (
       }
     }
 
-    const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
-
-    if (image) {
-      userAvatars.unshift({
-        name: await utils.get_user_name(e, avatar.userId),
-        id: image
-      })
+    if (isRustServer) {
+      const image = await utils.upload_image(avatar.avatar, AvatarUploadType)
+      if (image) {
+        userAvatars.unshift({
+          name: await utils.get_user_name(e, avatar.userId),
+          id: image
+        })
+      }
+    } else {
+      userAvatars.unshift(avatar.avatar as Buffer)
     }
   }
 
@@ -124,18 +144,26 @@ export async function handleImages (
     const protectList = Config.protect.list
     if (protectList.length > 0) {
       /** 处理表情保护列表可能含有关键词 */
-      const memeKeys = await Promise.all(protectList.map(async item => {
-        const key = await utils.get_meme_key_by_keyword(item)
-        return key ?? item
-      }))
+      const memeKeys = await Promise.all(
+        protectList.map(async (item) => {
+          const key = await utils.get_meme_key_by_keyword(item)
+          return key ?? item
+        })
+      )
       if (memeKeys.includes(memeKey)) {
-        const allProtectedUsers = [...allUsers, ...(quotedUser ? [quotedUser] : [])]
+        const allProtectedUsers = [
+          ...allUsers,
+          ...(quotedUser ? [quotedUser] : [])
+        ]
 
         if (allProtectedUsers.length > 0) {
           const masterQQArray = config.master()
           /** 优先检查引用消息的用户 */
-          const protectUser = quotedUser ??
-            (allProtectedUsers.length === 1 ? allProtectedUsers[0] : allProtectedUsers[1])
+          const protectUser =
+            quotedUser ??
+            (allProtectedUsers.length === 1
+              ? allProtectedUsers[0]
+              : allProtectedUsers[1])
           if (!e.isMaster) {
             if (Config.protect.master) {
               if (masterQQArray.includes(protectUser)) {
@@ -155,16 +183,28 @@ export async function handleImages (
       }
     }
   }
-
-  images = [...userAvatars, ...images].slice(0, max_images)
-  formdata['images'] = images
+  if (isRustServer) {
+    images = [...userAvatars, ...images].slice(0, max_images) as Array<{ name: string; id: string }>
+  } else {
+    images = [...userAvatars, ...images].slice(0, max_images) as Buffer[]
+  }
+  if (isRustServer) {
+    (formdata as Record<string, unknown>).images = images
+  } else {
+    (images as Buffer[]).forEach((buffer, index) => {
+      const blob = new Blob([buffer], { type: 'image/png' })
+      const fd = formdata as FormData
+      fd.append('images', blob, `image${index}.png`)
+    })
+  }
 
   return images.length < min_images
     ? {
         success: false,
-        message: min_images === max_images
-          ? `该表情需要${min_images}张图片`
-          : `该表情至少需要 ${min_images} ~ ${max_images} 张图片`
+        message:
+          min_images === max_images
+            ? `该表情需要${min_images}张图片`
+            : `该表情至少需要 ${min_images} ~ ${max_images} 张图片`
       }
     : {
         success: true,

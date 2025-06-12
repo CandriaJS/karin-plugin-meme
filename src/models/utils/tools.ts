@@ -2,7 +2,7 @@ import karin, { logger } from 'node-karin'
 
 import { db, imageTool, server, utils } from '@/models'
 import Request from '@/models/utils/request'
-import type { dbType, MemeInfoType, ResponseType } from '@/types'
+import type { dbType, MemeInfoType, MemeOptionType } from '@/types'
 type Model = dbType['meme']
 type PresetModel = dbType['preset']
 
@@ -22,38 +22,102 @@ export async function update_meme (force: boolean = false) {
     const keys = await get_meme_all_keys()
     if (keys && keys.length > 0 && !force) return
     const url = await utils.get_base_url()
-    const res:ResponseType<MemeInfoType> = await Request.get(`${url}/meme/infos`)
-    if (!res.success) throw new Error(res.msg)
-    if (res.data && Array.isArray(res.data)) {
-      await Promise.all(res.data.map(meme => {
-        const {
-          key,
-          keywords: keyWords,
-          params: {
+    const isRustServer = await utils.isRustServer()
+    let memeDataList
+    if (isRustServer) {
+      const res = await Request.get(`${url}/meme/infos`)
+      if (!res.success) throw new Error(res.msg)
+      if (res.data && Array.isArray(res.data)) {
+        memeDataList = res.data.map(meme => {
+          const {
+            key,
+            keywords: keyWords,
+            params: {
+              min_texts,
+              max_texts,
+              min_images,
+              max_images,
+              default_texts,
+              options
+            },
+            tags
+          } = meme
+
+          const MemeOptions = options.map((option: MemeOptionType) => ({
+            type: option.type,
+            name: option.name,
+            default: option.default,
+            description: option.description ?? null,
+            choices: option.choices ?? null,
+            minimum: option.minimum ?? null
+          }))
+
+          return {
+            key,
+            keyWords: keyWords?.length ? keyWords : null,
             min_texts,
             max_texts,
             min_images,
             max_images,
-            default_texts,
-            options
-          },
-          tags
-        } = meme
-
-        return add_meme({
-          key,
-          keyWords: keyWords?.length ? keyWords : null,
-          min_texts,
-          max_texts,
-          min_images,
-          max_images,
-          default_texts: default_texts?.length ? default_texts : null,
-          options: options?.length ? options : null,
-          tags: tags?.length ? tags : null
-        }, {
-          force
+            default_texts: default_texts?.length ? default_texts : null,
+            options: options?.length ? MemeOptions : null,
+            tags: tags?.length ? tags : null
+          }
         })
-      }))
+      }
+    } else {
+      const keysRes = await Request.get(`${url}/memes/keys`)
+      if (!keysRes.success) throw new Error(keysRes.msg)
+      const concurrentLimit = 5
+      const memeInfos = []
+      for (let i = 0; i < keysRes.data.length; i += concurrentLimit) {
+        const batch = keysRes.data.slice(i, i + concurrentLimit)
+        const batchResults = await Promise.all(
+          batch.map(async (key: string) => {
+            const infoRes = await Request.get(`${url}/memes/${key}/info`)
+            return infoRes.success ? infoRes.data : null
+          })
+        )
+        memeInfos.push(...batchResults.filter(Boolean))
+      }
+      memeDataList = memeInfos.map(meme => {
+        const MemeOptions = meme.params_type?.args_type
+          ? Object.entries(meme.params_type.args_type.args_model.properties)
+            .filter(([name]) => name !== 'user_infos')
+            .map(([name, prop]: [string, any]) => {
+              const option: MemeOptionType = {
+                type: convertSchemaTypeToOptionType(prop.type),
+                name,
+                default: prop.default,
+                description: prop.description ?? null,
+                choices: null,
+                minimum: null,
+                maximum: null
+              }
+              return option
+            })
+          : null
+
+        return {
+          key: meme.key,
+          keyWords: meme.keywords,
+          min_texts: meme.params_type?.min_texts,
+          max_texts: meme.params_type?.max_texts,
+          min_images: meme.params_type?.min_images,
+          max_images: meme.params_type?.max_images,
+          default_texts: meme.params_type?.default_texts,
+          options: meme.params_type?.args_type ? MemeOptions : null,
+          tags: meme.tags?.length ? meme.tags : null
+        }
+      })
+    }
+    if (memeDataList && memeDataList.length > 0) {
+      await add_meme(memeDataList, {
+        type: 'bulk',
+        force
+      })
+    } else {
+      logger.warn('未获取到有效的表情数据')
     }
   } catch (error) {
     logger.error(`初始化表情数据失败: ${error}`)
@@ -89,9 +153,25 @@ export async function update_preset (force: boolean = false) {
   }
 }
 
+function convertSchemaTypeToOptionType (schemaType: string | string[]): MemeOptionType['type'] {
+  if (Array.isArray(schemaType)) {
+    schemaType = schemaType.find(t => t !== 'null') ?? 'string'
+  }
+  switch (schemaType) {
+    case 'boolean':
+      return 'boolean'
+    case 'integer':
+      return 'integer'
+    case 'number':
+      return 'float'
+    default:
+      return 'string'
+  }
+}
+
 /**
  * 添加表情
- * @param data 表情数据
+ * @param meme 表情数据
  * - key 表情的唯一标识符
  * - keyWords 表情的关键词列表
  * - min_texts 表情最少的文本数
@@ -101,46 +181,60 @@ export async function update_preset (force: boolean = false) {
  * - default_texts 表情的默认文本列表
  * - options 表情的参数类型
  * - tags 表情的标签列表
- * @param force 是否强制更新
+ * @param type 操作类型
+ * - common: 普通写入 (默认)
+ * - bulk: 批量写入
  * @returns 添加结果
  */
-export async function add_meme ({
-  key,
-  keyWords,
-  min_texts,
-  max_texts,
-  min_images,
-  max_images,
-  default_texts,
-  options,
-  tags
-}: {
-  key: MemeInfoType['key'],
-  keyWords: MemeInfoType['keywords'],
-  min_texts: MemeInfoType['params']['min_texts'],
-  max_texts: MemeInfoType['params']['max_texts'],
-  min_images: MemeInfoType['params']['min_images'],
-  max_images: MemeInfoType['params']['max_images'],
-  default_texts: MemeInfoType['params']['default_texts'],
-  options: MemeInfoType['params']['options'],
-  tags: MemeInfoType['tags']
-}, {
-  force = false
-}: {
-  force?: boolean
-}): Promise<[Model, boolean | null]> {
-  const data = {
-    key,
-    keyWords,
-    min_texts,
-    max_texts,
-    min_images,
-    max_images,
-    default_texts,
-    options,
-    tags
+export async function add_meme (
+  meme: Array<{
+    key: MemeInfoType['key'],
+    keyWords: MemeInfoType['keywords'],
+    min_texts: MemeInfoType['params']['min_texts'],
+    max_texts: MemeInfoType['params']['max_texts'],
+    min_images: MemeInfoType['params']['min_images'],
+    max_images: MemeInfoType['params']['max_images'],
+    default_texts: MemeInfoType['params']['default_texts'],
+    options: MemeInfoType['params']['options'],
+    tags: MemeInfoType['tags']
+  }>,
+  options?: {
+    type?: 'common' | 'bulk',
+    force?: boolean
   }
-  return await db.meme.add(data, { force })
+): Promise<[Model, boolean | null] | Model[]> {
+  if (meme.length === 0) return []
+  const { type = 'common', force = false } = options ?? {}
+
+  if (type === 'bulk') {
+    meme = Array.isArray(meme) ? meme : [meme]
+    const dataList = meme.map(item => ({
+      key: item.key,
+      keyWords: item.keyWords,
+      min_texts: item.min_texts,
+      max_texts: item.max_texts,
+      min_images: item.min_images,
+      max_images: item.max_images,
+      default_texts: item.default_texts,
+      options: item.options,
+      tags: item.tags
+    }))
+    return await db.meme.add_bulk(dataList, { force })
+  } else {
+    const singleMeme = Array.isArray(meme) ? meme[0] : meme
+    const data = {
+      key: singleMeme.key,
+      keyWords: singleMeme.keyWords,
+      min_texts: singleMeme.min_texts,
+      max_texts: singleMeme.max_texts,
+      min_images: singleMeme.min_images,
+      max_images: singleMeme.max_images,
+      default_texts: singleMeme.default_texts,
+      options: singleMeme.options,
+      tags: singleMeme.tags
+    }
+    return await db.meme.add(data, { force })
+  }
 }
 
 /**
@@ -421,13 +515,13 @@ export async function get_meme_preview (key: string): Promise<Buffer> {
  * @param data 表情数据
  * @returns 表情图片数据
  */
-export async function make_meme (memekey: string, data: Record<string, unknown>): Promise<Buffer> {
+export async function make_meme (memekey: string, data: Record<string, unknown> | FormData): Promise<Buffer> {
   try {
     const url = await utils.get_base_url()
     let res, image
     const meme_server_type = await server.get_meme_server_type()
     if (meme_server_type === 'python') {
-      res = await Request.post(`${url}/memes/${memekey}`, data, {}, 'formdata')
+      res = await Request.post(`${url}/memes/${memekey}`, data, {}, 'arraybuffer')
       image = res.data
     } else if (meme_server_type === 'rust') {
       res = await Request.post(`${url}/memes/${memekey}`, data, {}, 'json')
