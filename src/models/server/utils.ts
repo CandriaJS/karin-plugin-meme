@@ -364,7 +364,13 @@ export async function get_meme_server_memory (): Promise<string> {
 export async function get_meme_server_meme_total (): Promise<string> {
   try {
     const url = await utils.get_base_url()
-    const res = await utils.Request.get(`${url}/meme/keys`)
+    const isRust = await get_meme_server_type() === 'rust'
+    let res
+    if (isRust) {
+      res = await utils.Request.get(`${url}/meme/keys`)
+    } else {
+      res = await utils.Request.get(`${url}/memes/keys`)
+    }
     return res.data.length
   } catch (error) {
     logger.error(error)
