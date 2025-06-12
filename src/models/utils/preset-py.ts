@@ -1,266 +1,236 @@
-import { PresetInfoResponseType } from '@/types'
+import type { PresetInfoResponseType } from '@/types'
 
-const preset:PresetInfoResponseType[] = [
-  {
-    name: '狠撅',
-    key: 'do',
-    option_name: 'fps',
-    option_value: 50
-  },
-  {
-    name: '狠骑',
-    key: 'qi',
-    option_name: 'fps',
-    option_value: 50
-  },
+const preset: PresetInfoResponseType[] = [
   /** ba说 */
   {
     name: '心奈说',
     key: 'ba_say',
     option_name: 'character',
-    option_value: 'kokona'
+    option_value: 1
   },
   {
     name: '爱丽丝说',
     key: 'ba_say',
     option_name: 'character',
-    option_value: 'arisu'
+    option_value: 2
   },
   {
     name: '泉奈说',
     key: 'ba_say',
     option_name: 'character',
-    option_value: 'izuna'
+    option_value: 3
   },
   {
     name: 'key说',
     key: 'ba_say',
     option_name: 'character',
-    option_value: 'key'
+    option_value: 4
   },
   {
     name: '玛丽说',
     key: 'ba_say',
     option_name: 'character',
-    option_value: 'mari'
+    option_value: 5
   },
   {
     name: '濑名说',
     key: 'ba_say',
     option_name: 'character',
-    option_value: 'sena'
+    option_value: 6
   },
   {
     name: '优香说',
     key: 'ba_say',
     option_name: 'character',
-    option_value: 'yuuka'
+    option_value: 7
   },
   /** 原神吃 */
   {
     name: '八重神子吃',
     key: 'genshin_eat',
     option_name: 'character',
-    option_value: 'nilou'
-  },
-  {
-    name: '神子吃',
-    key: 'genshin_eat',
-    option_name: 'character',
-    option_value: 'nilou'
-  },
-  {
-    name: '八重吃',
-    key: 'genshin_eat',
-    option_name: 'character',
-    option_value: 'nilou'
+    option_value: 1
   },
   {
     name: '胡桃吃',
     key: 'genshin_eat',
     option_name: 'character',
-    option_value: 'hutao'
+    option_value: 2
   },
   {
     name: '妮露吃',
     key: 'genshin_eat',
     option_name: 'character',
-    option_value: 'nilou'
+    option_value: 3
   },
   {
     name: '可莉吃',
     key: 'genshin_eat',
     option_name: 'character',
-    option_value: 'klee'
+    option_value: 4
   },
   {
     name: '刻晴吃',
     key: 'genshin_eat',
     option_name: 'character',
-    option_value: 'keqing'
+    option_value: 5
   },
   {
     name: '钟离吃',
     key: 'genshin_eat',
     option_name: 'character',
-    option_value: 'zhongli'
+    option_value: 6
   },
   /** 世界计划 */
   {
     name: '爱莉说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'airi'
+    option_value: 1
   },
   {
     name: '彰人说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'akito'
+    option_value: 2
   },
   {
     name: '杏说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'an'
+    option_value: 3
   },
   {
     name: '梦说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'emu'
+    option_value: 4
   },
   {
     name: '绘名说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'ena'
+    option_value: 5
   },
   {
     name: '遥说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'haruka'
+    option_value: 6
   },
   {
     name: '穗波说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'honami'
+    option_value: 7
   },
   {
     name: '一歌说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'ichika'
+    option_value: 8
   },
   {
     name: 'KAITO说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'kaito'
+    option_value: 9
   },
   {
     name: '奏说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'kanade'
+    option_value: 10
   },
   {
     name: '心羽说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'kohane'
+    option_value: 11
   },
   {
     name: '连说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'len'
+    option_value: 12
   },
   {
     name: '流歌说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'luka'
+    option_value: 13
   },
   {
     name: '真冬说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'mafuyu'
+    option_value: 14
   },
   {
     name: 'MEIKO说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'meiko'
+    option_value: 15
   },
   {
     name: '初音未来说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'miku'
+    option_value: 16
   },
   {
     name: '实乃理说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'minori'
-  },
-  {
-    name: '瑞希说',
-    key: 'pjsk',
-    option_name: 'character',
-    option_value: 'mizuki'
+    option_value: 17
   },
   {
     name: '宁宁说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'nene'
+    option_value: 19
   },
   {
     name: '铃说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'rin'
+    option_value: 20
   },
   {
     name: '类说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'rui'
+    option_value: 21
   },
   {
     name: '咲希说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'saki'
+    option_value: 22
   },
   {
     name: '志步说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'shiho'
+    option_value: 23
   },
   {
     name: '雫说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'shizuku'
+    option_value: 24
   },
   {
     name: '冬弥说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'touya'
+    option_value: 25
   },
   {
     name: '司说',
     key: 'pjsk',
     option_name: 'character',
-    option_value: 'tsukasa'
+    option_value: 26
   }
 ]
-export { preset }
+export { preset as preset_py }

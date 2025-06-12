@@ -133,7 +133,13 @@ export async function update_preset (force: boolean = false) {
   try {
     const presetKeys = await get_preset_all_keys()
     if (presetKeys && presetKeys.length > 0 && !force) return
-    const preset = utils.preset
+    const isRustServer = await utils.isRustServer()
+    let preset
+    if (isRustServer) {
+      preset = (await import('@/models/utils/preset-rs')).preset_rs
+    } else {
+      preset = (await import('@/models/utils/preset-py')).preset_py
+    }
     await Promise.all(
       preset.map(async (preset) => {
         const memeExists = await db.meme.get(preset.key)
