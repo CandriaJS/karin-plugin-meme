@@ -1,5 +1,12 @@
 # 变更日志
 
+## [3.0.7](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.6...v3.0.7) (2025-06-13)
+
+
+### 🎨 代码样式
+
+* 调整 package.json 文件格式 ([2641a6b](https://github.com/CandriaJS/karin-plugin-meme/commit/2641a6b7634892bc0935085e508f0be4f208ca36))
+
 ## [3.0.6](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.5...v3.0.6) (2025-06-13)
 
 
