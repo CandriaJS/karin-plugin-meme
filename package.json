@@ -82,9 +82,9 @@
       "config",
       "data",
       "resources"
-    ],
-    "engines": {
-      "karin": ">=1.10.1"
-    }
+    ]
+  },
+  "engines": {
+    "karin": ">=1.10.1"
   }
 }
