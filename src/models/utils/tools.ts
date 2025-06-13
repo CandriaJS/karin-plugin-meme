@@ -512,7 +512,7 @@ export async function get_meme_preview (key: string): Promise<Buffer> {
       if (!res.success) throw new Error(res.msg)
       image = await imageTool.get_image(res.data.image_id, 'buffer')
     } else if (meme_server_type === 'python') {
-      const res = await Request.get(`${url}/memes/${key}/preview`)
+      const res = await Request.get(`${url}/memes/${key}/preview`, {}, {}, 'arraybuffer')
       if (!res.success) throw new Error(res.msg)
       image = res.data
     } else {

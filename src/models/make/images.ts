@@ -18,11 +18,11 @@ export async function handleImages (
 > {
   let images: Array<{ name: string; id: string }> | Buffer[] = []
   const getType = isRust
-    ? 'buffer'
-    : Config.server.usebase64
+    ? Config.server.usebase64
       ? 'base64'
       : 'url'
-  const AvatarUploadType = Config.server.usebase64
+    : 'buffer'
+  const AvatarUploadType = isRust && Config.server.usebase64
     ? 'data'
     : Number(Config.server.mode) === 1 && Config.meme.cache
       ? 'path'
