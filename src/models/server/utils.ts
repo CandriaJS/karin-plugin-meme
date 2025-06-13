@@ -33,33 +33,6 @@ function formatRuntime (diffMs: number): string {
 }
 
 /**
- * 获取本地IP地址
- * @returns 本地IP地址
- */
-export async function get_local_ip (): Promise<string> {
-  const interfaces = os.networkInterfaces()
-
-  for (const devName in interfaces) {
-    const iface = interfaces[devName]
-    if (!iface) continue
-
-    for (const alias of iface) {
-      if (!alias) continue
-
-      if (
-        alias.family === 'IPv4' &&
-        alias.address !== '127.0.0.1' &&
-        !alias.internal
-      ) {
-        return alias.address
-      }
-    }
-  }
-
-  return Promise.resolve('127.0.0.1')
-}
-
-/**
  * 重启表情服务端
  * @returns 重启结果
  */
@@ -139,7 +112,10 @@ export async function download_server_resource (): Promise<boolean> {
     if (!server_path) throw new Error('表情服务端文件不存在')
 
     return new Promise<boolean>((resolve, reject) => {
-      const downloadProcess = spawn(server_path, ['download'], { stdio: 'inherit' })
+      const downloadProcess = spawn(server_path, ['download'], {
+        stdio: 'inherit',
+        env: { ...process.env, MEME_HOME: path.join(karinPathBase, Version.Plugin_Name, 'data', 'memes') }
+      })
 
       downloadProcess.on('error', (error) => {
         logger.error(error)
@@ -388,12 +364,28 @@ export async function get_meme_server_memory (): Promise<string> {
 export async function get_meme_server_meme_total (): Promise<string> {
   try {
     const url = await utils.get_base_url()
-    const res = await utils.Request.get(`${url}/meme/keys`)
+    const isRust = await get_meme_server_type() === 'rust'
+    let res
+    if (isRust) {
+      res = await utils.Request.get(`${url}/meme/keys`)
+    } else {
+      res = await utils.Request.get(`${url}/memes/keys`)
+    }
     return res.data.length
   } catch (error) {
     logger.error(error)
     return '未知'
   }
+}
+
+/**
+ * 获取表情服务端的类型
+ * @returns 获取表情服务端的类型
+ */
+export async function get_meme_server_type (): Promise<'python' | 'rust'> {
+  const version = await get_meme_server_version()
+  if (!version) return 'python'
+  return system.satisfies('>=0.2.0', version) ? 'rust' : 'python'
 }
 
 /**
@@ -428,7 +420,7 @@ export async function init_server (port: number = 2255): Promise<void> {
     if (type === 'Linux') {
       await exec(`chmod +x ${server_path}`)
     }
-    const resource_path = path.join(os.homedir(), '.meme_generator', 'resources')
+    const resource_path = path.join(karinPathBase, Version.Plugin_Name, 'data', 'memes', 'resources')
     if (!await exists(resource_path)) {
       logger.info('表情服务端资源不存在，请稍后使用[#柠糖表情下载表情服务端资源]命令下载')
     }

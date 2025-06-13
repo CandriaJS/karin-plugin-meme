@@ -1,6 +1,6 @@
 {
   "name": "@candriajs/karin-plugin-meme",
-  "version": "2.7.1",
+  "version": "3.0.5",
   "description": "一个Karin版的表情包合成插件",
   "keywords": [
     "karin-plugin",
@@ -40,7 +40,6 @@
   "dependencies": {
     "adm-zip": "^0.5.16",
     "axios-retry": "^4.5.0",
-    "kill-port": "^2.0.1",
     "markdown-it": "^14.1.0",
     "sequelize": "^6.37.7",
     "smol-toml": "^1.3.4"

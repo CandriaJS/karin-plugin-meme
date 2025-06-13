@@ -1,5 +1,68 @@
 # 变更日志
 
+## [3.0.5](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.4...v3.0.5) (2025-06-12)
+
+
+### ♻️ 代码重构
+
+* **models:** 简化代码结构 ([0813b65](https://github.com/CandriaJS/karin-plugin-meme/commit/0813b6595d325289c613ea2085d87d5798ce84fb))
+
+## [3.0.4](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.3...v3.0.4) (2025-06-12)
+
+
+### ♻️ 代码重构
+
+* **models:** 兼容两种 meme 服务器类型的预览功能 ([84e7cc2](https://github.com/CandriaJS/karin-plugin-meme/commit/84e7cc29b29fc49025071102c18eb52b1efcc9bb))
+
+## [3.0.3](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.2...v3.0.3) (2025-06-12)
+
+
+### 🐛 错误修复
+
+* **server:** 表情服务端资源下载 ([f3c871f](https://github.com/CandriaJS/karin-plugin-meme/commit/f3c871fcfded49a896b7bd405509f0fe9c2d2272))
+
+
+### ♻️ 代码重构
+
+* **models:** 兼容 rust 和 non-rust meme 服务器类型 ([8f1fa96](https://github.com/CandriaJS/karin-plugin-meme/commit/8f1fa966c548ef87d14ee05d92f3b540f2777f82))
+
+## [3.0.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.1...v3.0.2) (2025-06-12)
+
+
+### ♻️ 代码重构
+
+* **server:** 移除获取本地 IP 地址的功能 ([38a1a0a](https://github.com/CandriaJS/karin-plugin-meme/commit/38a1a0a1ef2c9875133e5f5ccde95c0df43c8d8c))
+
+## [3.0.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.0...v3.0.1) (2025-06-12)
+
+
+### ⚡️ 性能优化
+
+* 导出make_meme函数 ([dde058a](https://github.com/CandriaJS/karin-plugin-meme/commit/dde058ac3b254646c00ecce54b588d2ce3983489))
+
+## [3.0.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.7.2...v3.0.0) (2025-06-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* 同时兼容Python版和Rust meme api ([#105](https://github.com/CandriaJS/karin-plugin-meme/issues/105))
+
+### ✨ 新功能
+
+* 同时兼容Python版和Rust meme api ([#105](https://github.com/CandriaJS/karin-plugin-meme/issues/105)) ([5fc8af1](https://github.com/CandriaJS/karin-plugin-meme/commit/5fc8af118b80d2c9ea2f99fb465559849c88c10a))
+
+
+### ♻️ 代码重构
+
+* **server:** 修改表情服务端配置路径和资源路径 ([6ceac37](https://github.com/CandriaJS/karin-plugin-meme/commit/6ceac3763befd60b411024e9b664c3ac509f91e8))
+
+## [2.7.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.7.1...v2.7.2) (2025-06-11)
+
+
+### 🐛 错误修复
+
+* 修复更新日志截图 ([0cf134b](https://github.com/CandriaJS/karin-plugin-meme/commit/0cf134b8e26bb093f16b234fa6305500abe65e45))
+
 ## [2.7.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v2.7.0...v2.7.1) (2025-06-10)
 
 

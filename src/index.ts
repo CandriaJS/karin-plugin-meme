@@ -51,3 +51,5 @@ logger.info(
 )
 logger.info(logger.chalk.cyan.bold('💬 雾里的小窝: 272040396'))
 logger.info(logger.chalk.green.bold('========================='))
+
+export { make_meme } from '@/models/utils'

@@ -6,7 +6,9 @@ export async function handleOption (
   e: Message,
   memekey: string,
   userText: string,
-  formdata: Record<string, unknown>,
+  allUsers: string[],
+  formdata: Record<string, unknown> | FormData,
+  isRust: boolean,
   isPreset? : boolean,
   PresetKeyWord?: string
 ): Promise<
@@ -67,8 +69,23 @@ export async function handleOption (
     }
     options[option.name] = result.value
   }
+  if (isRust) {
+    (formdata as Record<string, unknown>)['options'] = options
+  } else {
+    const userInfos = [
+      {
+        text: await utils.get_user_name(e, allUsers[0] || e.sender.userId),
+        gender: await utils.get_user_gender(e, allUsers[0] || e.sender.userId)
+      }
+    ]
+    const args = JSON.stringify({
+      user_infos: userInfos,
+      ...options
+    })
+    const fd = formdata as FormData
+    fd.append('args', args)
+  }
 
-  formdata['options'] = options
   return {
     success: true,
     text: userText.replace(/#(\S+)\s+([^#]+)/g, '').trim()

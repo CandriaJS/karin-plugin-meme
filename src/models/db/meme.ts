@@ -150,6 +150,40 @@ export async function add ({
 }
 
 /**
+ * 批量添加表情信息
+ * @param items 要添加的表情数据数组
+ * @param options 配置选项
+ * @returns Promise<Model[]> 添加成功的模型数组
+ */
+export async function add_bulk (
+  meme: Array<{
+    key: MemeInfoType['key'],
+    keyWords: MemeInfoType['keywords'],
+    min_texts: MemeInfoType['params']['min_texts'],
+    max_texts: MemeInfoType['params']['max_texts'],
+    min_images: MemeInfoType['params']['min_images'],
+    max_images: MemeInfoType['params']['max_images'],
+    default_texts: MemeInfoType['params']['default_texts'],
+    options: MemeInfoType['params']['options'],
+    tags: MemeInfoType['tags']
+  }>,
+  options?: {
+    /** 是否清空现有数据 */
+    force?: boolean
+  }
+): Promise<Model[]> {
+  const { force = false } = options ?? {}
+
+  if (force) {
+    await clear()
+  }
+
+  return await table.bulkCreate(meme, {
+    updateOnDuplicate: ['keyWords', 'min_texts', 'max_texts', 'min_images', 'max_images', 'default_texts', 'options', 'tags'],
+    returning: true
+  }) as Model[]
+}
+/**
  * 通过表情唯一标识符获取表情信息
  * @param key 表情的唯一标识符
  * @returns 表情的信息
