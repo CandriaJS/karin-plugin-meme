@@ -100,17 +100,17 @@ export async function get_user_avatar (
     if (!e) throw new Error('消息事件不能为空')
     if (!userId) throw new Error('用户ID不能为空')
 
-    const avatarDir = path.join(
-      karinPathBase,
-      Version.Plugin_Name,
-      'data',
-      'avatar'
-    )
+    const avatarDir = path.join(karinPathBase, Version.Plugin_Name, 'data', 'avatar')
     const cachePath = path.join(avatarDir, `${userId}.png`).replace(/\\/g, '/')
 
     if (Config.meme.cache && Number(Config.server.mode) === 1 && (await exists(cachePath))) {
-      const avatarUrl = await e.bot.getAvatarUrl(userId)
-      if (!avatarUrl) throw new Error(`获取用户头像失败: ${userId}`)
+      let avatarUrl: string
+      try {
+        avatarUrl = await e.bot.getAvatarUrl(userId)
+      } catch {
+        logger.warn('获取用户头像出错, 将使用api获取用户头像')
+        avatarUrl = `https://q1.qlogo.cn/g?b=qq&nk=${userId}&s=640`
+      }
       const headRes = await Request.head(avatarUrl)
       const lastModified = headRes.data['last-modified']
       const cacheStat = await fs.stat(cachePath)
