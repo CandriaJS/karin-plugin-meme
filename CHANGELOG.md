@@ -1,5 +1,12 @@
 # 变更日志
 
+## [3.0.10](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.9...v3.0.10) (2025-06-14)
+
+
+### 🐛 错误修复
+
+* **models:** 优化头像获取逻辑 ([32ffcfb](https://github.com/CandriaJS/karin-plugin-meme/commit/32ffcfbff009de341e7fc1f41eaa573571c700b7))
+
 ## [3.0.9](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.8...v3.0.9) (2025-06-13)
 
 
