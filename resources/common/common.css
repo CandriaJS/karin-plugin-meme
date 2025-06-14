@@ -79,20 +79,6 @@ body {
   padding: 0 2px;
 }
 
-.notice {
-  color: #888;
-  font-size: 12px;
-  text-align: right;
-  padding: 12px 5px 5px;
-}
-
-.notice-center {
-  color: #fff;
-  text-align: center;
-  margin-bottom: 10px;
-  text-shadow: 1px 1px 1px #333;
-}
-
 .copyright {
   font-size: 15px;
   font-family: Helvetica;
