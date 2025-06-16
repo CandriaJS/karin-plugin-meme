@@ -24,6 +24,11 @@ export const memeComponents = () => [
             description: '是否开启头像缓存，开启后头像图片将缓存到本地，减少网络请求次数',
             defaultSelected: Config.meme.cache
           }),
+          components.switch.create('username', {
+            label: '用户昵称',
+            description: '是否开启使用用户昵称, 开启后默认文本将使用用户昵称',
+            defaultSelected: Config.meme.username
+          }),
           components.switch.create('errorReply', {
             label: '错误回复',
             description: '是否开启错误回复，开启后会在错误时回复错误信息，关闭后只会在控制台输出错误信息',

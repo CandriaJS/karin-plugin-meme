@@ -12,5 +12,9 @@ reply: false
 # 是否开启头像缓存
 cache: true
 
+# 是否开启默认使用用户昵称
+# 仅python服务端有效
+username: false
+
 # 是否开启错误消息回复
 errorReply: true

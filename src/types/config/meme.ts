@@ -7,6 +7,8 @@ export interface memeType {
   reply: boolean
   /** 是否开启头像缓存 */
   cache: boolean
+  /** 是否获取用户昵称 */
+  username: boolean
   /** 错误回复 */
   errorReply: boolean
 }

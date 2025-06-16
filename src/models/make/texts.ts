@@ -1,5 +1,6 @@
 import { Message } from 'node-karin'
 
+import { Config } from '@/common'
 import { utils } from '@/models'
 
 export async function handleTexts (
@@ -29,14 +30,18 @@ export async function handleTexts (
   }
 
   const memeInfo = await utils.get_meme_info(memekey)
-  const default_texts = memeInfo?.default_texts ? JSON.parse(String(memeInfo.default_texts)) : await utils.get_user_name(e, quotedUser ?? allUsers[0] ?? e.userId)
-  if (
-    texts.length < min_texts &&
-    default_texts
-  ) {
-    while (texts.length < min_texts) {
-      const randomIndex = Math.floor(Math.random() * default_texts.length)
-      texts.push(default_texts[randomIndex])
+  if (Config.meme.username && !isRust) {
+    texts.push(await utils.get_user_name(e, quotedUser ?? allUsers[0] ?? e.userId))
+  } else {
+    const default_texts = memeInfo?.default_texts ? JSON.parse(String(memeInfo.default_texts)) : null
+    if (
+      texts.length < min_texts &&
+      default_texts
+    ) {
+      while (texts.length < min_texts) {
+        const randomIndex = Math.floor(Math.random() * default_texts.length)
+        texts.push(default_texts[randomIndex])
+      }
     }
   }
   if (isRust) {
