@@ -1,5 +1,12 @@
 # 变更日志
 
+## [3.1.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.11...v3.1.0) (2025-06-16)
+
+
+### ✨ 新功能
+
+* **meme:** 添加获取用户昵称功能 ([d142510](https://github.com/CandriaJS/karin-plugin-meme/commit/d142510709e46c88f8636213d5f19319032e28c8))
+
 ## [3.0.11](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.10...v3.0.11) (2025-06-14)
 
 
