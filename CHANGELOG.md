@@ -1,5 +1,17 @@
 # 变更日志
 
+## [3.1.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.1.0...v3.1.1) (2025-06-17)
+
+
+### 🐛 错误修复
+
+* 表情列表emoji显示 ([aa16352](https://github.com/CandriaJS/karin-plugin-meme/commit/aa163526818c585f21e3997a5206d78b7735bd88))
+
+
+### ♻️ 代码重构
+
+* **texts:** 优化文本处理逻辑 ([beb284c](https://github.com/CandriaJS/karin-plugin-meme/commit/beb284cbcfa670275376168fa94afea1b3bfecfd))
+
 ## [3.1.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.0.11...v3.1.0) (2025-06-16)
 
 
