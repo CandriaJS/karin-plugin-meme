@@ -30,12 +30,12 @@
 
 body {
   color: #1e1f20;
-  font-family: Number, YS, PingFangSC-Medium, NotoColorEmoji, sans-serif;
   transform-origin: 0 0;
   width: 100%;
 }
 
 .container {
+  font-family: Number, YS, PingFangSC-Medium, NotoColorEmoji, sans-serif;
   width: 1800px;
   padding: 20px 15px 10px 15px;
   background-size: contain;
