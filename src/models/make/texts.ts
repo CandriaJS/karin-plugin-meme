@@ -17,7 +17,7 @@ export async function handleTexts (
   | { success: true, texts: string }
   | { success: false, message: string }
 > {
-  const texts: string[] = []
+  let texts: string[] = []
 
   /** 用户输入的文本 */
   if (userText) {
@@ -30,20 +30,20 @@ export async function handleTexts (
   }
 
   const memeInfo = await utils.get_meme_info(memekey)
-  if (Config.meme.username && !isRust) {
-    texts.push(await utils.get_user_name(e, quotedUser ?? allUsers[0] ?? e.userId))
-  } else {
-    const default_texts = memeInfo?.default_texts ? JSON.parse(String(memeInfo.default_texts)) : null
-    if (
-      texts.length < min_texts &&
-      default_texts
-    ) {
+  if (texts.length < min_texts) {
+    if (Config.meme.username && !isRust) {
+      texts.push(await utils.get_user_name(e, quotedUser ?? allUsers[0] ?? e.userId))
+    } else {
+      const default_texts = memeInfo?.default_texts ? JSON.parse(String(memeInfo.default_texts)) : null
       while (texts.length < min_texts) {
         const randomIndex = Math.floor(Math.random() * default_texts.length)
         texts.push(default_texts[randomIndex])
       }
     }
   }
+
+  texts = texts.slice(0, max_texts)
+
   if (isRust) {
     (formdata as Record<string, unknown>)['texts'] = texts
   } else {

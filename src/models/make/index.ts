@@ -79,14 +79,14 @@ export async function make_meme (
       userText = option.text
     }
 
-    if (min_texts > 0 && max_texts > 0) {
+    if (min_texts >= 0 && max_texts > 0) {
       const text = await handleTexts(e, memekey, min_texts, max_texts, allUsers, quotedUser, userText, formdata, isRust)
       if (!text.success) {
         throw new Error(text.message)
       }
     }
 
-    if (min_images > 0 && max_images > 0) {
+    if (min_images >= 0 && max_images > 0) {
       const image = await handleImages(e, memekey, min_images, max_images, allUsers, quotedUser, userText, formdata, isRust)
       if (!image.success) {
         throw new Error(image.message)
