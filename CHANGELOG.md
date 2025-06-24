@@ -1,5 +1,12 @@
 # 变更日志
 
+## [3.1.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.1.1...v3.1.2) (2025-06-24)
+
+
+### ♻️ 代码重构
+
+* **models:** 优化引用消息获取逻辑 ([bedd777](https://github.com/CandriaJS/karin-plugin-meme/commit/bedd7779140a9b8640c26a376d881201251a1c2e))
+
 ## [3.1.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.1.0...v3.1.1) (2025-06-17)
 
 
