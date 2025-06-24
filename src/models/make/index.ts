@@ -37,19 +37,13 @@ export async function make_meme (
   try {
     const getquotedUser = async (e: Message): Promise<string | null> => {
       let source = null
-      let MsgId: string | null = null
+      const replyId: string | null = e.replyId ?? e.elements.find((m) => m.type === 'reply')?.messageId ?? null
 
-      if (e.replyId) {
-        MsgId = (await e.bot.getMsg(e.contact, e.replyId)).messageId ?? null
-      } else {
-        MsgId = e.elements.find((m) => m.type === 'reply')?.messageId ?? null
-      }
-      if (MsgId) {
-        source = (await e.bot.getHistoryMsg(e.contact, MsgId, 2))?.[0] ?? null
+      if (replyId) {
+        source = (await e.bot.getMsg(e.contact, replyId)) ?? null
       }
       if (source) {
-        const sourceArray = Array.isArray(source) ? source : [source]
-        return sourceArray[0].sender.userId.toString()
+        return source.sender.userId.toString()
       }
       return null
     }
