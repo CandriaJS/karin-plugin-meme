@@ -537,7 +537,8 @@ export async function make_meme (memekey: string, data: Record<string, unknown> 
     const url = await utils.get_base_url()
     let res, image
     if (meme_server_type === 'python') {
-      res = await Request.post(`${url}/memes/${memekey}`, data, {}, 'arraybuffer')
+      res = await Request.post(`${url}/memes/${memekey}/`, data, {}, 'arraybuffer')
+      if (!res.success) throw new Error(res.msg)
       image = res.data
     } else if (meme_server_type === 'rust') {
       res = await Request.post(`${url}/memes/${memekey}`, data, {}, 'json')

@@ -64,7 +64,6 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.1"
   },
-  "packageManager": "pnpm@9.13.2",
   "karin": {
     "main": "src/index.ts",
     "web": "./lib/web.config.js",
@@ -86,5 +85,13 @@
   },
   "engines": {
     "karin": ">=1.10.1"
-  }
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@karinjs/sqlite3-cjs",
+      "esbuild",
+      "unrs-resolver"
+    ]
+  },
+  "packageManager": "pnpm@10.12.4"
 }
