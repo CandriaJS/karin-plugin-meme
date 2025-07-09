@@ -72,7 +72,6 @@ export async function make_meme (
       }
       userText = option.text
     }
-
     if (min_texts >= 0 && max_texts > 0) {
       const text = await handleTexts(e, memekey, min_texts, max_texts, allUsers, quotedUser, userText, formdata, isRust)
       if (!text.success) {
@@ -86,6 +85,21 @@ export async function make_meme (
         throw new Error(image.message)
       }
     }
+    logger.debug(`生成的表情的key: ${memekey}`)
+    logger.debug(
+      `表情的参数:\n${
+        isRust
+          ? `images: ${JSON.stringify(
+              (formdata as { images: Array<{ id: string; name: string }> }).images
+                .map(img => ({ id: img.id, name: img.name }))
+            )}\n` +
+            `texts: ${JSON.stringify((formdata as { texts: unknown[] }).texts)}\n` +
+            `options: ${JSON.stringify((formdata as { options: Record<string, unknown> }).options)}`
+          : `images: [${(formdata as FormData).getAll('images').map((_, i) => `image${i}.png`).join(', ')}]\n` +
+          `texts: ${JSON.stringify((formdata as FormData).getAll('texts'))}\n` +
+          `options: ${JSON.stringify((formdata as FormData).getAll('args'))}`
+      }`
+    )
     const response = await utils.make_meme(memekey, formdata, isRust ? 'rust' : 'python')
     const basedata = await base64(response)
     if (Config.stat.enable && e.isGroup) {
