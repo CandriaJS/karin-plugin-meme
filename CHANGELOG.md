@@ -1,5 +1,12 @@
 # 变更日志
 
+## [3.1.3](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.1.2...v3.1.3) (2025-07-09)
+
+
+### 🎡 持续集成
+
+* **release:** 修改 pnpm 安装配置 ([f557adb](https://github.com/CandriaJS/karin-plugin-meme/commit/f557adba55e1e948030ec6f70ea8e9fd34313eb8))
+
 ## [3.1.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.1.1...v3.1.2) (2025-07-09)
 
 
