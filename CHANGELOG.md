@@ -1,5 +1,24 @@
 # 变更日志
 
+## [3.1.2](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.1.1...v3.1.2) (2025-07-09)
+
+
+### 🐛 错误修复
+
+* **webui:** 优化服务器地址验证规则 ([a32c5f9](https://github.com/CandriaJS/karin-plugin-meme/commit/a32c5f925132780ac4337bc6bf961ee8db1b75c3))
+* 修改python生成表情图片异常 ([62dc817](https://github.com/CandriaJS/karin-plugin-meme/commit/62dc81706c3984e8658c0aaf09b77e49be704032))
+
+
+### ♻️ 代码重构
+
+* **models:** 优化 texts.ts 中的文本处理逻辑 ([e61fca7](https://github.com/CandriaJS/karin-plugin-meme/commit/e61fca74fade452d14ee1b2d8ea7d4892b5940fb))
+* **models:** 优化引用消息获取逻辑 ([bedd777](https://github.com/CandriaJS/karin-plugin-meme/commit/bedd7779140a9b8640c26a376d881201251a1c2e))
+
+
+### 📦️ 构建系统
+
+* 新增独立的构建工作流 ([4ab0323](https://github.com/CandriaJS/karin-plugin-meme/commit/4ab0323b3afb5f5e3e0689db2dfdb7eb06ffe8a6))
+
 ## [3.1.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.1.0...v3.1.1) (2025-06-17)
 
 
