@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/CandriaJS/karin-plugin-meme/compare/v4.0.0...v4.0.1) (2025-08-26)
+
+
+### 🔧 其他更新
+
+* 重建仓库 ([01880f9](https://github.com/CandriaJS/karin-plugin-meme/commit/01880f9ca1d1d0fca7e5f75d7fa56f1fb13d25c5))
+
 ## [4.0.0](https://github.com/CandriaJS/karin-plugin-meme/compare/v3.1.3...v4.0.0) (2025-08-26)
 
 
