@@ -1,5 +1,12 @@
 ## 变更日志
 
+## [4.0.3](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-v4.0.2...meme-v4.0.3) (2025-08-26)
+
+
+### 🐛 错误修复
+
+* **meme:** 修复表情详情预览图片功能 ([7ed4235](https://github.com/CandriaJS/karin-plugin-meme/commit/7ed42356eb22554cf869eb6806d338b3122a02b9))
+
 ## [4.0.2](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-v4.0.1...meme-v4.0.2) (2025-08-26)
 
 
