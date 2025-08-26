@@ -54,7 +54,7 @@ export const info = karin.command(/^#?(?:(?:柠糖)?表情)详情\s*(.+)$/i, asy
       const previewImage = meme.generatePreview()
       if (previewImage.type === 'Ok') {
         replyMessage.push(segment.text('\n预览图片:\n'))
-        replyMessage.push(segment.image(`base64://${await base64(previewImage)}`))
+        replyMessage.push(segment.image(`base64://${await base64(previewImage.field0)}`))
       } else throw new Error(`生成预览图片失败: ${previewImage.field0.type}:${JSON.stringify(previewImage.field0.field0)}`)
     } catch(error) {
       logger.error(error)
