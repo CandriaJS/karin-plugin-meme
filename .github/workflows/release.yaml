@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       meme: ${{ steps.release-please.outputs['packages/meme--release_created'] }}
-      meme_api: ${{ steps.release-please.outputs['packages/meme-api--release_created'] }}
+      meme-api: ${{ steps.release-please.outputs['packages/meme-api--release_created'] }}
     steps:
       - name: 获取token
         uses: actions/create-github-app-token@v2
