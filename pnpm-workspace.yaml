@@ -1,0 +1,6 @@
+packages:
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@karinjs/sqlite3-cjs'
+  - esbuild

@@ -1,0 +1,56 @@
+name: Build Package
+on:
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+
+      - name: 设置 bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      
+      - name: 安装依赖
+        run: | 
+          bun install
+          cp -r README.md LICENSE packages/meme/
+          cp -r README.md LICENSE packages/meme-api/
+        
+      - name: 构建meme
+        run: |
+          bun install
+          bun run build
+          mkdir -p ${{ runner.temp }}/temp/meme
+          cp -r package.json CHANGELOG.md README.md LICENSE resources config lib ${{ runner.temp }}/temp/meme
+        working-directory: packages/meme
+
+      - name: 构建meme-api
+        run: |
+          bun install
+          bun run build
+          mkdir -p ${{ runner.temp }}/temp/meme-api
+          cp -r package.json CHANGELOG.md README.md LICENSE resources config lib ${{ runner.temp }}/temp/meme-api
+        working-directory: packages/meme-api
+
+      - name: 上传meme构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: meme
+          path: ${{ runner.temp }}/temp/meme
+
+      - name: 上传meme-api构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: meme-api
+          path: ${{ runner.temp }}/temp/meme-api

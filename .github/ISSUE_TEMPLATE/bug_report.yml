@@ -1,0 +1,55 @@
+name: 错误报告
+description: 在使用 karin-plugin-meme 的过程中遇到了错误
+title: '[🐛 Bug]: '
+labels: [ "bug" ]
+
+body:
+  - type: markdown
+    attributes:
+      value: 感谢您花时间填写此错误报告，请**务必确认您的issue不是重复的**，否则我们可能会直接关闭它。请按照下面的模板填写您的信息。
+
+  - type: checkboxes
+    attributes:
+      label: 请确保以下事项
+      description: 您必须勾选以下所有内容, 否则您的issue可能会被直接关闭。
+      options:
+        - label: 我已经阅读了[文档](https://docs.wuliya.cn/candria/meme)。
+        - label: 我确定没有重复的issue或讨论。
+        - label: 我确定是`karin-plugin-meme`的问题，而不是其他原因（例如网络，`依赖`或`操作`）。
+        - label: 我确定这个问题在最新版本中没有被修复。
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: 您使用的是哪个版本/commit id的源码, 请不要使用`latest`或`main`作为答案。
+      placeholder: v0.xx.xx 或者 commit id
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 问题描述
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: 配置
+      description: 请提供您的`karin-plugin-meme`应用的配置文件(隐藏隐私字段)
+    validations:
+      required: true
+  - type: textarea
+    id: Operation-procedure
+    attributes:
+      label: 操作步骤
+      description: 大意为聊天记录截图
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志
+      description: 请复制粘贴错误日志，或者截图。务必完整
+    validations:
+      required: true

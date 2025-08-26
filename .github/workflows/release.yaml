@@ -1,0 +1,100 @@
+name: 发布发行版
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  id-token: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      meme: ${{ steps.release-please.outputs['packages/meme--release_created'] }}
+      meme_api: ${{ steps.release-please.outputs['packages/meme-api--release_created'] }}
+    steps:
+      - name: 获取token
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          
+      - name: 运行 release-please-action
+        id: release-please
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+          
+  build:
+    needs: release
+    if: ${{ needs.release.outputs.meme == 'true' || needs.release.outputs.meme-api == 'true' }}
+    uses: ./.github/workflows/build.yaml
+
+
+  meme:
+    needs: [build, release]
+    runs-on: ubuntu-latest
+    if: ${{ needs.release.outputs.meme == 'true' }}
+    steps:
+      - name: 导入构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: meme
+          path: ./
+
+
+      - name: 发布到 NPM Package
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          registry: https://registry.npmjs.org/
+          access: public
+          provenance: true
+
+      - name: 发布到 GitHub Packages
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: https://npm.pkg.github.com
+          access: public
+          provenance: true
+
+  meme-api:
+    needs: [build, release]
+    runs-on: ubuntu-latest
+    if: ${{ needs.release.outputs.meme_api == 'true' }}
+    steps:
+      - name: 导入构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: meme-api
+          path: ./
+
+
+      - name: 发布到 NPM Package
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          registry: https://registry.npmjs.org/
+          access: public
+          provenance: true
+
+      - name: 发布到 GitHub Packages
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: https://npm.pkg.github.com
+          access: public
+          provenance: true
+      
+
+  

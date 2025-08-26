@@ -1,0 +1,128 @@
+name: 发布预览版
+
+on:
+  push:
+    branches:
+      - main
+      - '!release-please*'
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  beta-info:
+    runs-on: ubuntu-latest
+    if: "!startsWith(github.head_ref, 'release-please')"
+    outputs:
+      short_commit_hash: ${{ steps.get-sha.outputs.SHORT_COMMIT_HASH }}
+      build_timestamp: ${{ steps.get-build-timestamp.outputs.BUILD_TIMESTAMP }}
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+
+      - name: 获取分支的最新提交哈希
+        id: get-sha
+        run: |
+          branch=${{ github.event.pull_request.head.ref || github.ref_name }}
+          git fetch --depth=1 origin $branch
+          SHORT_COMMIT_HASH=$(git rev-parse --short FETCH_HEAD)
+          echo "SHORT_COMMIT_HASH=$SHORT_COMMIT_HASH" >> $GITHUB_ENV
+          echo "SHORT_COMMIT_HASH=$SHORT_COMMIT_HASH" >> $GITHUB_OUTPUT
+          echo "分支 $branch 的最新短哈希为: $SHORT_COMMIT_HASH"
+
+      - name: 获取构建时间
+        id: get-build-timestamp
+        run: |
+          branch=${{ github.event.pull_request.head.ref || github.ref_name }}
+          git fetch origin $branch --depth=1
+          BUILD_TIMESTAMP_UTC=$(git show -s --format=%cd --date=iso-strict origin/$branch)
+          echo "BUILD_TIMESTAMP_UTC=$BUILD_TIMESTAMP_UTC"
+          BUILD_TIMESTAMP=$(TZ=Asia/Shanghai date -d "$BUILD_TIMESTAMP_UTC" +"%Y-%m-%d %H:%M:%S")
+
+          echo "BUILD_TIMESTAMP=$BUILD_TIMESTAMP" >> $GITHUB_ENV
+          echo "BUILD_TIMESTAMP=$BUILD_TIMESTAMP" >> $GITHUB_OUTPUT
+          echo "构建时间: $BUILD_TIMESTAMP"
+
+  build:
+    if: "!startsWith(github.head_ref, 'release-please')"
+    uses: ./.github/workflows/build.yaml
+
+  create-release:
+    if: "!startsWith(github.head_ref, 'release-please')"
+    needs: [beta-info, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 导入Meme构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: meme
+          path: ./meme
+
+      - name: 导入Meme-api构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: meme-api
+          path: ./meme-api
+
+      - name: 获取token
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: 设置 bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: 发布 meme
+        run: |
+          bun x pkg-pr-new publish './meme' './meme-api' --json output.json --comment=off > meme.txt 2>&1
+          
+          echo "## 成功推送的Package包 :" >> $GITHUB_STEP_SUMMARY
+          echo "包名: \`@candriajs/karin-plugin-meme\`" >> $GITHUB_STEP_SUMMARY
+          echo "使用 pnpm:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "pnpm add https://pkg.pr.new/${{ github.repository }}/@candriajs/karin-plugin-meme@${{ needs.beta-info.outputs.short_commit_hash }} -w" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+          echo "包名: \`@candriajs/karin-plugin-meme-api\`" >> $GITHUB_STEP_SUMMARY
+          echo "使用 pnpm:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "pnpm add https://pkg.pr.new/${{ github.repository }}/@candriajs/karin-plugin-meme-api@${{ needs.beta-info.outputs.short_commit_hash }} -w" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+          echo "## 完整输出信息" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat meme.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: 发布PR 评论
+        if: github.event_name == 'pull_request_target'
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          pr-number: ${{ github.event.pull_request_target.number }}
+          github-token: ${{ steps.app-token.outputs.token }}
+          comment-tag: execution
+          mode: recreate
+          message: |
+            🎉 🎉 🎉 **构建完成！**
+            该版本是基于 `${{ github.event.pull_request.head.ref || github.ref_name }}` 分支的快照 [**`${{ needs.beta-info.outputs.short_commit_hash }}`**](https://github.com/${{ github.repository }}/commit/${{ needs.beta-info.outputs.short_commit_hash }}) 所构建的。
+
+            你可以通过以下命令安装该版本：
+            ```
+            pnpm add https://pkg.pr.new/${{ github.repository }}/karin-plugin-meme@${{ needs.beta-info.outputs.short_commit_hash }} -w
+            ```

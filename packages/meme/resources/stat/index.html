@@ -1,0 +1,20 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/stat/index.css" />
+{{/block}}
+
+{{block 'main'}}
+<div class="stat-container">
+  <h1 class="stat-title">柠糖表情统计</h1>
+  <div class="stat-total">表情调用总次数：{{total}}</div>
+  <div class="stat-list">
+    {{each memeList item}}
+    <div class="stat-item">
+      <div class="stat-keyword">{{item.keywords}}</div>
+      <div class="stat-count">{{item.count}} 次</div>
+    </div>
+    {{/each}}
+  </div>
+</div>
+{{/block}}

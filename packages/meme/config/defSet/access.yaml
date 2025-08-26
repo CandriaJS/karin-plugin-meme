@@ -1,0 +1,44 @@
+# 是否开启名单限制
+enable: false
+
+# 是否开启表情限制
+memeEnable: false
+
+# 名单限制模式（白名单：0，黑名单：1）
+accessMode: 1
+
+# 表情限制模式（白名单：0，黑名单：1）
+memeMode: 1
+
+# 用户黑白名单
+# 示例配置文件
+# accessList: 
+# - 
+#  groupId: 763064591 // 群号
+#  blackUser:  // 黑名单用户
+#    - 114514
+#   whiteUser:  // 白名单用户
+#     - 114514
+# - 
+#  groupId: global // 群号，此处是全局
+#  blackUser: // 黑名单用户
+#    - 3369906077
+#   whiteUser: // 白名单用户
+#     - 114514
+accessList: []
+
+# 启用/禁用表情
+#  示例配置文件
+# memeAccessList: 
+# - 
+#  groupId: 763064591 // 群号
+#  blackMeme:  // 黑名单表情
+#      - 喜报
+#  whiteMeme:   // 白名单表情
+#      - 悲报
+#  groupId: global // 群号，此处是全局
+#  blackMeme:  // 黑名单表情
+#      - 喜报
+#  whiteMeme:   // 白名单表情
+#      - 悲报
+memeAccessList: []
