@@ -1,6 +1,5 @@
 import { logger } from 'node-karin'
 import axios from 'node-karin/axios'
-
 import { Config } from '@/common'
 import { server, utils } from '@/models'
 import { Version } from '@/root'

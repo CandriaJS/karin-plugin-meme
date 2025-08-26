@@ -71,7 +71,7 @@ jobs:
   meme-api:
     needs: [build, release]
     runs-on: ubuntu-latest
-    if: ${{ needs.release.outputs.meme_api == 'true' }}
+    if: ${{ needs.release.outputs.meme-api == 'true' }}
     steps:
       - name: 导入构建产物
         uses: actions/download-artifact@v4
