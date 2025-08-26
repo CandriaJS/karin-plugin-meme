@@ -1,5 +1,12 @@
 # 变更日志
 
+## [1.1.3](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-api-v1.1.2...meme-api-v1.1.3) (2025-08-26)
+
+
+### 🔧 其他更新
+
+* 优化代码格式 ([e758492](https://github.com/CandriaJS/karin-plugin-meme/commit/e758492631888e38045b1e593c7cb7dc16c2a61d))
+
 ## [1.1.2](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-api-v1.1.1...meme-api-v1.1.2) (2025-08-26)
 
 
