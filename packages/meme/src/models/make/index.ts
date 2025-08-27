@@ -63,7 +63,7 @@ export async function make_meme (
       options: {}
     }
     if (options) {
-      const option = await handleOption(e, memekey, userText, allUsers, formdata, isPreset, PresetKeyWord)
+      const option = await handleOption(e, memekey, userText, formdata, isPreset, PresetKeyWord)
       if (!option.success) {
         throw new Error(option.message)
       }

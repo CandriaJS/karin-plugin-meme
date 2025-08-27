@@ -4,10 +4,9 @@ import { utils } from '@/models'
 import type { MemeOptionType } from '@/types'
 import { OptionValue } from 'meme-generator'
 export async function handleOption (
-  e: Message,
+  _e: Message,
   memekey: string,
   userText: string,
-  allUsers: string[],
   formdata: Record<string, unknown>,
   isPreset? : boolean,
   PresetKeyWord?: string
@@ -107,7 +106,7 @@ function convertOptionValue(
             message: `参数 ${option.name} 需要是布尔值`
           }
         }
-        return { success: true, value: convertedValue as unknown as OptionValue }
+        return { success: true, value: { type: 'Boolean', field0: convertedValue } }
       }
 
     case 'integer':
@@ -131,9 +130,8 @@ function convertOptionValue(
             message: `参数 ${option.name} 不能大于 ${supportedOption.maximum}`
           }
         }
-        return { success: true, value: intValue as unknown as OptionValue }
+        return { success: true, value: { type: 'Integer', field0: intValue } }
       }
-
     case 'float':
       {
         const floatValue = parseFloat(String(option.value))
@@ -155,18 +153,18 @@ function convertOptionValue(
             message: `参数 ${option.name} 不能大于 ${supportedOption.maximum}`
           }
         }
-        return { success: true, value: floatValue as unknown as OptionValue }
+        return { success: true, value: { type: 'Float', field0: floatValue } }
       }
 
     case 'string':
-      convertedValue = option.value
+      convertedValue = option.value as string
       if (supportedOption.choices && !supportedOption.choices.includes(String(convertedValue))) {
         return {
           success: false,
           message: `参数 ${option.name} 的值必须是: ${supportedOption.choices.join(', ')} 之一`
         }
       }
-      return { success: true, value: convertedValue as unknown as OptionValue }
+      return { success: true, value: { type: 'String', field0: convertedValue } }
 
     default:
       return {
