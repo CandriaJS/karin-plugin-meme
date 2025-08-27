@@ -1,6 +1,6 @@
 {
   "name": "@candriajs/karin-plugin-meme",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "一个Karin版的表情包合成插件",
   "keywords": [
     "karin-plugin",

@@ -1,5 +1,12 @@
 ## 变更日志
 
+## [4.0.4](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-v4.0.3...meme-v4.0.4) (2025-08-27)
+
+
+### ♻️ 代码重构
+
+* **meme:** 重构选项处理逻辑 ([6739cf0](https://github.com/CandriaJS/karin-plugin-meme/commit/6739cf01c9383330f17ca730f57af9ce13114b57))
+
 ## [4.0.3](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-v4.0.2...meme-v4.0.3) (2025-08-26)
 
 
