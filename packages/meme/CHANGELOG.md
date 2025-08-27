@@ -1,5 +1,12 @@
 ## 变更日志
 
+## [4.0.5](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-v4.0.4...meme-v4.0.5) (2025-08-27)
+
+
+### ♻️ 代码重构
+
+* **meme:** 调整用户头像处理顺序 ([5d41794](https://github.com/CandriaJS/karin-plugin-meme/commit/5d41794976b62cf591394d93ccd46a73afc47d88))
+
 ## [4.0.4](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-v4.0.3...meme-v4.0.4) (2025-08-27)
 
 
