@@ -87,7 +87,7 @@ export async function handleImages(
       }
     }
 
-    userAvatars.push({
+    userAvatars.unshift({
       name: await utils.get_user_name(e, avatar.userId),
       data: avatar.image
     })
