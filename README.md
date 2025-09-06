@@ -18,20 +18,17 @@
 如有问题请提交 `issue` 或加入 Q 群: `272040396` 📬
 
 >[!TIP]
->自`V2`版本起，已内置服务端的下载，在`server.yaml`中配置`mode`为`1`重启等待插件下载完成即可使用
->修改完需重启生效
->但需手动下载表情资源, 在data/server目录下执行以下命令. windows用户需要加.exe后缀
->```bash
->meme download
->```
+>`@candriajs/karin-plugin-meme` 的`MEME_HOME`环境变量设置了在`@karinjs/@candriajs/karin-plugin-meme/data/memes`
 
-## 安装与更新 🔧
 
-在`Karin`目录执行以下命令
+## 包区别
 
-```bash
-pnpm add @candriajs/karin-plugin-meme@latest -w
-```
+| 包名                              | 描述                                | 安装命令                                          |
+| --------------------------------- | ----------------------------------- | ------------------------------------------------- |
+| `@candriajs/karin-plugin-meme`    | 内置服务端，无需额外安装 API 服务端 | `pnpm add @candriajs/karin-plugin-meme@latest -w` |
+| `@candriajs/karin-plugin-mem-api` | 需要单独安装 API 服务端             | `pnpm add @candriajs/karin-plugin-meme-api@latest -w`                                            |
+
+
 
 ## 使用帮助 ℹ️
 其他内容请查看 [官方文档](https://docs.wuliya.cn)
