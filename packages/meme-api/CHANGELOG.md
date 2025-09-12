@@ -1,5 +1,17 @@
 # 变更日志
 
+## [1.2.0](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-api-v1.1.3...meme-api-v1.2.0) (2025-09-12)
+
+
+### ✨ 新功能
+
+* **meme:** 重构表情列表渲染功能 ([66b5c83](https://github.com/CandriaJS/karin-plugin-meme/commit/66b5c832e43943e54e11e047c8095732361f3c9f))
+
+
+### ♻️ 代码重构
+
+* **dependencies:** 调整 canvas 依赖至子包 ([e9608c6](https://github.com/CandriaJS/karin-plugin-meme/commit/e9608c639cc23cc15f59c6faad949e94b35de0cc))
+
 ## [1.1.3](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-api-v1.1.2...meme-api-v1.1.3) (2025-08-26)
 
 

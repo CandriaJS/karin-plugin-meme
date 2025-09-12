@@ -1,5 +1,22 @@
 ## 变更日志
 
+## [4.1.0](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-v4.0.5...meme-v4.1.0) (2025-09-12)
+
+
+### ✨ 新功能
+
+* **meme:** 重构表情列表渲染功能 ([66b5c83](https://github.com/CandriaJS/karin-plugin-meme/commit/66b5c832e43943e54e11e047c8095732361f3c9f))
+
+
+### 🐛 错误修复
+
+* render ([7b98816](https://github.com/CandriaJS/karin-plugin-meme/commit/7b988167727bd6ab0bac4af644a7099f9a1c3248))
+
+
+### ♻️ 代码重构
+
+* **dependencies:** 调整 canvas 依赖至子包 ([e9608c6](https://github.com/CandriaJS/karin-plugin-meme/commit/e9608c639cc23cc15f59c6faad949e94b35de0cc))
+
 ## [4.0.5](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-v4.0.4...meme-v4.0.5) (2025-08-27)
 
 
