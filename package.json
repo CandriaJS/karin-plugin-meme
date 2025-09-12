@@ -23,7 +23,6 @@
   },
   "packageManager": "pnpm@10.13.1",
   "dependencies": {
-    "canvas": "npm:@napi-rs/canvas@^0.1.79",
     "es-toolkit": "^1.39.10"
   }
 }

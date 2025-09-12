@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      canvas:
-        specifier: npm:@napi-rs/canvas@^0.1.79
-        version: '@napi-rs/canvas@0.1.79'
       es-toolkit:
         specifier: ^1.39.10
         version: 1.39.10
@@ -45,6 +42,9 @@ importers:
 
   packages/meme:
     dependencies:
+      canvas:
+        specifier: npm:@napi-rs/canvas@^0.1.79
+        version: '@napi-rs/canvas@0.1.79'
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
@@ -82,6 +82,9 @@ importers:
       axios-retry:
         specifier: ^4.5.0
         version: 4.5.0(axios@1.12.0)
+      canvas:
+        specifier: npm:@napi-rs/canvas@^0.1.79
+        version: '@napi-rs/canvas@0.1.79'
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
