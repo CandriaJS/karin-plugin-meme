@@ -15,7 +15,7 @@
     "@karinjs/plugin-puppeteer": "^1.0.16",
     "@types/node": "^22.15.3",
     "cross-env": "^7.0.3",
-    "node-karin": "^1.10.20",
+    "node-karin": "1.10.23",
     "tsc-alias": "1.8.13",
     "tsup": "^8.5.0",
     "tsx": "^4.19.4",
@@ -23,6 +23,7 @@
   },
   "packageManager": "pnpm@10.13.1",
   "dependencies": {
+    "canvas": "npm:@napi-rs/canvas@^0.1.79",
     "es-toolkit": "^1.39.10"
   }
 }

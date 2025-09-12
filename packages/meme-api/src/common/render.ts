@@ -4,6 +4,7 @@ import karin, { ImageElement, segment } from 'node-karin'
 
 import { Config } from '@/common/config'
 import { Version } from '@/root'
+import { createCanvas, loadImage } from 'canvas'
 
 /**
  * 渲染精度
@@ -53,6 +54,148 @@ const Render = {
     }
 
     return ret
-  }
+  },
+  	async list(data: { name: string; types: string[] }[]) {
+		const width = 1200;
+		const minHeight = 600;
+		const padding = 40;
+		const columnCount = 3;
+		const columnGap = 32;
+		const rowHeight = 68;
+		const headerHeight = 160;
+		const headerMarginBottom = 20;
+		const columnWidth = Math.floor(
+			(width - padding * 2 - columnGap * (columnCount - 1)) / columnCount,
+		);
+
+		const itemsPerColumn = Math.ceil(data.length / columnCount);
+		const totalRows = itemsPerColumn;
+		const neededHeight = headerHeight + totalRows * rowHeight + padding * 2;
+		const realHeight = Math.max(minHeight, neededHeight);
+
+		const canvas = createCanvas(width, realHeight);
+		const ctx = canvas.getContext("2d");
+
+		// 背景
+		const bg = await loadImage(
+			`${Version.Plugin_Path}/resources/list/imgs/bg.webp`,
+		);
+		ctx.drawImage(bg, 0, 0, width, realHeight);
+
+		ctx.save();
+		const headerBoxWidth = width - padding * 2;
+		const headerBoxHeight = 110;
+		const headerBoxX = padding;
+		const headerBoxY = padding;
+		ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+		ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+		ctx.shadowBlur = 4;
+		ctx.shadowOffsetY = 2;
+		ctx.beginPath();
+		ctx.roundRect(headerBoxX, headerBoxY, headerBoxWidth, headerBoxHeight, 12);
+		ctx.fill();
+
+		// 绘制标题
+		ctx.font = "48px SmileySans";
+		ctx.fillStyle = "#333";
+		ctx.textBaseline = "top";
+		ctx.shadowColor = "#fff";
+		ctx.shadowBlur = 8;
+
+		const title = "柠糖表情列表";
+		const titleWidth = ctx.measureText(title).width;
+		const centerXTitle = (width - titleWidth) / 2;
+		ctx.fillText(title, centerXTitle, padding + 15);
+
+		// 绘制副标题
+		ctx.font = "24px SmileySans";
+		ctx.shadowBlur = 0;
+		ctx.fillStyle = "#666";
+		const subtitle = `表情总数：${data.length}`;
+		const subtitleWidth = ctx.measureText(subtitle).width;
+		const centerXSubtitle = (width - subtitleWidth) / 2;
+		ctx.fillText(subtitle, centerXSubtitle, padding + 70);
+
+		ctx.restore();
+
+		const textIcon = await loadImage(
+			`${Version.Plugin_Path}/resources/list/imgs/icons/text.svg`,
+		);
+		const imageIcon = await loadImage(
+			`${Version.Plugin_Path}/resources/list/imgs/icons/image.svg`,
+		);
+		const optionIcon = await loadImage(
+			`${Version.Plugin_Path}/resources/list/imgs/icons/option.svg`,
+		);
+
+		ctx.save();
+		ctx.font = "20px SmileySans, NotoColorEmoji";
+		ctx.fillStyle = "#333";
+		ctx.textBaseline = "middle";
+
+		for (let i = 0; i < data.length; i++) {
+			const item = data[i];
+			const columnIndex = Math.floor(i / itemsPerColumn);
+			const rowIndex = i % itemsPerColumn;
+			const x = padding + columnIndex * (columnWidth + columnGap);
+			const y = headerHeight + headerMarginBottom + rowIndex * rowHeight;
+			ctx.save();
+			ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+			ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+			ctx.shadowBlur = 4;
+			ctx.shadowOffsetY = 2;
+			ctx.beginPath();
+			ctx.roundRect(x, y - 10, columnWidth, rowHeight + 20, 8);
+			ctx.fill();
+			ctx.restore();
+
+			const index = i + 1;
+			const text = `${index}. ${item.name}`;
+			ctx.fillText(text, x + 16, y + rowHeight / 2);
+
+			// 绘制meme类别
+			const iconSize = 18;
+			const iconGap = 8;
+			let iconX = x + columnWidth - 16;
+
+			if (item.types.includes("option")) {
+				iconX -= iconSize;
+				ctx.drawImage(
+					optionIcon,
+					iconX,
+					y + (rowHeight - iconSize) / 2,
+					iconSize,
+					iconSize,
+				);
+				iconX -= iconGap;
+			}
+			if (item.types.includes("image")) {
+				iconX -= iconSize;
+				ctx.drawImage(
+					imageIcon,
+					iconX,
+					y + (rowHeight - iconSize) / 2,
+					iconSize,
+					iconSize,
+				);
+				iconX -= iconGap;
+			}
+			if (item.types.includes("text")) {
+				iconX -= iconSize;
+				ctx.drawImage(
+					textIcon,
+					iconX,
+					y + (rowHeight - iconSize) / 2,
+					iconSize,
+					iconSize,
+				);
+			}
+		}
+
+		ctx.restore();
+
+		const buf = await canvas.toBuffer("image/png");
+		return buf;
+	},
 }
 export { Render }

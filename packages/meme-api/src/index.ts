@@ -3,6 +3,7 @@ import axios from 'node-karin/axios'
 import { Config } from '@/common'
 import { server, utils } from '@/models'
 import { Version } from '@/root'
+import { GlobalFonts } from 'canvas'
 export async function KARIN_PLUGIN_INIT () {
   try {
     if (Number(Config.server.mode) === 1) {
@@ -13,13 +14,14 @@ export async function KARIN_PLUGIN_INIT () {
   } catch (error) {
     logger.error(logger.chalk.bold.red(`[${Version.Plugin_AliasName}] 💥 表情服务端启动失败！错误详情：${(error as Error).message}`))
   }
+
+  await register_font();
   try {
     await utils.init()
     logger.info(logger.chalk.bold.blue(`[${Version.Plugin_AliasName}] 🎉 表情包数据加载成功！`))
   } catch (error) {
     logger.error(logger.chalk.bold.red(`[${Version.Plugin_AliasName}] 💥 表情包数据加载失败！错误详情：${(error as Error).message}`))
   }
-}
 
 let responseData = '加载失败'
 try {
@@ -50,5 +52,17 @@ logger.info(
 )
 logger.info(logger.chalk.cyan.bold('💬 雾里的小窝: 272040396'))
 logger.info(logger.chalk.green.bold('========================='))
+}
+
+async function register_font() {
+	GlobalFonts.registerFromPath(
+		`${Version.Plugin_Path}/resources/fonts/NotoColorEmoji-Regular.woff2`,
+		"NotoColorEmoji",
+	);
+	GlobalFonts.registerFromPath(
+		`${Version.Plugin_Path}/resources/fonts/SmileySans-Oblique.woff2`,
+		"SmileySans",
+	);
+}
 
 export { make_meme } from '@/models/utils'

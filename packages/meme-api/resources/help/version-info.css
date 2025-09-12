@@ -1,12 +1,10 @@
 @font-face {
-  font-family: "Helvetica";
-  src: url("https://static.wuliya.cn/static/font/HELVETI.woff") format("woff");
-  font-display: swap
+  font-family: "SmileySans";
+  src: url("../fonts/SmileySans-Oblique.woff2") format("woff2");
 }
 @font-face {
   font-family: "NotoColorEmoji";
-  src: url("https://static.wuliya.cn/static/font/NotoColorEmoji-Regular.ttf") format("truetype");
-  font-display: swap
+  src: url("../fonts/NotoColorEmoji-Regular.woff2") format("woff2");
 }
 
 * {
@@ -16,7 +14,7 @@
 }
 
 .markdown-body {
-  font-family: Helvetica, NotoColorEmoji, sans-serif;
+  font-family: SmileySans, NotoColorEmoji, sans-serif;
   box-sizing: border-box;
   min-width: 200px;
   width: 100%;

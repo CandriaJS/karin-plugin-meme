@@ -11,6 +11,7 @@ export default defineConfig({
   platform: 'node',            // 指定为Node.js环境
   outDir: 'lib',               // 指定输出目录
   external: [
-    "node-karin"
+    "node-karin",
+    "canvas",
 ]                 // 外部依赖, 不打包进输出文件中
 })

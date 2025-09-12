@@ -123,6 +123,9 @@ jobs:
             该版本是基于 `${{ github.event.pull_request.head.ref || github.ref_name }}` 分支的快照 [**`${{ needs.beta-info.outputs.short_commit_hash }}`**](https://github.com/${{ github.repository }}/commit/${{ needs.beta-info.outputs.short_commit_hash }}) 所构建的。
 
             你可以通过以下命令安装该版本：
-            ```
+            ```meme
             pnpm add https://pkg.pr.new/${{ github.repository }}/karin-plugin-meme@${{ needs.beta-info.outputs.short_commit_hash }} -w
+            ```
+            ```meme-api
+            pnpm add https://pkg.pr.new/${{ github.repository }}/karin-plugin-meme-api@${{ needs.beta-info.outputs.short_commit_hash }} -w
             ```

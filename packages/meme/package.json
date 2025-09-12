@@ -39,9 +39,9 @@
   },
   "dependencies": {
     "markdown-it": "^14.1.0",
+    "meme-generator": "npm:@memecrafters/meme-generator@0.2.2-beta",
     "radashi": "^12.6.2",
-    "sequelize": "^6.37.7",
-    "meme-generator": "npm:@memecrafters/meme-generator@0.2.2-beta"
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "@karinjs/puppeteer": "^2.2.3",

@@ -22,17 +22,18 @@ class Request {
     })
 
     // 配置重试机制
-    axiosRetry(this.axiosInstance, {
-      retries: Config.server.retry,
-      retryDelay: () => 0,
-      shouldResetTimeout: true,
-      retryCondition: (error: AxiosError) => {
-        if (error.response) {
-          return error.response.status === 500
-        }
-        return axiosRetry.isNetworkOrIdempotentRequestError(error)
-      }
-    })
+				axiosRetry(this.axiosInstance, {
+					retries: Config.server.retry,
+					retryDelay: () => 0,
+					shouldResetTimeout: true,
+					retryCondition: (error: any) => {
+						const typedError = error as AxiosError;
+						if (typedError.response) {
+							return typedError.response.status === 500;
+						}
+						return axiosRetry.isNetworkOrIdempotentRequestError(typedError);
+					},
+				});
   }
 
   /**
