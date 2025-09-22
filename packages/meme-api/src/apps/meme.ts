@@ -56,7 +56,6 @@ const checkUserAccess = (e: Message): boolean => {
         }
       } else {
         /**  黑名单模式 */
-        console.log(groupConfig.blackUser)
         if (groupConfig.blackUser.map(String).includes(userId)) {
           logger.info(`[${Version.Plugin_AliasName}] 用户 ${userId} 在群 ${groupId} 的黑名单中，跳过生成`)
           return false
