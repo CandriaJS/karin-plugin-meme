@@ -29,11 +29,8 @@
   ],
   "scripts": {
     "app": "node --import tsx src/app.ts",
-    "build": "tsup",
+    "build": "tsc --noEmit && tsdown",
     "dev": "cross-env EBV_FILE=\"development.env\" node --import tsx src/app.ts",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "pub": "npm publish --access public",
     "sort": "sort-package-json",
     "watch": "cross-env EBV_FILE=\"development.env\" tsx watch --include \"src/**/*.ts\" src/app.ts"
   },

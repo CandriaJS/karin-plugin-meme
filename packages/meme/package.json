@@ -29,19 +29,17 @@
   ],
   "scripts": {
     "app": "node --import tsx src/app.ts",
-    "build": "tsup",
+    "build": "tsc --noEmit && tsdown",
     "dev": "cross-env EBV_FILE=\"development.env\" node --import tsx src/app.ts",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "pub": "npm publish --access public",
     "sort": "sort-package-json",
     "watch": "cross-env EBV_FILE=\"development.env\" tsx watch --include \"src/**/*.ts\" src/app.ts"
   },
   "dependencies": {
+    "@puniyu/component": "^0.6.0",
+    "canvas": "npm:@napi-rs/canvas@^0.1.79",
     "markdown-it": "^14.1.0",
     "meme-generator": "npm:@memecrafters/meme-generator@0.2.2-beta",
     "radashi": "^12.6.2",
-    "canvas": "npm:@napi-rs/canvas@^0.1.79",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {

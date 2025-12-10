@@ -1,65 +1,73 @@
-import MarkdownIt from 'markdown-it'
-import karin, { Message, requireFile } from 'node-karin'
-import lodash from 'node-karin/lodash';
-import { Render } from '@/common'
-import { Help } from '@/models'
-import { Version } from '@/root'
-import type { HelpType } from '@/types'
-import type { groupList, group } from '@/types/help/list';
+import karin, { Message, segment } from "node-karin";
+import { Render } from "@/common";
+import type { HelpGroup } from "@puniyu/component";
+import { Version } from "@/root";
+import fs from "node:fs";
 
-export const help = karin.command(/^#?(?:(柠糖)?表情)(?:命令|帮助|菜单|help|说明|功能|指令|使用说明)$/i, async (e: Message) => {
-  let helpGroup: HelpType['helpList'] = []
+export const help = karin.command(
+  /^#?(?:(柠糖)?表情)(?:命令|帮助|菜单|help|说明|功能|指令|使用说明)$/i,
+  async (e: Message) => {
+    const iconImg = await fs.promises.readFile(
+      `${Version.Plugin_Path}/resources/icons/image.svg`
+    );
+    const helpList: HelpGroup[] = [
+      {
+        name: "表情命令",
+        list: [
+          { name: "#柠糖表情列表", desc: "获取表情列表", icon: iconImg },
+          { name: "#柠糖表情统计", desc: "获取表情统计", icon: iconImg },
+          { name: "#柠糖表情搜索xx", desc: "搜指定的表情", icon: iconImg },
+          { name: "#柠糖表情详情xx", desc: "获取指定表情详情", icon: iconImg },
+          { name: "#随机表情", desc: "随机生成一个表情", icon: iconImg },
+          {
+            name: "xx",
+            desc: "如喜报 xx (参数使用#,多个参数同样使用#, 多段文本使用/, 指定用户头像使用@+qq号)",
+            icon: iconImg,
+          },
+        ],
+      },
+    ];
 
-
-  lodash.forEach(Help.List.helpList, (group: groupList) => {
-    if (group.auth && group.auth === 'master' && !e.isMaster) {
-      return true
+    if (e.isMaster) {
+      const iconImg = await fs.promises.readFile(
+        `${Version.Plugin_Path}/resources/icons/update.png`
+      );
+      helpList.push({
+        name: "管理命令，仅主人可用",
+        list: [
+          { name: "#柠糖表情(插件)更新", desc: "更新插件本体", icon: iconImg },
+          {
+            name: "#柠糖表情更新表情资源",
+            desc: "更新表情资源",
+            icon: iconImg,
+          },
+          {
+            name: "#柠糖表情更新表情数据",
+            desc: "更新表情数据",
+            icon: iconImg,
+          },
+        ],
+      });
     }
-    lodash.forEach(group.list, (help: group) => {
-      let icon = help.icon * 1
-      if (!icon) {
-        help.css = 'display:none'
-      } else {
-        let x = (icon - 1) % 10
-        let y = (icon - x - 1) / 10
-        help.css = `background-position:-${x * 50}px -${y * 50}px`
-      }
-    })
+    const bg = await fs.promises.readFile(
+      `${Version.Plugin_Path}/resources/background.webp`
+    );
 
-    helpGroup.push(group)
-  })
-  const themeData = Help.Theme.getThemeData(Help.Cfg.helpCfg)
-  const img = await Render.render(
-    'help/index',
-    {
-      helpCfg: Help.Cfg.helpCfg,
-      helpGroup,
-      ...themeData
-    }
-  )
-  await e.reply(img)
-  return true
-}, {
-  name: '柠糖表情:帮助',
-  priority: -Infinity,
-  event: 'message',
-  permission: 'all'
-})
+    const img = await Render.help({
+      title: "柠糖图片操作",
+      theme: {
+        backgroundImage: bg,
+      },
+      list: helpList,
+    });
 
-export const version = karin.command(/^#?(?:(柠糖)?表情)(?:版本|版本信息|version|versioninfo)$/i, async (e: Message) => {
-  const md = new MarkdownIt({ html: true })
-  const makdown = md.render(await requireFile(`${Version.Plugin_Path}/CHANGELOG.md`))
-  const img = await Render.render(
-    'help/version-info',
-    {
-      Markdown: makdown
-    }
-  )
-  await e.reply(img)
-  return true
-}, {
-  name: '柠糖表情:版本',
-  priority: -Infinity,
-  event: 'message',
-  permission: 'all'
-})
+    await e.reply(segment.image(`base64://${img.toString("base64")}`));
+    return true;
+  },
+  {
+    name: "柠糖表情:帮助",
+    priority: 500,
+    event: "message",
+    permission: "all",
+  }
+);
