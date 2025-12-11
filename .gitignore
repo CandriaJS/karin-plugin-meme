@@ -16,7 +16,7 @@ temp/
 lib/
 
 # 依赖
-node_modules/
+**/node_modules/**
 config/config/pm2.yaml
 index.js
 @karinjs/

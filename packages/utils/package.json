@@ -1,0 +1,25 @@
+{
+  "name": "@candriajs/utils",
+  "version": "1.0.0",
+  "private": true,
+  "license": "GNU General Public License v3.0",
+  "author": "CandriaJS",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "config/",
+    "lib/",
+    "resources/",
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && tsdown"
+  },
+  "dependencies": {
+    "canvas": "catalog:"
+  }
+}

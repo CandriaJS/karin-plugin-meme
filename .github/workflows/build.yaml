@@ -16,29 +16,27 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
 
-      - name: 设置 bun
-        uses: oven-sh/setup-bun@v2
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v4
         with:
-          bun-version: latest
+          run_install: true
       
-      - name: 安装依赖
+      - name: 构建全部包
         run: | 
-          bun install
+          pnpm run build:all
           cp -r README.md LICENSE packages/meme/
           cp -r README.md LICENSE packages/meme-api/
         
       - name: 构建meme
         run: |
-          bun install
-          bun run build
+          pnpm pkg delete devDependencies
           mkdir -p ${{ runner.temp }}/temp/meme
           cp -r package.json CHANGELOG.md README.md LICENSE resources config lib ${{ runner.temp }}/temp/meme
         working-directory: packages/meme
 
       - name: 构建meme-api
         run: |
-          bun install
-          bun run build
+          pnpm pkg delete devDependencies
           mkdir -p ${{ runner.temp }}/temp/meme-api
           cp -r package.json CHANGELOG.md README.md LICENSE resources config lib ${{ runner.temp }}/temp/meme-api
         working-directory: packages/meme-api

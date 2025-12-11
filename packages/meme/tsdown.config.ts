@@ -23,6 +23,7 @@ export default defineConfig({
   sourcemap: false,
   treeshake: true,
   platform: 'node',
+  noExternal: ['@candriajs/utils'],
   outDir: path.join(filePath, 'lib'),
   external: [/^node-karin/],
 })

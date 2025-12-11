@@ -50,7 +50,7 @@ export async function KARIN_PLUGIN_INIT() {
 			{ timeout: 3000 },
 		);
 		responseData = response.data.data.count;
-	} catch (error) {
+	} catch {
 		logger.error(logger.chalk.red.bold("⚠️ 访问统计数据失败，超时或网络错误"));
 	}
 

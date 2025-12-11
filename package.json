@@ -8,7 +8,11 @@
   "type": "module",
   "main": "",
   "scripts": {
-    "dev:meme": "pnpm --filter @candriajs/karin-plugin-meme dev"
+    "dev:meme": "pnpm --filter @candriajs/karin-plugin-meme dev",
+    "build:all": "pnpm -r run build",
+    "build:utils": "pnpm --filter @candriajs/utils build",
+    "build:meme": "pnpm --filter @candriajs/karin-plugin-meme build",
+    "build:meme-api": "pnpm --filter @candriajs/karin-plugin-meme-api build"
   },
   "devDependencies": {
     "@prettier/plugin-oxc": "^0.1.3",
@@ -24,7 +28,7 @@
     "tsx": "^4.19.4",
     "typescript": "^5.9.2"
   },
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.12.4",
   "dependencies": {
     "es-toolkit": "^1.39.10"
   }

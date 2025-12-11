@@ -4,3 +4,6 @@ packages:
 onlyBuiltDependencies:
   - '@karinjs/sqlite3-cjs'
   - esbuild
+
+catalog:
+  canvas: npm:@napi-rs/canvas@^0.1.84
