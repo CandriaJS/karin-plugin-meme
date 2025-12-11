@@ -56,7 +56,7 @@ export const update = karin.command(/^#?(?:(?:柠糖)?表情)(?:插件)?(?:(强�
       await e.reply(`\n更新完成，开始重启 本次运行时间：${common.uptime()}`, { reply: true })
       await restart(e.selfId, e.contact, e.messageId)
       return true
-    } catch (error) {
+    } catch {
       await e.reply(`${Version.Plugin_Name}重启失败，请手动重启以应用更新！`)
     }
   }

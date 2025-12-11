@@ -1,7 +1,5 @@
 export * as db from '@/models/db'
-export * as Help from '@/models/help'
 export * as imageTool from '@/models/imageTool'
 export * as make from '@/models/make'
-export * as server from '@/models/server'
 export * as utils from '@/models/utils'
 export * as webui from '@/models/webui'

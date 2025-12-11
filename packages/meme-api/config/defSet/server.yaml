@@ -1,21 +1,7 @@
-# 自定义表情设服务器配置
-
-# 自定义表情服务模式
-# 0: 使用远程服务
-# 1: 使用本地服务
-mode: 0
+# 自定义表情服务器配置
 
 # 自定义表情服务地址
 url: ''
-
-# 自定义表情服务端口
-# 仅在本地服务模式下生效
-port: 2255
-
-# 是否使用base64上传图片
-# 仅在本地服务模式下生效
-usebase64: false
-
 
 # 服务器类型，适用于自动检测不出来的情况
 # 0：自动检测
@@ -28,11 +14,3 @@ retry: 5
 
 # 请求超时时间
 timeout: 5
-
-# 服务端文件下载代理镜像地址
-# 如: https://github.moeyy.xyz
-proxy_url: ''
-
-# 服务端资源下载代理镜像地址
-# 如: https://cdn.mengze.vip/gh/MemeCrafters/meme-generator-rs@
-download_url: ''

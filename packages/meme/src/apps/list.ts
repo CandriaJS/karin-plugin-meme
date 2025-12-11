@@ -56,7 +56,7 @@ export const list = karin.command(
       const filePath = path.join(tempPath, `meme_list_${hash}.png`);
 			await fs.promises.writeFile(filePath, img);
       const imagePath = path.resolve(filePath).replace(/\\/g, "/");
-			await e.reply(segment.image(`file://${imagePath}`)), { reply: true };
+			await e.reply(segment.image(`file://${imagePath}`), { reply: true });
 			return true;
 		} catch (error) {
 			logger.error(error);

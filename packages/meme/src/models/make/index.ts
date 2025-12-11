@@ -22,22 +22,25 @@ import type { MemeOptionType } from '@/types'
  * @param PresetKeyWord - [可选] 预设模板的关键字
  * @returns 返回处理完成的表情包图片base64数据，格式为"base64://xxxx"
  */
-export async function make_meme (
+export async function make_meme(
   e: Message,
   memekey: string,
   min_texts: number,
   max_texts: number,
-  min_images:number,
+  min_images: number,
   max_images: number,
   options: MemeOptionType[] | null,
   userText: string,
   isPreset?: boolean,
-  PresetKeyWord?: string
+  PresetKeyWord?: string,
 ): Promise<string> {
   try {
     const getquotedUser = async (e: Message): Promise<string | null> => {
       let source = null
-      const replyId: string | null = e.replyId ?? e.elements.find((m) => m.type === 'reply')?.messageId ?? null
+      const replyId: string | null =
+        e.replyId ??
+        e.elements.find((m) => m.type === 'reply')?.messageId ??
+        null
 
       if (replyId) {
         source = (await e.bot.getMsg(e.contact, replyId)) ?? null
@@ -52,32 +55,56 @@ export async function make_meme (
     const allUsers = [
       ...new Set([
         ...e.elements
-          .filter(m => m?.type === 'at')
-          .map(at => at?.targetId?.toString() ?? ''),
-        ...[...(userText?.matchAll(/@\s*(\d+)/g) ?? [])].map(match => match[1] ?? '')
-      ])
-    ].filter(targetId => targetId && targetId !== quotedUser)
+          .filter((m) => m?.type === 'at')
+          .map((at) => at?.targetId?.toString() ?? ''),
+        ...[...(userText?.matchAll(/@\s*(\d+)/g) ?? [])].map(
+          (match) => match[1] ?? '',
+        ),
+      ]),
+    ].filter((targetId) => targetId && targetId !== quotedUser)
     let formdata: Record<string, unknown> = {
       images: [],
       texts: [],
-      options: {}
+      options: {},
     }
     if (options) {
-      const option = await handleOption(e, memekey, userText, formdata, isPreset, PresetKeyWord)
+      const option = await handleOption(
+        e,
+        memekey,
+        userText,
+        formdata,
+        isPreset,
+        PresetKeyWord,
+      )
       if (!option.success) {
         throw new Error(option.message)
       }
       userText = option.text
     }
     if (min_texts >= 0 && max_texts > 0) {
-      const text = await handleTexts(e, min_texts, max_texts, userText, formdata)
+      const text = await handleTexts(
+        e,
+        min_texts,
+        max_texts,
+        userText,
+        formdata,
+      )
       if (!text.success) {
         throw new Error(text.message)
       }
     }
 
     if (min_images >= 0 && max_images > 0) {
-      const image = await handleImages(e, memekey, min_images, max_images, allUsers, quotedUser, userText, formdata)
+      const image = await handleImages(
+        e,
+        memekey,
+        min_images,
+        max_images,
+        allUsers,
+        quotedUser,
+        userText,
+        formdata,
+      )
       if (!image.success) {
         throw new Error(image.message)
       }
@@ -85,25 +112,29 @@ export async function make_meme (
     logger.debug(`生成的表情的key: ${memekey}`)
     logger.debug(
       `表情的参数:\n${
- `images: ${JSON.stringify(
-              (formdata as { images: Array<{ id: string; name: string }> }).images
-                .map(img => ({ id: img.id, name: img.name }))
-            )}\n` +
-            `texts: ${JSON.stringify((formdata as { texts: unknown[] }).texts)}\n` +
-            `options: ${JSON.stringify((formdata as { options: Record<string, unknown> }).options)}`
-          }`
+        `images: ${JSON.stringify(
+          (
+            formdata as { images: Array<{ id: string; name: string }> }
+          ).images.map((img) => ({ id: img.id, name: img.name })),
+        )}\n` +
+        `texts: ${JSON.stringify((formdata as { texts: unknown[] }).texts)}\n` +
+        `options: ${JSON.stringify((formdata as { options: Record<string, unknown> }).options)}`
+      }`,
     )
     const response = await utils.make_meme(memekey, formdata)
     const basedata = await base64(response)
     if (Config.stat.enable && e.isGroup) {
-      const groupStart = (await db.stat.get({
-        groupId: e.groupId,
-        memeKey: memekey
-      }))?.count ?? 0
+      const groupStart =
+        (
+          await db.stat.get({
+            groupId: e.groupId,
+            memeKey: memekey,
+          })
+        )?.count ?? 0
       await db.stat.add({
         groupId: e.groupId,
         memeKey: memekey,
-        count: Number(groupStart) + 1
+        count: Number(groupStart) + 1,
       })
     }
     return `base64://${basedata}`
