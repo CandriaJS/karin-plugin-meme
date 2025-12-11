@@ -3,5 +3,4 @@ autoUpdateRes: true
 
 # 表情资源更新Cron表达式
 autoUpdateResCron: "0 0 2 * * ?"
-# 渲染精度
-renderScale: 100
+

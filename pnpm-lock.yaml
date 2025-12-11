@@ -4,12 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    canvas:
-      specifier: npm:@napi-rs/canvas@^0.1.84
-      version: 0.1.84
-
 importers:
 
   .:
@@ -61,7 +55,7 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
       canvas:
-        specifier: 'catalog:'
+        specifier: npm:@napi-rs/canvas@^0.1.84
         version: '@napi-rs/canvas@0.1.84'
       markdown-it:
         specifier: ^14.1.0
@@ -94,6 +88,9 @@ importers:
 
   packages/meme-api:
     dependencies:
+      '@puniyu/component':
+        specifier: ^0.6.0
+        version: 0.6.0
       adm-zip:
         specifier: ^0.5.16
         version: 0.5.16
@@ -101,11 +98,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0(axios@1.12.0)
       canvas:
-        specifier: 'catalog:'
+        specifier: npm:@napi-rs/canvas@^0.1.84
         version: '@napi-rs/canvas@0.1.84'
-      markdown-it:
-        specifier: ^14.1.0
-        version: 14.1.0
       radashi:
         specifier: ^12.6.2
         version: 12.6.2
@@ -116,6 +110,9 @@ importers:
         specifier: ^1.3.4
         version: 1.4.2
     devDependencies:
+      '@candriajs/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@types/adm-zip':
         specifier: ^0.5.7
         version: 0.5.7
@@ -132,7 +129,7 @@ importers:
   packages/utils:
     dependencies:
       canvas:
-        specifier: 'catalog:'
+        specifier: npm:@napi-rs/canvas@^0.1.84
         version: '@napi-rs/canvas@0.1.84'
 
 packages:

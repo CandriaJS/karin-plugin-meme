@@ -8,16 +8,25 @@ import { utils } from '@/models'
  * @param type 返回类型 base64 或 buffer  默认 base64
  * @returns 图片
  */
-export const get_image = async (image_id: string, type: 'base64' | 'buffer' = 'base64'): Promise<Buffer | string> => {
+export async function get_image<T extends 'base64' | 'buffer' = 'base64'>(
+  image_id: string,
+  type?: T,
+): Promise<T extends 'buffer' ? Buffer : string> {
   try {
-    const url = await utils.get_base_url()
-    const res = await utils.Request.get(`${url}/image/${image_id}`, {}, {}, 'arraybuffer')
-    switch (type) {
+    const url = await utils.getBaseUrl()
+    const res = await utils.Request.get(
+      `${url}/image/${image_id}`,
+      {},
+      {},
+      'arraybuffer',
+    )
+    const actualType = type ?? ('base64' as T)
+    switch (actualType) {
       case 'buffer':
-        return res.data
+        return res.data as T extends 'buffer' ? Buffer : string
       case 'base64':
       default:
-        return await base64(res.data)
+        return (await base64(res.data)) as T extends 'buffer' ? Buffer : string
     }
   } catch (error) {
     throw new Error(`获取图片失败: ${(error as Error).message}`)

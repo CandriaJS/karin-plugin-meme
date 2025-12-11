@@ -10,7 +10,7 @@ import {
   Message,
   MessageResponse,
   mkdir,
-  readFile
+  readFile,
 } from 'node-karin'
 
 import { Config } from '@/common'
@@ -18,7 +18,6 @@ import Request from './request'
 import { Version } from '@/root'
 import type { AvatarInfoType, ImageInfoType } from '@/types'
 import { getMeme, Image, OptionValue } from 'meme-generator'
-
 
 /**
  * 获取用户头像
@@ -28,16 +27,23 @@ import { getMeme, Image, OptionValue } from 'meme-generator'
  * @returns 用户头像
  */
 
-export async function get_user_avatar<T extends 'url' | 'base64' | 'buffer' = 'url'>(
+export async function geUserAvatar<
+  T extends 'url' | 'base64' | 'buffer' = 'url',
+>(
   e: Message,
   userId: string,
-  type: T = 'url' as T
+  type: T = 'url' as T,
 ): Promise<AvatarInfoType<T> | null> {
   try {
     if (!e) throw new Error('消息事件不能为空')
     if (!userId) throw new Error('用户ID不能为空')
 
-    const avatarDir = path.join(karinPathBase, Version.Plugin_Name, 'data', 'avatar')
+    const avatarDir = path.join(
+      karinPathBase,
+      Version.Plugin_Name,
+      'data',
+      'avatar',
+    )
     const cachePath = path.join(avatarDir, `${userId}.png`).replace(/\\/g, '/')
 
     if (Config.meme.cache && (await exists(cachePath))) {
@@ -59,7 +65,7 @@ export async function get_user_avatar<T extends 'url' | 'base64' | 'buffer' = 'u
             if (!data) throw new Error(`通过缓存获取用户头像失败: ${userId}`)
             return {
               userId,
-              image: data.toString('base64')
+              image: data.toString('base64'),
             } as AvatarInfoType<T>
           }
           case 'buffer': {
@@ -67,14 +73,14 @@ export async function get_user_avatar<T extends 'url' | 'base64' | 'buffer' = 'u
             if (!data) throw new Error(`通过缓存获取用户头像失败: ${userId}`)
             return {
               userId,
-              image: data
+              image: data,
             } as AvatarInfoType<T>
           }
           case 'url':
           default:
             return {
               userId,
-              image: cachePath
+              image: cachePath,
             } as AvatarInfoType<T>
         }
       }
@@ -98,18 +104,18 @@ export async function get_user_avatar<T extends 'url' | 'base64' | 'buffer' = 'u
       case 'base64':
         return {
           userId,
-          image: avatarData.toString('base64')
+          image: avatarData.toString('base64'),
         } as AvatarInfoType<T>
       case 'buffer':
         return {
           userId,
-          image: avatarData
+          image: avatarData,
         } as AvatarInfoType<T>
       case 'url':
       default:
         return {
           userId,
-          image: Config.meme.cache ? cachePath : avatarUrl
+          image: Config.meme.cache ? cachePath : avatarUrl,
         } as AvatarInfoType<T>
     }
   } catch (error) {
@@ -124,10 +130,7 @@ export async function get_user_avatar<T extends 'url' | 'base64' | 'buffer' = 'u
  * @param userId 用户 ID
  * @returns 用户昵称
  */
-export async function get_user_name(
-  e: Message,
-  userId: string
-): Promise<string> {
+export async function getUserName(e: Message, userId: string): Promise<string> {
   try {
     let nickname: string | null = null
     let userInfo
@@ -155,22 +158,21 @@ export async function get_user_name(
  * @param userId 用户 ID
  * @returns 用户性别
  */
-export async function get_user_gender(
+export async function getUserGender(
   e: Message,
-  userId: string
+  userId: string,
 ): Promise<string> {
   try {
     let sex: 'male' | 'female' | 'unknown' = 'unknown'
     let userInfo
     if (e.isGroup) {
       userInfo = await e.bot.getGroupMemberInfo(e.groupId, userId)
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      sex = userInfo.sex || userInfo.sex || 'unknown'
+      sex = userInfo.sex || 'unknown'
     } else if (e.isPrivate) {
       userInfo = await e.bot.getStrangerInfo(userId)
-      sex = userInfo.sex ?? 'unknown'
+      sex = userInfo.sex || 'unknown'
     } else {
-      sex = e.sender.sex ?? 'unknown'
+      sex = e.sender.sex || 'unknown'
     }
     if (!sex) throw new Error('获取用户性别失败')
     return sex
@@ -186,15 +188,15 @@ export async function get_user_gender(
  * @param type 返回类型 url 或 base64
  * @returns 图片数组信息
  */
-export async function get_image<T extends 'url' | 'base64' | 'buffer' = 'url'>(
+export async function getImage<T extends 'url' | 'base64' | 'buffer' = 'url'>(
   e: Message,
-  type: T = 'url' as T
+  type: T = 'url' as T,
 ): Promise<ImageInfoType<T>[]> {
   const imagesInMessage = e.elements
     .filter((m) => m.type === 'image')
     .map((img) => ({
       userId: e.sender.userId,
-      image: img.file
+      image: img.file,
     }))
 
   const tasks: Promise<ImageInfoType<T>>[] = []
@@ -204,7 +206,8 @@ export async function get_image<T extends 'url' | 'base64' | 'buffer' = 'url'>(
   /**
    * 获取引用消息的内容
    */
-  const replyId: string | null = e.replyId ?? e.elements.find((m) => m.type === 'reply')?.messageId ?? null
+  const replyId: string | null =
+    e.replyId ?? e.elements.find((m) => m.type === 'reply')?.messageId ?? null
 
   if (replyId) {
     source = (await e.bot.getMsg(e.contact, replyId)) ?? null
@@ -218,7 +221,7 @@ export async function get_image<T extends 'url' | 'base64' | 'buffer' = 'url'>(
       .filter((m) => m.type === 'image')
       .map((img) => ({
         userId: source.sender.userId,
-        image: img.file
+        image: img.file,
       })) as Array<ImageInfoType<T>>
   }
 
@@ -231,18 +234,18 @@ export async function get_image<T extends 'url' | 'base64' | 'buffer' = 'url'>(
         case 'buffer':
           return {
             userId: item.userId,
-            image: await buffer(item.image)
+            image: await buffer(item.image),
           } as ImageInfoType<T>
         case 'base64':
           return {
             userId: item.userId,
-            image: await base64(item.image)
+            image: await base64(item.image),
           } as ImageInfoType<T>
         case 'url':
         default:
           return {
             userId: item.userId,
-            image: item.image.toString()
+            image: item.image.toString(),
           } as ImageInfoType<T>
       }
     })
@@ -258,18 +261,18 @@ export async function get_image<T extends 'url' | 'base64' | 'buffer' = 'url'>(
         case 'buffer':
           return {
             userId: item.userId,
-            image: await buffer(item.image)
+            image: await buffer(item.image),
           } as ImageInfoType<T>
         case 'base64':
           return {
             userId: item.userId,
-            image: await base64(item.image)
+            image: await base64(item.image),
           } as ImageInfoType<T>
         case 'url':
         default:
           return {
             userId: item.userId,
-            image: item.image.toString()
+            image: item.image.toString(),
           } as ImageInfoType<T>
       }
     })
@@ -280,7 +283,7 @@ export async function get_image<T extends 'url' | 'base64' | 'buffer' = 'url'>(
   const images = results
     .filter(
       (res): res is PromiseFulfilledResult<ImageInfoType<T>> =>
-        res.status === 'fulfilled' && Boolean(res.value)
+        res.status === 'fulfilled' && Boolean(res.value),
     )
     .map((res) => res.value)
 
@@ -293,14 +296,24 @@ export async function get_image<T extends 'url' | 'base64' | 'buffer' = 'url'>(
  * @param data 表情数据
  * @returns 表情图片数据
  */
-export async function make_meme(memekey: string, data: Record<string, unknown>): Promise<Buffer> {
+export async function make_meme(
+  memekey: string,
+  data: Record<string, unknown>,
+): Promise<Buffer> {
   try {
     const meme = getMeme(memekey)
     if (!meme) throw new Error('未找到该表情: ' + memekey)
-    const imgae = meme.generate(data['images'] as Image[], data['texts'] as string[], data['options'] as Record<string, OptionValue>)
+    const imgae = meme.generate(
+      data['images'] as Image[],
+      data['texts'] as string[],
+      data['options'] as Record<string, OptionValue>,
+    )
     if (imgae.type === 'Ok') {
       return imgae.field0
-    } else throw new Error(`生成表情图片失败: ${imgae.field0.type}:${JSON.stringify(imgae.field0.field0)}`)
+    } else
+      throw new Error(
+        `生成表情图片失败: ${imgae.field0.type}:${JSON.stringify(imgae.field0.field0)}`,
+      )
   } catch (error) {
     logger.error(error)
     throw new Error((error as Error).message)

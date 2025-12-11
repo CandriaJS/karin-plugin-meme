@@ -2,18 +2,17 @@ import { Message } from 'node-karin'
 
 import { utils } from '@/models'
 import type { MemeOptionType } from '@/types'
-export async function handleOption (
+export async function handleOption(
   e: Message,
   memekey: string,
   userText: string,
   allUsers: string[],
   formdata: Record<string, unknown> | FormData,
   isRust: boolean,
-  isPreset? : boolean,
-  PresetKeyWord?: string
+  isPreset?: boolean,
+  PresetKeyWord?: string,
 ): Promise<
-| { success: true, text: string }
-| { success: false, message: string }
+  { success: true; text: string } | { success: false; message: string }
 > {
   let options: Record<string, unknown> = {}
   const optionsMatches = userText.match(/#(\S+)\s+([^#]+)/g)
@@ -24,10 +23,13 @@ export async function handleOption (
     if (!presetInfo) {
       return {
         success: false,
-        message: '获取预设信息失败'
+        message: '获取预设信息失败',
       }
     }
-    optionArray.push({ name: presetInfo.option_name, value: presetInfo.option_value })
+    optionArray.push({
+      name: presetInfo.option_name,
+      value: presetInfo.option_value,
+    })
   }
   if (optionsMatches) {
     for (const match of optionsMatches) {
@@ -35,7 +37,7 @@ export async function handleOption (
       if (name && value) {
         optionArray.push({
           name: name.trim(),
-          value: value.trim()
+          value: value.trim(),
         })
       }
     }
@@ -45,18 +47,22 @@ export async function handleOption (
   if (!optionsInfo) {
     return {
       success: false,
-      message: '获取选项信息失败'
+      message: '获取选项信息失败',
     }
   }
 
-  const optionsArray = Array.isArray(optionsInfo) ? optionsInfo : JSON.parse(optionsInfo)
+  const optionsArray = Array.isArray(optionsInfo)
+    ? optionsInfo
+    : JSON.parse(optionsInfo)
 
   for (const option of optionArray) {
-    const supportedOption = optionsArray.find((opt: MemeOptionType) => opt.name === option.name)
+    const supportedOption = optionsArray.find(
+      (opt: MemeOptionType) => opt.name === option.name,
+    )
     if (!supportedOption) {
       return {
         success: false,
-        message: `该表情不支持参数：${option.name}`
+        message: `该表情不支持参数：${option.name}`,
       }
     }
 
@@ -64,23 +70,23 @@ export async function handleOption (
     if (!result.success) {
       return {
         success: false,
-        message: result.message!
+        message: result.message!,
       }
     }
     options[option.name] = result.value
   }
   if (isRust) {
-    (formdata as Record<string, unknown>)['options'] = options
+    ;(formdata as Record<string, unknown>)['options'] = options
   } else {
     const userInfos = [
       {
-        text: await utils.get_user_name(e, allUsers[0] || e.sender.userId),
-        gender: await utils.get_user_gender(e, allUsers[0] || e.sender.userId)
-      }
+        text: await utils.getUserAame(e, allUsers[0] || e.sender.userId),
+        gender: await utils.getUserGender(e, allUsers[0] || e.sender.userId),
+      },
     ]
     const args = JSON.stringify({
       user_infos: userInfos,
-      ...options
+      ...options,
     })
     const fd = formdata as FormData
     fd.append('args', args)
@@ -88,7 +94,7 @@ export async function handleOption (
 
   return {
     success: true,
-    text: userText.replace(/#(\S+)\s+([^#]+)/g, '').trim()
+    text: userText.replace(/#(\S+)\s+([^#]+)/g, '').trim(),
   }
 }
 
@@ -101,15 +107,14 @@ export async function handleOption (
  * @param supportedOption - 支持的选项类型定义
  * @returns 转换结果对象
  */
-function convertOptionValue (
+function convertOptionValue(
   option: { name: string; value: string | number },
-  supportedOption: MemeOptionType
+  supportedOption: MemeOptionType,
 ): { success: boolean; value?: unknown; message?: string } {
   let convertedValue: boolean | number | string
 
   switch (supportedOption.type) {
-    case 'boolean':
-    {
+    case 'boolean': {
       const boolValue = String(option.value).toLowerCase()
       if (['true', '真', '是', 'yes', '1'].includes(boolValue)) {
         convertedValue = true
@@ -118,80 +123,93 @@ function convertOptionValue (
       } else {
         return {
           success: false,
-          message: `参数 ${option.name} 需要是布尔值`
+          message: `参数 ${option.name} 需要是布尔值`,
         }
       }
       return { success: true, value: convertedValue }
     }
-    case 'integer':
-    {
+    case 'integer': {
       const intValue = parseInt(String(option.value))
       if (isNaN(intValue)) {
         return {
           success: false,
-          message: `参数 ${option.name} 需要是整数`
+          message: `参数 ${option.name} 需要是整数`,
         }
       }
-      if (supportedOption.minimum !== null && intValue < supportedOption.minimum) {
+      if (
+        supportedOption.minimum !== null &&
+        intValue < supportedOption.minimum
+      ) {
         return {
           success: false,
-          message: `参数 ${option.name} 不能小于 ${supportedOption.minimum}`
+          message: `参数 ${option.name} 不能小于 ${supportedOption.minimum}`,
         }
       }
-      if (supportedOption.maximum !== null && intValue > supportedOption.maximum) {
+      if (
+        supportedOption.maximum !== null &&
+        intValue > supportedOption.maximum
+      ) {
         return {
           success: false,
-          message: `参数 ${option.name} 不能大于 ${supportedOption.maximum}`
+          message: `参数 ${option.name} 不能大于 ${supportedOption.maximum}`,
         }
       }
       return {
         success: true,
-        value: intValue
+        value: intValue,
       }
     }
-    case 'float':
-    {
+    case 'float': {
       const floatValue = parseFloat(String(option.value))
       if (isNaN(floatValue)) {
         return {
           success: false,
-          message: `参数 ${option.name} 需要是数字`
+          message: `参数 ${option.name} 需要是数字`,
         }
       }
-      if (supportedOption.minimum !== null && floatValue < supportedOption.minimum) {
+      if (
+        supportedOption.minimum !== null &&
+        floatValue < supportedOption.minimum
+      ) {
         return {
           success: false,
-          message: `参数 ${option.name} 不能小于 ${supportedOption.minimum}`
+          message: `参数 ${option.name} 不能小于 ${supportedOption.minimum}`,
         }
       }
-      if (supportedOption.maximum !== null && floatValue > supportedOption.maximum) {
+      if (
+        supportedOption.maximum !== null &&
+        floatValue > supportedOption.maximum
+      ) {
         return {
           success: false,
-          message: `参数 ${option.name} 不能大于 ${supportedOption.maximum}`
+          message: `参数 ${option.name} 不能大于 ${supportedOption.maximum}`,
         }
       }
       return {
         success: true,
-        value: floatValue
+        value: floatValue,
       }
     }
 
     case 'string':
       convertedValue = option.value
-      if (supportedOption.choices && !supportedOption.choices.includes(String(convertedValue))) {
+      if (
+        supportedOption.choices &&
+        !supportedOption.choices.includes(String(convertedValue))
+      ) {
         return {
           success: false,
-          message: `参数 ${option.name} 的值必须是: ${supportedOption.choices.join(', ')} 之一`
+          message: `参数 ${option.name} 的值必须是: ${supportedOption.choices.join(', ')} 之一`,
         }
       }
       return {
         success: true,
-        value: convertedValue
+        value: convertedValue,
       }
     default:
       return {
         success: false,
-        message: `不支持的参数类型：${supportedOption.type}`
+        message: `不支持的参数类型：${supportedOption.type}`,
       }
   }
 }

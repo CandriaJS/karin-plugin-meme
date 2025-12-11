@@ -1,8 +1,8 @@
-export interface AvatarInfoType {
+export interface AvatarInfoType<T extends 'url' | 'base64' | 'buffer' = 'url'> {
   /** 用户id */
   userId: string
   /** 头像 */
-  avatar: string | Buffer
+  avatar: T extends 'buffer' ? Buffer : string
 }
 
 export interface ImageInfoType {

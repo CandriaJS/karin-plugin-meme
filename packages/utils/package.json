@@ -20,6 +20,6 @@
     "build": "tsc --noEmit && tsdown"
   },
   "dependencies": {
-    "canvas": "catalog:"
+    "canvas": "npm:@napi-rs/canvas@^0.1.84"
   }
 }

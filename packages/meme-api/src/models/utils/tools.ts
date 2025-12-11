@@ -1,6 +1,6 @@
 import karin, { logger } from 'node-karin'
 
-import { db, imageTool, server, utils } from '@/models'
+import { db, imageTool, utils } from '@/models'
 import Request from '@/models/utils/request'
 import type { dbType, MemeInfoType, MemeOptionType } from '@/types'
 import { parallel, tryit } from 'radashi'
@@ -23,14 +23,14 @@ export async function update_meme(force: boolean = false) {
   try {
     const keys = await get_meme_all_keys()
     if (keys && keys.length > 0 && !force) return
-    const url = await utils.get_base_url()
+    const url = await utils.getBaseUrl()
     const isRustServer = await utils.isRustServer()
     let memeDataList
     if (isRustServer) {
       const res = await Request.get(`${url}/meme/infos`)
       if (!res.success) throw new Error(res.msg)
       if (res.data && Array.isArray(res.data)) {
-        memeDataList = res.data.map(meme => {
+        memeDataList = res.data.map((meme) => {
           const {
             key,
             keywords: keyWords,
@@ -40,9 +40,9 @@ export async function update_meme(force: boolean = false) {
               min_images,
               max_images,
               default_texts,
-              options
+              options,
             },
-            tags
+            tags,
           } = meme
 
           const MemeOptions = options.map((option: MemeOptionType) => ({
@@ -51,7 +51,7 @@ export async function update_meme(force: boolean = false) {
             default: option.default,
             description: option.description ?? null,
             choices: option.choices ?? null,
-            minimum: option.minimum ?? null
+            minimum: option.minimum ?? null,
           }))
 
           return {
@@ -63,7 +63,7 @@ export async function update_meme(force: boolean = false) {
             max_images,
             default_texts: default_texts?.length ? default_texts : null,
             options: options?.length ? MemeOptions : null,
-            tags: tags?.length ? tags : null
+            tags: tags?.length ? tags : null,
           }
         })
       }
@@ -72,42 +72,39 @@ export async function update_meme(force: boolean = false) {
       if (!keysRes.success) throw new Error(keysRes.msg)
       const concurrentLimit = 20
       const [errors, memeInfos] = await tryit(() =>
-        parallel(
-          concurrentLimit,
-          keysRes.data,
-          async (key: string) => {
-            const [err, infoRes] = await tryit(() => Request.get(`${url}/memes/${key}/info`))();
-            if (err) {
-              logger.warn(`获取表情信息失败: ${key}, 错误: ${err.message}`);
-              return null;
-            }
-            return infoRes.success ? infoRes.data : null;
+        parallel(concurrentLimit, keysRes.data, async (key: string) => {
+          const [err, infoRes] = await tryit(() =>
+            Request.get(`${url}/memes/${key}/info`),
+          )()
+          if (err) {
+            logger.warn(`获取表情信息失败: ${key}, 错误: ${err.message}`)
+            return null
           }
-        )
-      )();
+          return infoRes.success ? infoRes.data : null
+        }),
+      )()
 
       if (errors) {
-        logger.error(`获取所有表情数据失败: ${errors.message}`);
+        logger.error(`获取所有表情数据失败: ${errors.message}`)
         throw new Error(`获取所有表情数据失败: ${errors}`)
       }
 
-
-      memeDataList = memeInfos.filter(Boolean).map(meme => {
+      memeDataList = memeInfos.filter(Boolean).map((meme) => {
         const MemeOptions = meme.params_type?.args_type
           ? Object.entries(meme.params_type.args_type.args_model.properties)
-            .filter(([name]) => name !== 'user_infos')
-            .map(([name, prop]: [string, any]) => {
-              const option: MemeOptionType = {
-                type: convertSchemaTypeToOptionType(prop.type),
-                name,
-                default: prop.default,
-                description: prop.description ?? null,
-                choices: null,
-                minimum: null,
-                maximum: null
-              }
-              return option
-            })
+              .filter(([name]) => name !== 'user_infos')
+              .map(([name, prop]: [string, any]) => {
+                const option: MemeOptionType = {
+                  type: convertSchemaTypeToOptionType(prop.type),
+                  name,
+                  default: prop.default,
+                  description: prop.description ?? null,
+                  choices: null,
+                  minimum: null,
+                  maximum: null,
+                }
+                return option
+              })
           : null
 
         return {
@@ -119,14 +116,14 @@ export async function update_meme(force: boolean = false) {
           max_images: meme.params_type?.max_images,
           default_texts: meme.params_type?.default_texts,
           options: meme.params_type?.args_type ? MemeOptions : null,
-          tags: meme.tags?.length ? meme.tags : null
+          tags: meme.tags?.length ? meme.tags : null,
         }
       })
     }
     if (memeDataList && memeDataList.length > 0) {
       await add_meme(memeDataList, {
         type: 'bulk',
-        force
+        force,
       })
     } else {
       logger.warn('未获取到有效的表情数据')
@@ -156,24 +153,29 @@ export async function update_preset(force: boolean = false) {
       preset.map(async (preset) => {
         const memeExists = await db.meme.get(preset.key)
         if (!memeExists && !force) return
-        await db.preset.add({
-          name: preset.name,
-          key: preset.key,
-          option_name: preset.option_name,
-          option_value: preset.option_value
-        }, {
-          force
-        })
-      })
+        await db.preset.add(
+          {
+            name: preset.name,
+            key: preset.key,
+            option_name: preset.option_name,
+            option_value: preset.option_value,
+          },
+          {
+            force,
+          },
+        )
+      }),
     )
   } catch (error) {
     logger.error(`初始化预设数据失败: ${error}`)
   }
 }
 
-function convertSchemaTypeToOptionType(schemaType: string | string[]): MemeOptionType['type'] {
+function convertSchemaTypeToOptionType(
+  schemaType: string | string[],
+): MemeOptionType['type'] {
   if (Array.isArray(schemaType)) {
-    schemaType = schemaType.find(t => t !== 'null') ?? 'string'
+    schemaType = schemaType.find((t) => t !== 'null') ?? 'string'
   }
   switch (schemaType) {
     case 'boolean':
@@ -206,27 +208,27 @@ function convertSchemaTypeToOptionType(schemaType: string | string[]): MemeOptio
  */
 export async function add_meme(
   meme: Array<{
-    key: MemeInfoType['key'],
-    keyWords: MemeInfoType['keywords'],
-    min_texts: MemeInfoType['params']['min_texts'],
-    max_texts: MemeInfoType['params']['max_texts'],
-    min_images: MemeInfoType['params']['min_images'],
-    max_images: MemeInfoType['params']['max_images'],
-    default_texts: MemeInfoType['params']['default_texts'],
-    options: MemeInfoType['params']['options'],
+    key: MemeInfoType['key']
+    keyWords: MemeInfoType['keywords']
+    min_texts: MemeInfoType['params']['min_texts']
+    max_texts: MemeInfoType['params']['max_texts']
+    min_images: MemeInfoType['params']['min_images']
+    max_images: MemeInfoType['params']['max_images']
+    default_texts: MemeInfoType['params']['default_texts']
+    options: MemeInfoType['params']['options']
     tags: MemeInfoType['tags']
   }>,
   options?: {
-    type?: 'common' | 'bulk',
+    type?: 'common' | 'bulk'
     force?: boolean
-  }
+  },
 ): Promise<[Model, boolean | null] | Model[]> {
   if (meme.length === 0) return []
   const { type = 'common', force = false } = options ?? {}
 
   if (type === 'bulk') {
     meme = Array.isArray(meme) ? meme : [meme]
-    const dataList = meme.map(item => ({
+    const dataList = meme.map((item) => ({
       key: item.key,
       keyWords: item.keyWords,
       min_texts: item.min_texts,
@@ -235,7 +237,7 @@ export async function add_meme(
       max_images: item.max_images,
       default_texts: item.default_texts,
       options: item.options,
-      tags: item.tags
+      tags: item.tags,
     }))
     return await db.meme.add_bulk(dataList, { force })
   } else {
@@ -249,7 +251,7 @@ export async function add_meme(
       max_images: singleMeme.max_images,
       default_texts: singleMeme.default_texts,
       options: singleMeme.options,
-      tags: singleMeme.tags
+      tags: singleMeme.tags,
     }
     return await db.meme.add(data, { force })
   }
@@ -261,7 +263,7 @@ export async function add_meme(
  */
 export async function get_preset_all_keys(): Promise<string[] | null> {
   const res = await db.preset.getAll()
-  return res.map(preset => preset.key).flat() ?? null
+  return res.map((preset) => preset.key).flat() ?? null
 }
 
 /**
@@ -270,7 +272,7 @@ export async function get_preset_all_keys(): Promise<string[] | null> {
  */
 export async function get_preset_all_keywords(): Promise<string[] | null> {
   const res = await db.preset.getAll()
-  return res.map(preset => preset.name).flat() ?? null
+  return res.map((preset) => preset.name).flat() ?? null
 }
 
 /**
@@ -289,11 +291,13 @@ export async function get_preset_key(keyword: string): Promise<string | null> {
  * @param key 表情的唯一标识符
  * @returns 预设表情信息
  */
-export async function get_preset_keyword(key: string): Promise<string[] | null> {
+export async function get_preset_keyword(
+  key: string,
+): Promise<string[] | null> {
   const res = await db.preset.getAll()
   const filteredOptions = res
-    .filter(preset => preset.key === key)
-    .map(preset => preset.name)
+    .filter((preset) => preset.key === key)
+    .map((preset) => preset.name)
   return filteredOptions.length > 0 ? filteredOptions : null
 }
 
@@ -302,7 +306,9 @@ export async function get_preset_keyword(key: string): Promise<string[] | null> 
  * @param key 表情的唯一标识符
  * @returns 预设表情信息
  */
-export async function get_preset_info(key: string): Promise<PresetModel | null> {
+export async function get_preset_info(
+  key: string,
+): Promise<PresetModel | null> {
   return await db.preset.get(key)
 }
 
@@ -311,7 +317,9 @@ export async function get_preset_info(key: string): Promise<PresetModel | null> 
  * @param keyword 表情关键词
  * @returns 预设表情信息
  */
-export async function get_preset_info_by_keyword(keyword: string): Promise<PresetModel | null> {
+export async function get_preset_info_by_keyword(
+  keyword: string,
+): Promise<PresetModel | null> {
   return await db.preset.getByKeyWord(keyword)
 }
 
@@ -320,9 +328,11 @@ export async function get_preset_info_by_keyword(keyword: string): Promise<Prese
  * @param keyword 表情的关键词
  * @returns 所有相关预设表情的键值列表
  */
-export async function get_preset_all_about_keywords(keyword: string): Promise<string[] | null> {
+export async function get_preset_all_about_keywords(
+  keyword: string,
+): Promise<string[] | null> {
   const res = await db.preset.getByKeyWordAbout(keyword)
-  return res.map(preset => preset.name).flat() ?? null
+  return res.map((preset) => preset.name).flat() ?? null
 }
 
 /**
@@ -330,9 +340,11 @@ export async function get_preset_all_about_keywords(keyword: string): Promise<st
  * @param key 表情的唯一标识符
  * @returns 所有相关预设表情的键值列表
  */
-export async function get_preset_all_about_keywords_by_key(key: string): Promise<string[] | null> {
+export async function get_preset_all_about_keywords_by_key(
+  key: string,
+): Promise<string[] | null> {
   const res = await db.preset.getAbout(key)
-  return res.map(preset => preset.name).flat() ?? null
+  return res.map((preset) => preset.name).flat() ?? null
 }
 
 /**
@@ -341,7 +353,7 @@ export async function get_preset_all_about_keywords_by_key(key: string): Promise
  */
 export async function get_meme_all_keys(): Promise<string[] | null> {
   const res = await db.meme.getAll()
-  return res.map(meme => meme.key).flat() ?? null
+  return res.map((meme) => meme.key).flat() ?? null
 }
 
 /**
@@ -349,7 +361,9 @@ export async function get_meme_all_keys(): Promise<string[] | null> {
  * @param keyword 表情关键词
  * @returns 表情键值
  */
-export async function get_meme_key_by_keyword(keyword: string): Promise<string | null> {
+export async function get_meme_key_by_keyword(
+  keyword: string,
+): Promise<string | null> {
   const res = await get_meme_info_by_keyword(keyword)
   if (!res) return null
   return res.key
@@ -360,7 +374,9 @@ export async function get_meme_key_by_keyword(keyword: string): Promise<string |
  * @param tag 表情的tag
  * @returns 表情的标签信息
  */
-export async function get_meme_key_by_tag(tag: string): Promise<string[] | null> {
+export async function get_meme_key_by_tag(
+  tag: string,
+): Promise<string[] | null> {
   const res = await db.meme.getByTag(tag)
   if (!res) return null
   return JSON.parse(String(res.key))
@@ -371,9 +387,11 @@ export async function get_meme_key_by_tag(tag: string): Promise<string[] | null>
  * @param key 表情的唯一标识符
  * @returns 所有相关表情的键值列表
  */
-export async function get_meme_keys_by_about(key: string): Promise<string[] | null> {
+export async function get_meme_keys_by_about(
+  key: string,
+): Promise<string[] | null> {
   const res = await db.meme.getKeysByAbout(key)
-  return res.map(meme => meme.key).flat() ?? null
+  return res.map((meme) => meme.key).flat() ?? null
 }
 
 /**
@@ -381,9 +399,11 @@ export async function get_meme_keys_by_about(key: string): Promise<string[] | nu
  * @param tag 表情的标签
  * @returns 所有相关表情的键值列表
  */
-export async function get_meme_keys_by_about_tag(tag: string): Promise<string[] | null> {
+export async function get_meme_keys_by_about_tag(
+  tag: string,
+): Promise<string[] | null> {
   const res = await db.meme.getTagsByAbout(tag)
-  return res.map(meme => meme.key).flat() ?? null
+  return res.map((meme) => meme.key).flat() ?? null
 }
 /**
  * 获取所有表情的关键词信息
@@ -419,7 +439,9 @@ export async function get_meme_keyword(key: string): Promise<string[] | null> {
  * @param tag 表情的标签
  * @returns 表情的标签信息
  */
-export async function get_meme_keyword_by_tag(tag: string): Promise<string[] | null> {
+export async function get_meme_keyword_by_tag(
+  tag: string,
+): Promise<string[] | null> {
   const res = await db.meme.getByTag(tag)
   if (!res) return null
   return JSON.parse(String(res.keyWords))
@@ -430,7 +452,9 @@ export async function get_meme_keyword_by_tag(tag: string): Promise<string[] | n
  * @param keyword 表情关键词
  * @returns 所有相关表情的关键词列表
  */
-export async function get_meme_keywords_by_about(keyword: string): Promise<string[] | null> {
+export async function get_meme_keywords_by_about(
+  keyword: string,
+): Promise<string[] | null> {
   const res = await db.meme.getKeyWordsByAbout(keyword)
   return res.map((item) => JSON.parse(String(item.keyWords))).flat() ?? null
 }
@@ -439,7 +463,9 @@ export async function get_meme_keywords_by_about(keyword: string): Promise<strin
  * @param tag 表情的标签
  * @returns 所有相关表情的关键词列表
  */
-export async function get_meme_keywords_by_about_tag(tag: string): Promise<string[] | null> {
+export async function get_meme_keywords_by_about_tag(
+  tag: string,
+): Promise<string[] | null> {
   const res = await db.meme.getTagsByAbout(tag)
   return res.map((item) => JSON.parse(String(item.keyWords))).flat() ?? null
 }
@@ -450,7 +476,7 @@ export async function get_meme_keywords_by_about_tag(tag: string): Promise<strin
  * @returns 表情信息
  */
 export async function get_meme_info(key: string): Promise<Model | null> {
-  return await db.meme.get(key) ?? null
+  return (await db.meme.get(key)) ?? null
 }
 
 /**
@@ -458,15 +484,16 @@ export async function get_meme_info(key: string): Promise<Model | null> {
  * @param keyword 表情关键词
  * @returns 表情信息
  */
-export async function get_meme_info_by_keyword(keyword: string): Promise<Model | null> {
-  return await db.meme.getByKeyWord(keyword) ?? null
+export async function get_meme_info_by_keyword(
+  keyword: string,
+): Promise<Model | null> {
+  return (await db.meme.getByKeyWord(keyword)) ?? null
 }
 
 type UploadImage<T extends 'url' | 'path' | 'data'> = {
-  image: Buffer | string;
-  type: T;
-} & (T extends 'url' ? { headers?: Record<string, string> } : {});
-
+  image: Buffer | string
+  type: T
+} & (T extends 'url' ? { headers?: Record<string, string> } : {})
 
 /**
  * 上传图片
@@ -479,40 +506,40 @@ type UploadImage<T extends 'url' | 'path' | 'data'> = {
  * @returns image_id 图片的唯一标识符
  */
 export async function upload_image<T extends 'url' | 'path' | 'data'>(
-  options: UploadImage<T>
+  options: UploadImage<T>,
 ): Promise<string> {
   try {
-    const { image, type } = options;
-    let data;
+    const { image, type } = options
+    let data
 
     if (type === 'url') {
-            const { headers } = options as UploadImage<'url'>;
+      const { headers } = options as UploadImage<'url'>
       data = {
         type: 'url',
         url: image,
         ...(headers && { headers }),
-      };
+      }
     } else if (type === 'path') {
       data = {
         type: 'path',
         path: image,
-      };
+      }
     } else if (type === 'data') {
       data = {
         type: 'data',
         data: Buffer.isBuffer(image) ? image.toString('base64') : image,
-      };
+      }
     } else {
-      throw new Error('无效的图片类型');
+      throw new Error('无效的图片类型')
     }
 
-    const url = await utils.get_base_url();
-    const res = await Request.post(`${url}/image/upload`, data, {}, 'json');
-    if (!res.success) throw new Error('图片上传失败');
-    return res.data.image_id;
+    const url = await utils.getBaseUrl()
+    const res = await Request.post(`${url}/image/upload`, data, {}, 'json')
+    if (!res.success) throw new Error('图片上传失败')
+    return res.data.image_id
   } catch (error) {
-    logger.error(error);
-    throw new Error((error as Error).message);
+    logger.error(error)
+    throw new Error((error as Error).message)
   }
 }
 /**
@@ -522,15 +549,20 @@ export async function upload_image<T extends 'url' | 'path' | 'data'>(
  */
 export async function get_meme_preview(key: string): Promise<Buffer> {
   try {
-    const meme_server_type = await server.get_meme_server_type()
-    const url = await utils.get_base_url()
+    const meme_server_type = await utils.get_meme_server_type()
+    const url = await utils.getBaseUrl()
     let image
     if (meme_server_type === 'rust') {
       const res = await Request.get(`${url}/memes/${key}/preview`)
       if (!res.success) throw new Error(res.msg)
       image = await imageTool.get_image(res.data.image_id, 'buffer')
     } else if (meme_server_type === 'python') {
-      const res = await Request.get(`${url}/memes/${key}/preview`, {}, {}, 'arraybuffer')
+      const res = await Request.get(
+        `${url}/memes/${key}/preview`,
+        {},
+        {},
+        'arraybuffer',
+      )
       if (!res.success) throw new Error(res.msg)
       image = res.data
     } else {
@@ -549,13 +581,22 @@ export async function get_meme_preview(key: string): Promise<Buffer> {
  * @param data 表情数据
  * @returns 表情图片数据
  */
-export async function make_meme(memekey: string, data: Record<string, unknown> | FormData, type?: 'python' | 'rust'): Promise<Buffer> {
+export async function make_meme(
+  memekey: string,
+  data: Record<string, unknown> | FormData,
+  type?: 'python' | 'rust',
+): Promise<Buffer> {
   try {
-    const meme_server_type = type ?? await server.get_meme_server_type()
-    const url = await utils.get_base_url()
+    const meme_server_type = type ?? (await utils.get_meme_server_type())
+    const url = await utils.getBaseUrl()
     let res, image
     if (meme_server_type === 'python') {
-      res = await Request.post(`${url}/memes/${memekey}/`, data, {}, 'arraybuffer')
+      res = await Request.post(
+        `${url}/memes/${memekey}/`,
+        data,
+        {},
+        'arraybuffer',
+      )
       if (!res.success) throw new Error(res.msg)
       image = res.data
     } else if (meme_server_type === 'rust') {
@@ -584,7 +625,13 @@ export async function make_meme(memekey: string, data: Record<string, unknown> |
  * @param name 文件名称
  * @returns 发送结果
  */
-export async function send_file(type: 'group' | 'private', botId: number, id: number, file: string, name: string) {
+export async function send_file(
+  type: 'group' | 'private',
+  botId: number,
+  id: number,
+  file: string,
+  name: string,
+) {
   try {
     const bot = karin.getBot(String(botId))
     let Contact
@@ -597,6 +644,8 @@ export async function send_file(type: 'group' | 'private', botId: number, id: nu
     }
     return await bot?.uploadFile(Contact, file, name)
   } catch (error) {
-    throw new Error(`向${type === 'group' ? '群' : '好友'} ${id} 发送文件失败: ${(error as Error).message}`)
+    throw new Error(
+      `向${type === 'group' ? '群' : '好友'} ${id} 发送文件失败: ${(error as Error).message}`,
+    )
   }
 }
