@@ -1,5 +1,17 @@
 # 变更日志
 
+## [1.2.1](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-api-v1.2.0...meme-api-v1.2.1) (2025-12-11)
+
+
+### 📝 文档更新
+
+* **readme:** 更新 README 中的图片链接和项目介绍 ([7b27ee0](https://github.com/CandriaJS/karin-plugin-meme/commit/7b27ee016635e1fe4b57b11a93e1221a66aa685c))
+
+
+### ♻️ 代码重构
+
+* 重构多个部分渲染实现 ([#13](https://github.com/CandriaJS/karin-plugin-meme/issues/13)) ([e95860e](https://github.com/CandriaJS/karin-plugin-meme/commit/e95860e72362bf234dfa596eab2f1ae39f53e8b6))
+
 ## [1.2.0](https://github.com/CandriaJS/karin-plugin-meme/compare/meme-api-v1.1.3...meme-api-v1.2.0) (2025-09-12)
 
 
