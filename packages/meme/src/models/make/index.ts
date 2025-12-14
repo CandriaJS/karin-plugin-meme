@@ -36,17 +36,14 @@ export async function make_meme(
 ): Promise<string> {
   try {
     const getquotedUser = async (e: Message): Promise<string | null> => {
-      let source = null
       const replyId: string | null =
         e.replyId ??
         e.elements.find((m) => m.type === 'reply')?.messageId ??
         null
 
       if (replyId) {
-        source = (await e.bot.getMsg(e.contact, replyId)) ?? null
-      }
-      if (source) {
-        return source.sender.userId.toString()
+        const source = await e.bot.getMsg(e.contact, replyId)
+        return source?.sender.userId.toString()
       }
       return null
     }
@@ -62,6 +59,14 @@ export async function make_meme(
         ),
       ]),
     ].filter((targetId) => targetId && targetId !== quotedUser)
+    userText = userText?.replace(/@\s*\d+/g, '').trim() ?? ''
+
+    const customNames: string[] = []
+    const nameMatches = userText?.matchAll(/#name\s+(\S+)/gi) ?? []
+    for (const match of nameMatches) {
+      customNames.push(match[1])
+    }
+    userText = userText?.replace(/#name\s+\S+/gi, '').trim() ?? ''
     let formdata: Record<string, unknown> = {
       images: [],
       texts: [],
@@ -104,6 +109,7 @@ export async function make_meme(
         quotedUser,
         userText,
         formdata,
+        customNames,
       )
       if (!image.success) {
         throw new Error(image.message)

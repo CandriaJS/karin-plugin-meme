@@ -13,6 +13,7 @@ export async function handleImages(
   quotedUser: string | null,
   userText: string,
   formdata: Record<string, unknown> | FormData,
+  customNames: string[] = [],
 ): Promise<
   { success: true; text: string } | { success: false; message: string }
 > {
@@ -168,6 +169,15 @@ export async function handleImages(
   }
 
   images = [...userAvatars, ...images].slice(0, max_images)
+
+  /** 应用用户自定义名称 */
+  if (customNames.length > 0) {
+    images = images.map((img, index) => ({
+      ...img,
+      name: customNames[index] ?? img.name,
+    }))
+  }
+
   ;(formdata as Record<string, unknown>).images = images
 
   return images.length < min_images
